@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -21,10 +21,10 @@ class ETSQLRaw
  * The raw expression.
  * @var string
  */
-    public $expression = "";
+    public $expression = '';
 
 
-    public function __construct($expression = "")
+    public function __construct($expression = '')
     {
         $this->expression = $expression;
     }

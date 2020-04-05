@@ -2,7 +2,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -12,21 +12,21 @@ if (!defined("IN_ESOTALK")) {
  * @package esoTalk
  */
 
-$form = $data["form"];
+$form = $data['form'];
 ?>
 
 <div id='loginSheet' class='sheet'>
 <div class='sheetContent'>
 
-<h3><?php echo T("Log In"); ?></h3>
+<h3><?php echo T('Log In'); ?></h3>
 
 <?php echo $form->open(); ?>
 
 <div class='sheetBody'>
 
-<?php if (!empty($data["message"])): ?>
+<?php if (!empty($data['message'])): ?>
 <div class='section help'>
-<?php echo $data["message"]; ?>
+<?php echo $data['message']; ?>
 </div>
 <?php endif; ?>
 
@@ -57,9 +57,9 @@ foreach ($form->getFieldsInSection($k) as $field): ?>
 </div>
 
 <div class='buttons'>
-<small><?php printf(T("Don't have an account? <a href='%s' class='link-join'>Sign up!</a>"), URL("user/join")); ?></small>
+<small><?php printf(T("Don't have an account? <a href='%s' class='link-join'>Sign up!</a>"), URL('user/join')); ?></small>
 <?php
-echo $form->button("login", T("Log In"), array("class" => "big submit"));
+echo $form->button('login', T('Log In'), array('class' => 'big submit'));
 echo $form->cancelButton();
 ?>
 </div>

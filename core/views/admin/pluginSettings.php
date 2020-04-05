@@ -2,7 +2,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -12,13 +12,13 @@ if (!defined("IN_ESOTALK")) {
  * @package esoTalk
  */
 
-$plugin = $data["plugin"];
-$view = $data["view"];
+$plugin = $data['plugin'];
+$view = $data['view'];
 ?>
 <div class='sheet' id='pluginSettingsSheet'>
 <div class='sheetContent'>
 
-<h3><?php printf(T("%s Settings"), $plugin["info"]["name"]); ?></h3>
+<h3><?php printf(T('%s Settings'), $plugin['info']['name']); ?></h3>
 
 <?php $this->renderView($view, $data); ?>
 

@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -88,7 +88,7 @@ class ETFactory
      * @param string $file The file which the class is contained within.
      * @return void
      */
-    public static function register($class, $className, $file = "")
+    public static function register($class, $className, $file = '')
     {
         self::$classes[$class] = array($className, $file);
     }
@@ -104,7 +104,7 @@ class ETFactory
      */
     public static function registerController($slug, $className, $file)
     {
-        $newSlug = $slug . "Controller";
+        $newSlug = $slug . 'Controller';
         self::$controllers[$slug] = $newSlug;
         self::register($newSlug, $className, $file);
     }
@@ -120,7 +120,7 @@ class ETFactory
      */
     public static function registerAdminController($slug, $className, $file)
     {
-        $newSlug = $slug . "AdminController";
+        $newSlug = $slug . 'AdminController';
         self::$adminControllers[$slug] = $newSlug;
         self::register($newSlug, $className, $file);
     }

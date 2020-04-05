@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -17,7 +17,7 @@ if (!defined("IN_ESOTALK")) {
  * @package esoTalk
  */
 
-if (!function_exists("highlight")) {
+if (!function_exists('highlight')) {
 
 /**
  * Find a list of words in a block of text and put spans with class='highlight' around them.
@@ -39,14 +39,14 @@ if (!function_exists("highlight")) {
             }
 
             // Make sure we only highlight whole words that would've been matched by a fulltext search.
-            $text = preg_replace("/(?<=[\s>]|^)(" . preg_quote($word, "/") . ")(?=[\s<,\.?!:\/-]|$)/iu", "<span class='highlight'>$1</span>", $text);
+            $text = preg_replace("/(?<=[\s>]|^)(" . preg_quote($word, '/') . ")(?=[\s<,\.?!:\/-]|$)/iu", "<span class='highlight'>$1</span>", $text);
         }
         return $text;
     }
 }
 
 
-if (!function_exists("conversationURL")) {
+if (!function_exists('conversationURL')) {
 
 /**
  * Construct a URL to a conversation, given its ID and title.
@@ -57,14 +57,14 @@ if (!function_exists("conversationURL")) {
  *
  * @package esoTalk
  */
-    function conversationURL($conversationId, $title = "")
+    function conversationURL($conversationId, $title = '')
     {
-        return $conversationId . (($title = slug($title)) ? "-$title" : "");
+        return $conversationId . (($title = slug($title)) ? "-$title" : '');
     }
 }
 
 
-if (!function_exists("memberURL")) {
+if (!function_exists('memberURL')) {
 
 /**
  * Construct a URL to a member, given their ID and username, and the profile pane to go to.
@@ -76,14 +76,14 @@ if (!function_exists("memberURL")) {
  *
  * @package esoTalk
  */
-    function memberURL($memberId, $username = "", $pane = "")
+    function memberURL($memberId, $username = '', $pane = '')
     {
-        return "member/" . ($pane ? "$pane/" : "") . $memberId . (($username = slug($username)) ? "-$username" : "");
+        return 'member/' . ($pane ? "$pane/" : '') . $memberId . (($username = slug($username)) ? "-$username" : '');
     }
 }
 
 
-if (!function_exists("postURL")) {
+if (!function_exists('postURL')) {
 
 /**
  * Construct a URL to a post, given its ID.
@@ -95,12 +95,12 @@ if (!function_exists("postURL")) {
  */
     function postURL($postId)
     {
-        return "conversation/post/" . $postId;
+        return 'conversation/post/' . $postId;
     }
 }
 
 
-if (!function_exists("searchURL")) {
+if (!function_exists('searchURL')) {
 
 /**
  * Construct a URL to a search results page, given a search string.
@@ -111,14 +111,14 @@ if (!function_exists("searchURL")) {
  *
  * @package esoTalk
  */
-    function searchURL($search, $channel = "all")
+    function searchURL($search, $channel = 'all')
     {
-        return "conversations/$channel/" . ($search ? "?search=" . urlencode($search) : "");
+        return "conversations/$channel/" . ($search ? '?search=' . urlencode($search) : '');
     }
 }
 
 
-if (!function_exists("memberLink")) {
+if (!function_exists('memberLink')) {
 
 /**
  * Return a member's name wrapped in an anchor tag linking to their profile page.
@@ -129,7 +129,7 @@ if (!function_exists("memberLink")) {
  *
  * @package esoTalk
  */
-    function memberLink($memberId, $username = "")
+    function memberLink($memberId, $username = '')
     {
         $displayName = name($username);
         if ($username) {
@@ -141,7 +141,7 @@ if (!function_exists("memberLink")) {
 }
 
 
-if (!function_exists("name")) {
+if (!function_exists('name')) {
 
 /**
  * Return a member's name to be displayed in an HTML context. If the name is blank, it is assumed the member
@@ -156,14 +156,14 @@ if (!function_exists("name")) {
     function name($username, $sanitize = true)
     {
         if (!$username) {
-            $username = "[" . T("deleted") . "]";
+            $username = '[' . T('deleted') . ']';
         }
         return $sanitize ? sanitizeHTML($username) : $username;
     }
 }
 
 
-if (!function_exists("avatar")) {
+if (!function_exists('avatar')) {
 
 /**
  * Return a HTML element to display a member's avatar.
@@ -173,22 +173,22 @@ if (!function_exists("avatar")) {
  *
  * @package esoTalk
  */
-    function avatar($member = array(), $className = "")
+    function avatar($member = array(), $className = '')
     {
         // Construct the avatar path from the provided information.
-        if (!empty($member["memberId"]) and !empty($member["avatarFormat"])) {
-            $file = "uploads/avatars/{$member["memberId"]}.{$member["avatarFormat"]}";
+        if (!empty($member['memberId']) and !empty($member['avatarFormat'])) {
+            $file = "uploads/avatars/{$member['memberId']}.{$member['avatarFormat']}";
             $url = getWebPath($file);
             return "<img src='$url' alt='' class='avatar $className'/>";
         }
 
         // Default to an avatar with the first letter of the member's name.
-        return "<span class='avatar $className'>" . (!empty($member["username"]) ? mb_strtoupper(mb_substr($member["username"], 0, 1, "UTF-8"), "UTF-8") : "&nbsp;") . "</span>";
+        return "<span class='avatar $className'>" . (!empty($member['username']) ? mb_strtoupper(mb_substr($member['username'], 0, 1, 'UTF-8'), 'UTF-8') : '&nbsp;') . '</span>';
     }
 }
 
 
-if (!function_exists("memberGroup")) {
+if (!function_exists('memberGroup')) {
 
 /**
  * Return a comma-separated list of groups that a member is in.
@@ -205,21 +205,21 @@ if (!function_exists("memberGroup")) {
     {
         // If the member isn't a Member, groups don't matter - just display their account type.
         if ($account and $account != ACCOUNT_MEMBER) {
-            return "<span class='group-$account'>" . groupName($account) . "</span>";
+            return "<span class='group-$account'>" . groupName($account) . '</span>';
         } else {
 
         // Otherwise, show a comma-separated list of the groups that they're in.
             $groups = array_filter((array)$groups);
             if (count($groups)) {
                 foreach ($groups as $k => $v) {
-                    $groups[$k] = "<span class='group-$k'>" . groupName($v) . "</span>";
+                    $groups[$k] = "<span class='group-$k'>" . groupName($v) . '</span>';
                 }
-                return implode(", ", $groups);
+                return implode(', ', $groups);
             }
 
             // If they're not in any groups, either show them as a "Member" or just show nothing at all.
             else {
-                return $showMember ? groupName(ACCOUNT_MEMBER) : "";
+                return $showMember ? groupName(ACCOUNT_MEMBER) : '';
             }
         }
     }
@@ -227,7 +227,7 @@ if (!function_exists("memberGroup")) {
 
 
 
-if (!function_exists("groupName")) {
+if (!function_exists('groupName')) {
 
 /**
  * Return a group's name to be displayed in an HTML context.
@@ -240,13 +240,13 @@ if (!function_exists("groupName")) {
  */
     function groupName($group, $plural = false)
     {
-        return T("group.$group" . ($plural ? ".plural" : ""), sanitizeHTML(ucfirst($group)));
+        return T("group.$group" . ($plural ? '.plural' : ''), sanitizeHTML(ucfirst($group)));
     }
 }
 
 
 
-if (!function_exists("groupLink")) {
+if (!function_exists('groupLink')) {
 
 /**
  * Return a group's name wrapped in an anchor linking to a list of members in that group.
@@ -258,12 +258,12 @@ if (!function_exists("groupLink")) {
  */
     function groupLink($group)
     {
-        return "<a href='" . URL("members/?search=" . urlencode(groupName($group))) . "'>" . groupName($group, true) . "</a>";
+        return "<a href='" . URL('members/?search=' . urlencode(groupName($group))) . "'>" . groupName($group, true) . '</a>';
     }
 }
 
 
-if (!function_exists("star")) {
+if (!function_exists('star')) {
 
 /**
  * Return a star for a certain conversation that can be clicked to toggle the starred that of that conversation.
@@ -278,20 +278,20 @@ if (!function_exists("star")) {
     {
         // If the user is not logged in, don't return anything.
         if (!ET::$session->user) {
-            return "";
+            return '';
         }
 
         // Otherwise, return a clickable star!
         else {
             $conversationId = (int)$conversationId;
-            $url = URL("conversation/star/" . $conversationId . "?token=" . ET::$session->token . "&return=" . urlencode(ET::$controller->selfURL));
-            return "<a href='$url' class='starButton' title='" . ($starred ? T("Following") : T("Follow")) . "' data-id='$conversationId'><i class='star icon-star" . ($starred ? "" : "-empty") . "'></i></a>";
+            $url = URL('conversation/star/' . $conversationId . '?token=' . ET::$session->token . '&return=' . urlencode(ET::$controller->selfURL));
+            return "<a href='$url' class='starButton' title='" . ($starred ? T('Following') : T('Follow')) . "' data-id='$conversationId'><i class='star icon-star" . ($starred ? '' : '-empty') . "'></i></a>";
         }
     }
 }
 
 
-if (!function_exists("starButton")) {
+if (!function_exists('starButton')) {
 
 /**
  * Return a star BUTTON for a certain conversation that can be clicked to toggle the starred that of that conversation.
@@ -306,20 +306,20 @@ if (!function_exists("starButton")) {
     {
         // If the user is not logged in, don't return anything.
         if (!ET::$session->user) {
-            return "";
+            return '';
         }
 
         // Otherwise, return a clickable star!
         else {
             $conversationId = (int)$conversationId;
-            $url = URL("conversation/star/" . $conversationId . "?token=" . ET::$session->token . "&return=" . urlencode(ET::$controller->selfURL));
-            return "<a href='$url' class='button big starButton' title='" . T("Follow to receive notifications") . "' data-id='$conversationId'><i class='star icon-star" . ($starred ? "" : "-empty") . "'></i> <span>" . ($starred ? T("Following") : T("Follow")) . "</span></a>";
+            $url = URL('conversation/star/' . $conversationId . '?token=' . ET::$session->token . '&return=' . urlencode(ET::$controller->selfURL));
+            return "<a href='$url' class='button big starButton' title='" . T('Follow to receive notifications') . "' data-id='$conversationId'><i class='star icon-star" . ($starred ? '' : '-empty') . "'></i> <span>" . ($starred ? T('Following') : T('Follow')) . '</span></a>';
         }
     }
 }
 
 
-if (!function_exists("label")) {
+if (!function_exists('label')) {
 
 /**
  *
@@ -328,13 +328,13 @@ if (!function_exists("label")) {
  *
  * @package esoTalk
  */
-    function label($label, $url = "", $className = "")
+    function label($label, $url = '', $className = '')
     {
         // Make sure the ETConversationModel class has been loaded so we can access its static properties.
         ET::conversationModel();
 
-        return ($url ? "<a href='$url'" : "<span") . " class='label label-$label $className' title='" . T("label.$label") . "'>
+        return ($url ? "<a href='$url'" : '<span') . " class='label label-$label $className' title='" . T("label.$label") . "'>
 		<i class='" . ETConversationModel::$labels[$label][1] . "'></i>
-	</" . ($url ? "a" : "span") . ">";
+	</" . ($url ? 'a' : 'span') . '>';
     }
 }

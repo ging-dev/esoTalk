@@ -2,7 +2,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -14,13 +14,13 @@ if (!defined("IN_ESOTALK")) {
  */
 
 // If there are no conversations, show a message.
-if (!$data["results"]): ?>
+if (!$data['results']): ?>
 <div class='area noResults help'>
-<h4><?php echo T("message.noSearchResults"); ?></h4>
+<h4><?php echo T('message.noSearchResults'); ?></h4>
 <ul>
-<li><?php echo T("message.reduceNumberOfGambits"); ?></li>
-<?php if (!ET::$session->user): ?><li><?php echo T("message.logInToSeeAllConversations"); ?></li><?php endif; ?>
-<li><?php echo T("message.fulltextKeywordWarning"); ?></li>
+<li><?php echo T('message.reduceNumberOfGambits'); ?></li>
+<?php if (!ET::$session->user): ?><li><?php echo T('message.logInToSeeAllConversations'); ?></li><?php endif; ?>
+<li><?php echo T('message.fulltextKeywordWarning'); ?></li>
 </ul>
 </div>
 
@@ -28,5 +28,5 @@ if (!$data["results"]): ?>
 // If there are conversations, however, show them!
 else:
 ?>
-<?php $this->renderView("conversations/list", $data); ?>
+<?php $this->renderView('conversations/list', $data); ?>
 <?php endif; ?>

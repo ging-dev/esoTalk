@@ -2,7 +2,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -12,25 +12,25 @@ if (!defined("IN_ESOTALK")) {
  * @package esoTalk
  */
 
-$member = $data["member"];
+$member = $data['member'];
 ?>
-<h4><?php printf(T("%s will be able to:"), $member["username"]); ?></h4>
+<h4><?php printf(T('%s will be able to:'), $member['username']); ?></h4>
 
 <ul>
-<?php foreach ($data["extraPermissions"] as $v): ?>
+<?php foreach ($data['extraPermissions'] as $v): ?>
 <li><?php echo $v; ?></li>
 <?php endforeach; ?>
 </ul>
 
 <table class='permissionsGrid'>
-<thead><tr><th>&nbsp;</th><?php foreach ($data["permissions"] as $k => $v): ?><th><?php echo T($v); ?></th><?php endforeach; ?></tr></thead>
+<thead><tr><th>&nbsp;</th><?php foreach ($data['permissions'] as $k => $v): ?><th><?php echo T($v); ?></th><?php endforeach; ?></tr></thead>
 <tbody>
-<?php foreach ($data["channels"] as $channel): ?>
+<?php foreach ($data['channels'] as $channel): ?>
 <tr>
-<th><span class='depth<?php echo $channel["depth"]; ?>'><?php echo $channel["title"]; ?></span></th>
-<?php foreach ($data["permissions"] as $k => $v):
-$allowed = ET::groupModel()->groupIdsAllowedInGroupIds($data["groupIds"], $channel["permissions"][$k], true);
-?><td class='<?php echo $allowed ? "yes" : "no"; ?>'><?php echo $allowed ? T("Yes") : T("No"); ?></td><?php endforeach; ?>
+<th><span class='depth<?php echo $channel['depth']; ?>'><?php echo $channel['title']; ?></span></th>
+<?php foreach ($data['permissions'] as $k => $v):
+$allowed = ET::groupModel()->groupIdsAllowedInGroupIds($data['groupIds'], $channel['permissions'][$k], true);
+?><td class='<?php echo $allowed ? 'yes' : 'no'; ?>'><?php echo $allowed ? T('Yes') : T('No'); ?></td><?php endforeach; ?>
 </tr>
 <?php endforeach; ?>
 </tbody>

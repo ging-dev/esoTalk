@@ -2,7 +2,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -13,29 +13,29 @@ if (!defined("IN_ESOTALK")) {
  * @package esoTalk
  */
 
-$form = $data["form"];
+$form = $data['form'];
 ?>
 <div class='sheet' id='forgotSheet'>
 <div class='sheetContent'>
 
-<h3><?php echo T("Set a New Password"); ?></h3>
+<h3><?php echo T('Set a New Password'); ?></h3>
 
 <?php echo $form->open(); ?>
 
 <div class='sheetBody'>
 
 <div class='section'>
-<p class='help'><?php echo T("message.setNewPassword"); ?></p>
+<p class='help'><?php echo T('message.setNewPassword'); ?></p>
 <ul class='form'>
-<li><label><?php echo T("New password"); ?></label> <?php echo $form->input("password", "password"); ?></li>
-<li><label><?php echo T("Confirm password"); ?></label> <?php echo $form->input("confirm", "password"); ?></li>
+<li><label><?php echo T('New password'); ?></label> <?php echo $form->input('password', 'password'); ?></li>
+<li><label><?php echo T('Confirm password'); ?></label> <?php echo $form->input('confirm', 'password'); ?></li>
 </ul>
 </div>
 
 </div>
 
 <div class='buttons'>
-<?php echo $form->button("submit", T("Change Password"), array("class" => "big")); ?>
+<?php echo $form->button('submit', T('Change Password'), array('class' => 'big')); ?>
 </div>
 
 <?php echo $form->close(); ?>

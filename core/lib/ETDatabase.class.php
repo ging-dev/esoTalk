@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -101,7 +101,7 @@ class ETDatabase extends ETPluggable
     public function structure()
     {
         if (!$this->structure) {
-            $this->structure = ETFactory::make("databaseStructure");
+            $this->structure = ETFactory::make('databaseStructure');
         }
         return $this->structure;
     }
@@ -114,7 +114,7 @@ class ETDatabase extends ETPluggable
      */
     public function SQL()
     {
-        return ETFactory::make("sqlQuery");
+        return ETFactory::make('sqlQuery');
     }
 
 
@@ -126,7 +126,7 @@ class ETDatabase extends ETPluggable
     public function connection()
     {
         if (!$this->pdoConnection) {
-            $dsn = "mysql:host=" . $this->host . ($this->port ? ";port=" . $this->port : "") . ";dbname=" . $this->dbName;
+            $dsn = 'mysql:host=' . $this->host . ($this->port ? ';port=' . $this->port : '') . ';dbname=' . $this->dbName;
             $this->pdoConnection = @new PDO($dsn, $this->user, $this->password, $this->connectionOptions);
         }
         return $this->pdoConnection;
@@ -140,7 +140,7 @@ class ETDatabase extends ETPluggable
      */
     public function getVersion()
     {
-        return $this->query("SELECT VERSION()")->result();
+        return $this->query('SELECT VERSION()')->result();
     }
 
 
@@ -156,7 +156,7 @@ class ETDatabase extends ETPluggable
      * @param array $connectionOptions An array of connection options to use when making the PDO connection.
      * @return void
      */
-    public function init($host, $user, $password, $dbName, $tablePrefix = "", $connectionOptions = array(), $port = null)
+    public function init($host, $user, $password, $dbName, $tablePrefix = '', $connectionOptions = array(), $port = null)
     {
         $this->pdoConnection = null;
 
@@ -235,7 +235,7 @@ class ETDatabase extends ETPluggable
      */
     public function lastInsertId()
     {
-        return $this->query("SELECT LAST_INSERT_ID()")->result();
+        return $this->query('SELECT LAST_INSERT_ID()')->result();
     }
 
 
@@ -259,7 +259,7 @@ class ETDatabase extends ETPluggable
             foreach ($value as &$v) {
                 $v = $this->escapeValue($v, $dataType);
             }
-            return implode(",", $value);
+            return implode(',', $value);
         }
 
         // If no data type was specified, work it out based on the variable content.
@@ -278,14 +278,14 @@ class ETDatabase extends ETPluggable
         // Now escape the value according to the data type.
         switch ($dataType) {
         case PDO::PARAM_BOOL:
-            return $value ? "1" : "0";
+            return $value ? '1' : '0';
 
         case PDO::PARAM_NULL:
-            return "NULL";
+            return 'NULL';
 
         case PDO::PARAM_INT:
             $value = (int)$value;
-            return $value ? (string)$value : "0";
+            return $value ? (string)$value : '0';
 
         default:
             $value = str_replace(array('\\', "\0", "\n", "\r", "'", '"', "\x1a"), array('\\\\', '\\0', '\\n', '\\r', "\\'", '\\"', '\\Z'), $value);
@@ -310,7 +310,7 @@ class ETDatabase extends ETPluggable
         // Get the database connection.
         $connection = $this->connection();
 
-        $this->trigger("beforeQuery", array(&$query));
+        $this->trigger('beforeQuery', array(&$query));
         $this->queries[] = $query;
 
         // Execute the query.
@@ -319,13 +319,13 @@ class ETDatabase extends ETPluggable
         // Was there an error?
         if (!$statement) {
             $error = $connection->errorInfo();
-            throw new Exception("SQL Error (" . $error[0] . ", " . $error[1] . "): " . $error[2] . "<br><br><pre>" . $this->highlightQueryErrors($query, $error[2]) . "</pre>");
+            throw new Exception('SQL Error (' . $error[0] . ', ' . $error[1] . '): ' . $error[2] . '<br><br><pre>' . $this->highlightQueryErrors($query, $error[2]) . '</pre>');
         }
 
         // Set up a new ETSQLResult object with the result statement.
-        $result = ETFactory::make("sqlResult", $statement);
+        $result = ETFactory::make('sqlResult', $statement);
 
-        $this->trigger("afterQuery", array($result));
+        $this->trigger('afterQuery', array($result));
 
         return $result;
     }

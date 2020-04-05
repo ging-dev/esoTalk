@@ -3,18 +3,18 @@
 // Copyright 2013 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
-ET::$pluginInfo["Debug"] = array(
-    "name" => "Debug",
-    "description" => "Shows useful debugging information, such as SQL queries, to administrators.",
-    "version" => ESOTALK_VERSION,
-    "author" => "esoTalk Team",
-    "authorEmail" => "support@esotalk.org",
-    "authorURL" => "http://esotalk.org",
-    "license" => "GPLv2"
+ET::$pluginInfo['Debug'] = array(
+    'name' => 'Debug',
+    'description' => 'Shows useful debugging information, such as SQL queries, to administrators.',
+    'version' => ESOTALK_VERSION,
+    'author' => 'esoTalk Team',
+    'authorEmail' => 'support@esotalk.org',
+    'authorURL' => 'http://esotalk.org',
+    'license' => 'GPLv2'
 );
 
 
@@ -62,7 +62,7 @@ class ETPlugin_Debug extends ETPlugin
         if (!ET::$session->isAdmin()) {
             return;
         }
-        ET::$config["esoTalk.debug"] = true;
+        ET::$config['esoTalk.debug'] = true;
     }
 
 
@@ -76,8 +76,8 @@ class ETPlugin_Debug extends ETPlugin
         if (!ET::$session->isAdmin()) {
             return;
         }
-        ET::$controller->addCSSFile($this->resource("debug.css"), true);
-        ET::$controller->addJSFile($this->resource("debug.js"), true);
+        ET::$controller->addCSSFile($this->resource('debug.css'), true);
+        ET::$controller->addJSFile($this->resource('debug.js'), true);
     }
 
 
@@ -110,8 +110,8 @@ class ETPlugin_Debug extends ETPlugin
 
         // The sixth item in the backtrace is typically the model. Screw being reliable.
         $item = $this->backtrace[6];
-        $method = isset($item["class"]) ? $item["class"] . "::" : "";
-        $method .= $item["function"] . "()";
+        $method = isset($item['class']) ? $item['class'] . '::' : '';
+        $method .= $item['function'] . '()';
 
         // Store the query in our queries array.
         $this->queries[] = array($result->queryString, round(microtime(true) - $this->queryStartTime, 4), $method);
@@ -136,23 +136,23 @@ class ETPlugin_Debug extends ETPlugin
 
         // Output the debug area.
         echo "<div id='debug'>
-	<div id='debugHdr'><h2>" . sprintf(T("Page loaded in %s seconds"), $time) . "</h2></div>";
+	<div id='debugHdr'><h2>" . sprintf(T('Page loaded in %s seconds'), $time) . '</h2></div>';
 
         // Include the geshi library so we can syntax-highlight MySQL queries.
-        include "geshi/geshi.php";
+        include 'geshi/geshi.php';
 
-        echo "<h3><a href='#' onclick='$(\"#debugQueries\").slideToggle(\"fast\");return false'>" . T("MySQL queries") . " (<span id='debugQueriesCount'>" . count($this->queries) . "</span>)</a></h3>
+        echo "<h3><a href='#' onclick='$(\"#debugQueries\").slideToggle(\"fast\");return false'>" . T('MySQL queries') . " (<span id='debugQueriesCount'>" . count($this->queries) . "</span>)</a></h3>
 		<div id='debugQueries' class='section'>";
         foreach ($this->queries as $query) {
-            $geshi = new GeSHi(trim($query[0]), "mysql");
+            $geshi = new GeSHi(trim($query[0]), 'mysql');
             $geshi->set_header_type(GESHI_HEADER_PRE);
-            echo "<div><strong>" . $query[2] . "</strong> <span class='queryTime subText" . ($query[1] > 0.5 ? " warning" : "") . "'>" . $query[1] . "s</span>" . $geshi->parse_code() . "</div>";
+            echo '<div><strong>' . $query[2] . "</strong> <span class='queryTime subText" . ($query[1] > 0.5 ? ' warning' : '') . "'>" . $query[1] . 's</span>' . $geshi->parse_code() . '</div>';
         }
         $this->queries = array();
 
         // Output POST + GET + FILES information.
         echo "</div>
-		<h3><a href='#' onclick='$(\"#debugPostGetFiles\").slideToggle(\"fast\");return false'>" . T("POST + GET + FILES information") . "</a></h3>
+		<h3><a href='#' onclick='$(\"#debugPostGetFiles\").slideToggle(\"fast\");return false'>" . T('POST + GET + FILES information') . "</a></h3>
 		<div id='debugPostGetFiles' class='section'>
 		<p style='white-space:pre' class='fixed' id='debugPost'>\$_POST = ";
         echo sanitizeHTML(print_r($_POST, true));
@@ -160,16 +160,16 @@ class ETPlugin_Debug extends ETPlugin
         echo sanitizeHTML(print_r($_GET, true));
         echo "</p><p style='white-space:pre' class='fixed' id='debugFiles'>\$_FILES = ";
         echo sanitizeHTML(print_r($_FILES, true));
-        echo "</p>
-		</div>";
+        echo '</p>
+		</div>';
 
         // Output SESSION + COOKIE information.
-        echo "<h3><a href='#' onclick='$(\"#debugSessionCookie\").slideToggle(\"fast\");return false'>" . T("SESSION + COOKIE information") . "</a></h3>
+        echo "<h3><a href='#' onclick='$(\"#debugSessionCookie\").slideToggle(\"fast\");return false'>" . T('SESSION + COOKIE information') . "</a></h3>
 		<div id='debugSessionCookie' class='section'><p style='white-space:pre' class='fixed' id='debugSession'>\$_SESSION = ";
         echo sanitizeHTML(print_r($_SESSION, true));
         echo "</p><p style='white-space:pre' class='fixed' id='debugCookie'>\$_COOKIE = ";
         echo sanitizeHTML(print_r($_COOKIE, true));
-        echo "</p></div>";
+        echo '</p></div>';
 
 
         // Hide all panels by default.
@@ -184,11 +184,11 @@ class ETPlugin_Debug extends ETPlugin
     public function settings($sender)
     {
         // Set up the settings form.
-        $form = ETFactory::make("form");
-        $form->action = URL("admin/plugins/settings/Debug");
+        $form = ETFactory::make('form');
+        $form->action = URL('admin/plugins/settings/Debug');
 
         // If the form was submitted...
-        if ($form->validPostBack("upgradeDB")) {
+        if ($form->validPostBack('upgradeDB')) {
 
             // Run the upgrade process.
             ET::upgradeModel()->upgrade();
@@ -198,11 +198,11 @@ class ETPlugin_Debug extends ETPlugin
                 $plugin->setup(C("$name.version"));
             }
 
-            $sender->message(T("message.upgradeSuccessful"), "success");
-            $sender->redirect(URL("admin/plugins"));
+            $sender->message(T('message.upgradeSuccessful'), 'success');
+            $sender->redirect(URL('admin/plugins'));
         }
 
-        $sender->data("debugSettingsForm", $form);
-        return $this->view("settings");
+        $sender->data('debugSettingsForm', $form);
+        return $this->view('settings');
     }
 }

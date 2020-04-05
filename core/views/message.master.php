@@ -2,7 +2,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -15,10 +15,10 @@ if (!defined("IN_ESOTALK")) {
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><?php echo sanitizeHTML($data["pageTitle"]); ?></title>
-		<meta charset='<?php echo T("charset", "utf-8"); ?>'>
-		<?php if (!empty($data["head"])) {
-    echo $data["head"];
+		<title><?php echo sanitizeHTML($data['pageTitle']); ?></title>
+		<meta charset='<?php echo T('charset', 'utf-8'); ?>'>
+		<?php if (!empty($data['head'])) {
+    echo $data['head'];
 } ?>
 		<link type="text/css" rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400,600">
 		<style>
@@ -221,7 +221,7 @@ if (!defined("IN_ESOTALK")) {
 		<div id='container'>
 			<img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEQAAAA8CAMAAADovOwsAAAASFBMVEUAAAA2QVk1QFk1QVk2QVk2QVg2QVk1RVU7QUk2QFg2QVk2QVk1QVk2QVk2QVk1QVk2QVk2QVk2QVk2QVk5RF42QVo2Qlo2QVnF7oIpAAAAE3RSTlMAai57xiCxAQQQPvLaWuhNipaiHZBk0wAAArNJREFUWMOllouyqyAMRfGB4AutCfn/T70GrDlXDocy3TOdtigrBDYElZexSrV772AZmlEpq+rFnaYBMMp1ozKmksA9xhchIZDz/D2vzK0dxjojILza0eq1RyIc9JlhBcIoPVz9olbHxCY8EhUmtCEEnLezkzXG2JAbAfbthznxmvQIRK+R48osLzyYzoTG8jA6QMBlikGl3T7ac5KIu5WIjxHKo4ck3A4ouadzxU8dz9Ufw9hcSDyzClbxqnnCI2c9cy+BzgYy7B9CiNYzWXuRmCEX6kDy0XoZex36HmghaR+iJVN22avsgsR6qb3KEuvxal9g85mN8tYzib0KSq3HkfearZXO46LPP4PYq6zUeoBuVB0m9qobDOCuHNFePwyx10rkFABN9QxJSQMAQ6D+DBbb9RggILuyvqg4hAgB2ZX1RQVuCEhBqCwqECEeWDUFgRV3PVwQ//5FNa41wa1vKSB4SwpCOZcJCQRCP/542cklyIrwgIiQ9nCmlGcE/B36CYGrIBQhdsEbQmomeFDK1uMoh0DgASlZTyDNT4hLIcF6SU7GnjLmnU8rb3vVYwpJrSdIE0in5e8UCNTrAUmsJ6Xv1W3aXkirBhTIhvCr7oIgxzIigRv2tQ2kTjoqISaK1uOLUiwQp4hOFMz93rTb/dqhlHZ5Cpcz1rSgl2bPJMl7NyocTj6P6Vq9DYSQiK4XtitfHmtGhOGTE/Y6zpsJs0aQ5eQRxPXq/2JWK5yns/PzelLHoIE3fHpkVjHAKvvrPQprIKMymXvUVxC5xn4DkXsUfQORu9c3ENmw9AUksV41pGg9RPIFSMl6hH1PQHiiIt8HSPne8Dx1x3ZrXr0Dj6dm+4CUVhtx0PJIT80+9FuJcVmvmRGJM1i2MFWG64a88eE9ZmyOmZbhREhNjCjzo+Efew16mea0NoYAAAAASUVORK5CYII=' id='logo'>
 
-			<?php echo $data["content"]; ?>
+			<?php echo $data['content']; ?>
 		</div>
 
 	</body>

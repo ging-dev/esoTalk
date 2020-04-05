@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -21,7 +21,7 @@ class ETMemberModel extends ETModel
  * Reserved user names which cannot be used.
  * @var array
  */
-    protected static $reservedNames = array("members", "moderators", "administrators");
+    protected static $reservedNames = array('members', 'moderators', 'administrators');
 
 
     /**
@@ -38,7 +38,7 @@ class ETMemberModel extends ETModel
      */
     public function __construct()
     {
-        parent::__construct("member");
+        parent::__construct('member');
     }
 
 
@@ -51,50 +51,50 @@ class ETMemberModel extends ETModel
     public function create(&$values)
     {
         // Trim the username.
-        $values["username"] = trim($values["username"]);
+        $values['username'] = trim($values['username']);
 
         // Validate the username, email, and password.
-        $this->validate("username", $values["username"], array($this, "validateUsername"));
-        $this->validate("email", $values["email"], array($this, "validateEmail"));
-        $this->validate("password", $values["password"], array($this, "validatePassword"));
+        $this->validate('username', $values['username'], array($this, 'validateUsername'));
+        $this->validate('email', $values['email'], array($this, 'validateEmail'));
+        $this->validate('password', $values['password'], array($this, 'validatePassword'));
 
         // Hash the password and set the join time.
-        $values["password"] = $this->hashPassword($values["password"]);
-        $values["joinTime"] = time();
+        $values['password'] = $this->hashPassword($values['password']);
+        $values['joinTime'] = time();
 
         // Set default preferences.
-        if (empty($values["preferences"])) {
-            $preferences = array("email.privateAdd", "email.post", "email.mention", "starOnReply", "starPrivate", "hideOnline");
+        if (empty($values['preferences'])) {
+            $preferences = array('email.privateAdd', 'email.post', 'email.mention', 'starOnReply', 'starPrivate', 'hideOnline');
             foreach ($preferences as $p) {
-                $values["preferences"][$p] = C("esoTalk.preferences." . $p);
+                $values['preferences'][$p] = C('esoTalk.preferences.' . $p);
             }
         }
-        $values["preferences"] = serialize($values["preferences"]);
+        $values['preferences'] = serialize($values['preferences']);
 
         if ($this->errorCount()) {
             return false;
         }
 
         $memberId = parent::create($values);
-        $values["memberId"] = $memberId;
+        $values['memberId'] = $memberId;
 
-        $this->trigger("createAfter", array($values));
+        $this->trigger('createAfter', array($values));
 
         // Create "join" activity for this member.
-        ET::activityModel()->create("join", $values);
+        ET::activityModel()->create('join', $values);
 
         // Go through the list of channels and unsubscribe from any ones that have that attribute set.
         $channels = ET::channelModel()->getAll();
         $inserts = array();
         foreach ($channels as $channel) {
-            if (!empty($channel["attributes"]["defaultUnsubscribed"])) {
-                $inserts[] = array($memberId, $channel["channelId"], 1);
+            if (!empty($channel['attributes']['defaultUnsubscribed'])) {
+                $inserts[] = array($memberId, $channel['channelId'], 1);
             }
         }
         if (count($inserts)) {
             ET::SQL()
-            ->insert("member_channel")
-            ->setMultiple(array("memberId", "channelId", "unsubscribed"), $inserts)
+            ->insert('member_channel')
+            ->setMultiple(array('memberId', 'channelId', 'unsubscribed'), $inserts)
             ->exec();
         }
 
@@ -111,23 +111,23 @@ class ETMemberModel extends ETModel
      */
     public function update($values, $wheres = array())
     {
-        if (isset($values["username"])) {
-            $values["username"] = trim($values["username"]);
-            $this->validate("username", $values["username"], array($this, "validateUsername"));
+        if (isset($values['username'])) {
+            $values['username'] = trim($values['username']);
+            $this->validate('username', $values['username'], array($this, 'validateUsername'));
         }
 
-        if (isset($values["email"])) {
-            $this->validate("email", $values["email"], array($this, "validateEmail"));
+        if (isset($values['email'])) {
+            $this->validate('email', $values['email'], array($this, 'validateEmail'));
         }
 
-        if (isset($values["password"])) {
-            $this->validate("password", $values["password"], array($this, "validatePassword"));
-            $values["password"] = $this->hashPassword($values["password"]);
+        if (isset($values['password'])) {
+            $this->validate('password', $values['password'], array($this, 'validatePassword'));
+            $values['password'] = $this->hashPassword($values['password']);
         }
 
         // Serialize preferences.
-        if (isset($values["preferences"])) {
-            $values["preferences"] = serialize($values["preferences"]);
+        if (isset($values['preferences'])) {
+            $values['preferences'] = serialize($values['preferences']);
         }
 
         if ($this->errorCount()) {
@@ -146,19 +146,19 @@ class ETMemberModel extends ETModel
      */
     public function getWithSQL($sql)
     {
-        $sql->select("m.*")
-        ->select("GROUP_CONCAT(g.groupId) AS groups")
-        ->select("GROUP_CONCAT(g.name) AS groupNames")
-        ->select("BIT_OR(g.canSuspend) AS canSuspend")
-        ->from("member m")
-        ->from("member_group mg", "mg.memberId=m.memberId", "left")
-        ->from("group g", "g.groupId=mg.groupId", "left")
-        ->groupBy("m.memberId");
+        $sql->select('m.*')
+        ->select('GROUP_CONCAT(g.groupId) AS groups')
+        ->select('GROUP_CONCAT(g.name) AS groupNames')
+        ->select('BIT_OR(g.canSuspend) AS canSuspend')
+        ->from('member m')
+        ->from('member_group mg', 'mg.memberId=m.memberId', 'left')
+        ->from('group g', 'g.groupId=mg.groupId', 'left')
+        ->groupBy('m.memberId');
 
         if (ET::$session and ET::$session->user) {
-            $sql->select("mm.*")
-            ->from("member_member mm", "mm.memberId2=m.memberId AND mm.memberId1=:userId", "left")
-            ->bind(":userId", ET::$session->userId);
+            $sql->select('mm.*')
+            ->from('member_member mm', 'mm.memberId2=m.memberId AND mm.memberId1=:userId', 'left')
+            ->bind(':userId', ET::$session->userId);
         }
 
         $members = $sql->exec()->allRows();
@@ -180,7 +180,7 @@ class ETMemberModel extends ETModel
      */
     public function getById($memberId)
     {
-        return reset($this->get(array("m.memberId" => $memberId)));
+        return reset($this->get(array('m.memberId' => $memberId)));
     }
 
 
@@ -193,10 +193,10 @@ class ETMemberModel extends ETModel
     public function getByIds($ids)
     {
         $sql = ET::SQL()
-        ->where("m.memberId IN (:memberIds)")
-        ->orderBy("FIELD(m.memberId,:memberIdsOrder)")
-        ->bind(":memberIds", $ids, PDO::PARAM_INT)
-        ->bind(":memberIdsOrder", $ids, PDO::PARAM_INT);
+        ->where('m.memberId IN (:memberIds)')
+        ->orderBy('FIELD(m.memberId,:memberIdsOrder)')
+        ->bind(':memberIds', $ids, PDO::PARAM_INT)
+        ->bind(':memberIdsOrder', $ids, PDO::PARAM_INT);
 
         return $this->getWithSQL($sql);
     }
@@ -212,13 +212,13 @@ class ETMemberModel extends ETModel
     {
         // Make the groups into an array of groupId => names. (Possibly consider using ETGroupModel::getAll()
         // instead of featching the groupNames in getWithSQL()?)
-        if (array_key_exists("groups", $member) and array_key_exists("groupNames", $member)) {
-            $member["groups"] = array_combine(explode(",", $member["groups"]), explode(",", $member["groupNames"]));
+        if (array_key_exists('groups', $member) and array_key_exists('groupNames', $member)) {
+            $member['groups'] = array_combine(explode(',', $member['groups']), explode(',', $member['groupNames']));
         }
 
         // Unserialize the member's preferences.
-        if (isset($member["preferences"])) {
-            $member["preferences"] = unserialize($member["preferences"]);
+        if (isset($member['preferences'])) {
+            $member['preferences'] = unserialize($member['preferences']);
         }
     }
 
@@ -231,7 +231,7 @@ class ETMemberModel extends ETModel
      */
     public function hashPassword($password)
     {
-        require_once PATH_LIBRARY . "/vendor/phpass/PasswordHash.php";
+        require_once PATH_LIBRARY . '/vendor/phpass/PasswordHash.php';
         $hasher = new PasswordHash(8, false);
         return $hasher->HashPassword($password);
     }
@@ -246,7 +246,7 @@ class ETMemberModel extends ETModel
      */
     public function checkPassword($password, $hash)
     {
-        require_once PATH_LIBRARY . "/vendor/phpass/PasswordHash.php";
+        require_once PATH_LIBRARY . '/vendor/phpass/PasswordHash.php';
         $hasher = new PasswordHash(8, false);
         return $hasher->CheckPassword($password, $hash);
     }
@@ -263,18 +263,18 @@ class ETMemberModel extends ETModel
     {
         // Make sure the name isn't a reserved word.
         if (in_array(strtolower($username), self::$reservedNames)) {
-            return "nameTaken";
+            return 'nameTaken';
         }
 
         // Make sure the username is not too small or large.
-        $length = mb_strlen($username, "UTF-8");
+        $length = mb_strlen($username, 'UTF-8');
         if ($length < 3 or $length > 20) {
-            return "invalidUsername";
+            return 'invalidUsername';
         }
 
         // Make sure there's no other member with the same username.
-        if ($checkForDuplicate and ET::SQL()->select("1")->from("member")->where("username=:username")->bind(":username", $username)->exec()->numRows()) {
-            return "nameTaken";
+        if ($checkForDuplicate and ET::SQL()->select('1')->from('member')->where('username=:username')->bind(':username', $username)->exec()->numRows()) {
+            return 'nameTaken';
         }
     }
 
@@ -290,12 +290,12 @@ class ETMemberModel extends ETModel
     {
         // Check it against a regular expression to make sure it's a valid email address.
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return "invalidEmail";
+            return 'invalidEmail';
         }
 
         // Make sure there's no other member with the same email.
-        if ($checkForDuplicate and ET::SQL()->select("1")->from("member")->where("email=:email")->bind(":email", $email)->exec()->numRows()) {
-            return "emailTaken";
+        if ($checkForDuplicate and ET::SQL()->select('1')->from('member')->where('email=:email')->bind(':email', $email)->exec()->numRows()) {
+            return 'emailTaken';
         }
     }
 
@@ -309,8 +309,8 @@ class ETMemberModel extends ETModel
     public function validatePassword($password)
     {
         // Make sure the password isn't too short.
-        if (strlen($password) < C("esoTalk.minPasswordLength")) {
-            return "passwordTooShort";
+        if (strlen($password) < C('esoTalk.minPasswordLength')) {
+            return 'passwordTooShort';
         }
     }
 
@@ -347,7 +347,7 @@ class ETMemberModel extends ETModel
     {
         // The user must be an administrator, and the root admin's permissions can't be changed. A user also
         // cannot change their own permissions.
-        return ET::$session->isAdmin() and $member["memberId"] != C("esoTalk.rootAdmin") and $member["memberId"] != ET::$session->userId;
+        return ET::$session->isAdmin() and $member['memberId'] != C('esoTalk.rootAdmin') and $member['memberId'] != ET::$session->userId;
     }
 
 
@@ -364,9 +364,9 @@ class ETMemberModel extends ETModel
         return
     (
         ET::$session->isAdmin()
-        or (ET::$session->user["canSuspend"] and ($member["account"] == ACCOUNT_MEMBER or $member["account"] == ACCOUNT_SUSPENDED))
+        or (ET::$session->user['canSuspend'] and ($member['account'] == ACCOUNT_MEMBER or $member['account'] == ACCOUNT_SUSPENDED))
     )
-    and $member["memberId"] != C("esoTalk.rootAdmin") and $member["memberId"] != ET::$session->userId;
+    and $member['memberId'] != C('esoTalk.rootAdmin') and $member['memberId'] != ET::$session->userId;
     }
 
 
@@ -382,7 +382,7 @@ class ETMemberModel extends ETModel
     {
         // Make sure the account is valid.
         if (!in_array($account, array(ACCOUNT_MEMBER, ACCOUNT_ADMINISTRATOR, ACCOUNT_SUSPENDED, ACCOUNT_PENDING))) {
-            $this->error("account", "invalidAccount");
+            $this->error('account', 'invalidAccount');
         }
 
         if ($this->errorCount()) {
@@ -390,24 +390,24 @@ class ETMemberModel extends ETModel
         }
 
         // Set the member's new account.
-        $this->updateById($member["memberId"], array("account" => $account));
+        $this->updateById($member['memberId'], array('account' => $account));
 
         // Delete all of the member's existing group associations.
         ET::SQL()
         ->delete()
-        ->from("member_group")
-        ->where("memberId", $member["memberId"])
+        ->from('member_group')
+        ->where('memberId', $member['memberId'])
         ->exec();
 
         // Insert new member-group associations.
         $inserts = array();
         foreach ($groups as $id) {
-            $inserts[] = array($member["memberId"], $id);
+            $inserts[] = array($member['memberId'], $id);
         }
         if (count($inserts)) {
             ET::SQL()
-            ->insert("member_group")
-            ->setMultiple(array("memberId", "groupId"), $inserts)
+            ->insert('member_group')
+            ->setMultiple(array('memberId', 'groupId'), $inserts)
             ->exec();
         }
 
@@ -415,10 +415,10 @@ class ETMemberModel extends ETModel
         $groupData = ET::groupModel()->getAll();
         $groupNames = array();
         foreach ($groups as $id) {
-            $groupNames[$id] = $groupData[$id]["name"];
+            $groupNames[$id] = $groupData[$id]['name'];
         }
 
-        ET::activityModel()->create("groupChange", $member, ET::$session->user, array("account" => $account, "groups" => $groupNames));
+        ET::activityModel()->create('groupChange', $member, ET::$session->user, array('account' => $account, 'groups' => $groupNames));
 
         return true;
     }
@@ -434,10 +434,10 @@ class ETMemberModel extends ETModel
     public function setPreferences($member, $preferences)
     {
         // Merge the member's old preferences with the new ones, giving preference to the new ones. Geddit?!
-        $preferences = array_merge((array)$member["preferences"], $preferences);
+        $preferences = array_merge((array)$member['preferences'], $preferences);
 
-        $this->updateById($member["memberId"], array(
-        "preferences" => $preferences
+        $this->updateById($member['memberId'], array(
+        'preferences' => $preferences
     ));
 
         return $preferences;
@@ -455,10 +455,10 @@ class ETMemberModel extends ETModel
     public function setStatus($memberId1, $memberId2, $data)
     {
         $keys = array(
-        "memberId1" => $memberId1,
-        "memberId2" => $memberId2
+        'memberId1' => $memberId1,
+        'memberId2' => $memberId2
     );
-        ET::SQL()->insert("member_member")->set($keys + $data)->setOnDuplicateKey($data)->exec();
+        ET::SQL()->insert('member_member')->set($keys + $data)->setOnDuplicateKey($data)->exec();
     }
 
 
@@ -474,37 +474,37 @@ class ETMemberModel extends ETModel
         // Delete the member's posts if necessary.
         if ($deletePosts) {
             ET::SQL()
-            ->update("post")
-            ->set("deleteMemberId", ET::$session->userId)
-            ->set("deleteTime", time())
-            ->where("memberId", $memberId)
+            ->update('post')
+            ->set('deleteMemberId', ET::$session->userId)
+            ->set('deleteTime', time())
+            ->where('memberId', $memberId)
             ->exec();
         }
 
         // Delete member and other records associated with the member.
         ET::SQL()
         ->delete()
-        ->from("member")
-        ->where("memberId", $memberId)
+        ->from('member')
+        ->where('memberId', $memberId)
         ->exec();
 
         ET::SQL()
         ->delete()
-        ->from("member_channel")
-        ->where("memberId", $memberId)
+        ->from('member_channel')
+        ->where('memberId', $memberId)
         ->exec();
 
         ET::SQL()
         ->delete()
-        ->from("member_conversation")
-        ->where("id", $memberId)
-        ->where("type", "member")
+        ->from('member_conversation')
+        ->where('id', $memberId)
+        ->where('type', 'member')
         ->exec();
 
         ET::SQL()
         ->delete()
-        ->from("member_group")
-        ->where("memberId", $memberId)
+        ->from('member_group')
+        ->where('memberId', $memberId)
         ->exec();
     }
 
@@ -523,13 +523,13 @@ class ETMemberModel extends ETModel
             return false;
         }
 
-        $data["type"] = $type;
-        ET::$session->updateUser("lastActionTime", time());
-        ET::$session->updateUser("lastActionDetail", $data);
+        $data['type'] = $type;
+        ET::$session->updateUser('lastActionTime', time());
+        ET::$session->updateUser('lastActionDetail', $data);
 
         return $this->updateById(ET::$session->userId, array(
-        "lastActionTime" => time(),
-        "lastActionDetail" => serialize($data)
+        'lastActionTime' => time(),
+        'lastActionDetail' => serialize($data)
     ));
     }
 
@@ -560,18 +560,18 @@ class ETMemberModel extends ETModel
     public static function getLastActionInfo($time, $action)
     {
         // If there is no action, or the time passed since the user was last seen is too great, then return no info.
-        if (!$action or $time < time() - C("esoTalk.userOnlineExpire")) {
+        if (!$action or $time < time() - C('esoTalk.userOnlineExpire')) {
             return false;
         }
 
         $data = unserialize($action);
-        if (!isset($data["type"])) {
+        if (!isset($data['type'])) {
             return false;
         }
 
         // If there's a callback for this last action type, return its output.
-        if (isset(self::$lastActionTypes[$data["type"]])) {
-            return call_user_func(self::$lastActionTypes[$data["type"]], $data) + array(null, null);
+        if (isset(self::$lastActionTypes[$data['type']])) {
+            return call_user_func(self::$lastActionTypes[$data['type']], $data) + array(null, null);
         }
 
         // Otherwise, return an empty array.
@@ -589,12 +589,12 @@ class ETMemberModel extends ETModel
      */
     public static function lastActionViewingConversation($data)
     {
-        if (empty($data["conversationId"])) {
-            return array(sprintf(T("Viewing %s"), T("a private conversation")));
+        if (empty($data['conversationId'])) {
+            return array(sprintf(T('Viewing %s'), T('a private conversation')));
         }
         return array(
-        sprintf(T("Viewing: %s"), sanitizeHTML($data["title"])),
-        URL(conversationURL($data["conversationId"], sanitizeHTML($data["title"])))
+        sprintf(T('Viewing: %s'), sanitizeHTML($data['title'])),
+        URL(conversationURL($data['conversationId'], sanitizeHTML($data['title'])))
     );
     }
 
@@ -607,10 +607,10 @@ class ETMemberModel extends ETModel
      */
     public static function lastActionStartingConversation($action)
     {
-        return array(T("Starting a conversation"));
+        return array(T('Starting a conversation'));
     }
 }
 
 // Add default last action types.
-ETMemberModel::addLastActionType("viewingConversation", array("ETMemberModel", "lastActionViewingConversation"));
-ETMemberModel::addLastActionType("startingConversation", array("ETMemberModel", "lastActionStartingConversation"));
+ETMemberModel::addLastActionType('viewingConversation', array('ETMemberModel', 'lastActionViewingConversation'));
+ETMemberModel::addLastActionType('startingConversation', array('ETMemberModel', 'lastActionStartingConversation'));

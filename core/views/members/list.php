@@ -2,7 +2,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -14,8 +14,8 @@ if (!defined("IN_ESOTALK")) {
 ?>
 <?php
 // Loop through the conversations and output a table row for each one.
-foreach ($data["members"] as $member):
-$this->renderView("members/member", $data + array("member" => $member));
+foreach ($data['members'] as $member):
+$this->renderView('members/member', $data + array('member' => $member));
 endforeach;
 
 ?>

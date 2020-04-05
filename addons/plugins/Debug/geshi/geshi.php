@@ -1836,7 +1836,7 @@ class geshi
                                         }
                                         $test_str .= GeSHi::hsc(substr($part, $i + $com_len, $close_pos - $i - $com_len));
                                         if ($this->lexic_permissions['COMMENTS'][$comment_key]) {
-                                            $test_str .= "</span>";
+                                            $test_str .= '</span>';
                                         }
                                         // Take into account that the comment might be the last in the source
                                         if (!$oops) {
@@ -2105,14 +2105,14 @@ class geshi
             if ($this->lexic_permissions['REGEXPS'][$key]) {
                 if (is_array($regexp)) {
                     $stuff_to_parse = preg_replace(
-                        "/" .
+                        '/' .
                         str_replace('/', '\/', $regexp[GESHI_SEARCH]) .
                         "/{$regexp[GESHI_MODIFIERS]}",
                         "{$regexp[GESHI_BEFORE]}<|!REG3XP$key!>{$regexp[GESHI_REPLACE]}|>{$regexp[GESHI_AFTER]}",
                         $stuff_to_parse
                     );
                 } else {
-                    $stuff_to_parse = preg_replace("/(" . str_replace('/', '\/', $regexp) . ")/", "<|!REG3XP$key!>\\1|>", $stuff_to_parse);
+                    $stuff_to_parse = preg_replace('/(' . str_replace('/', '\/', $regexp) . ')/', "<|!REG3XP$key!>\\1|>", $stuff_to_parse);
                 }
             }
         }
@@ -2207,7 +2207,7 @@ class geshi
                     } else {
                         $attributes = ' class="me' . $key . '"';
                     }
-                    $stuff_to_parse = preg_replace("/(" . preg_quote($this->language_data['OBJECT_SPLITTERS'][$key], 1) . "[\s]*)([a-zA-Z\*\(][a-zA-Z0-9_\*]*)/", "\\1<|$attributes>\\2|>", $stuff_to_parse);
+                    $stuff_to_parse = preg_replace('/(' . preg_quote($this->language_data['OBJECT_SPLITTERS'][$key], 1) . "[\s]*)([a-zA-Z\*\(][a-zA-Z0-9_\*]*)/", "\\1<|$attributes>\\2|>", $stuff_to_parse);
                 }
             }
         }
@@ -2471,7 +2471,7 @@ class geshi
                         $parsed_code .= "<div style=\"{$this->highlight_extra_lines_style}\">";
                     }
                     // Remove \n because it stuffs up <pre> header
-                    $parsed_code .= $line . "</div>";
+                    $parsed_code .= $line . '</div>';
                 } else {
                     $parsed_code .= $line . "\n";
                 }

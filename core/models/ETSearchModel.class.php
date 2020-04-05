@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -109,7 +109,7 @@ class ETSearchModel extends ETModel
      */
     public function __construct()
     {
-        parent::__construct("search");
+        parent::__construct('search');
     }
 
 
@@ -184,9 +184,9 @@ class ETSearchModel extends ETModel
      */
     public function orderBy($order)
     {
-        $direction = substr($order, strrpos($order, " ") + 1);
-        if ($direction != "ASC" and $direction != "DESC") {
-            $order .= " ASC";
+        $direction = substr($order, strrpos($order, ' ') + 1);
+        if ($direction != 'ASC' and $direction != 'DESC') {
+            $order .= ' ASC';
         }
         $this->orderBy[] = $order;
     }
@@ -232,14 +232,14 @@ class ETSearchModel extends ETModel
      */
     public function isFlooding()
     {
-        if (C("esoTalk.search.searchesPerMinute") <= 0) {
+        if (C('esoTalk.search.searchesPerMinute') <= 0) {
             return false;
         }
         $time = time();
         $period = 60;
 
         // If we have a record of their searches in the session, check how many searches they've performed in the last minute.
-        $searches = ET::$session->get("searches");
+        $searches = ET::$session->get('searches');
         if (!empty($searches)) {
 
         // Clean anything older than $period seconds out of the searches array.
@@ -250,7 +250,7 @@ class ETSearchModel extends ETModel
             }
 
             // Have they performed >= [searchesPerMinute] searches in the last minute? If so, they are flooding.
-            if (count($searches) >= C("esoTalk.search.searchesPerMinute")) {
+            if (count($searches) >= C('esoTalk.search.searchesPerMinute')) {
                 return $period - $time + min($searches);
             }
         }
@@ -263,26 +263,26 @@ class ETSearchModel extends ETModel
 
             // Have they performed >= $config["searchesPerMinute"] searches in the last minute?
             $sql = ET::SQL()
-            ->select("COUNT(ip)")
-            ->from("search")
+            ->select('COUNT(ip)')
+            ->from('search')
             ->where("type='conversations'")
-            ->where("ip=:ip")->bind(":ip", $ip)
-            ->where("time>:time")->bind(":time", $time - $period);
+            ->where('ip=:ip')->bind(':ip', $ip)
+            ->where('time>:time')->bind(':time', $time - $period);
 
-            if ($sql->exec()->result() >= C("esoTalk.search.searchesPerMinute")) {
+            if ($sql->exec()->result() >= C('esoTalk.search.searchesPerMinute')) {
                 return $period;
             }
 
             // Log this search in the searches table.
-            ET::SQL()->insert("search")->set("type", "conversations")->set("ip", $ip)->set("time", $time)->exec();
+            ET::SQL()->insert('search')->set('type', 'conversations')->set('ip', $ip)->set('time', $time)->exec();
 
             // Proactively clean the searches table of searches older than $period seconds.
-            ET::SQL()->delete()->from("search")->where("type", "conversations")->where("time<:time")->bind(":time", $time - $period)->exec();
+            ET::SQL()->delete()->from('search')->where('type', 'conversations')->where('time<:time')->bind(':time', $time - $period)->exec();
         }
 
         // Log this search in the session array.
         $searches[] = $time;
-        ET::$session->store("searches", $searches);
+        ET::$session->store('searches', $searches);
 
         return false;
     }
@@ -296,29 +296,29 @@ class ETSearchModel extends ETModel
      * @param bool $orderBySticky Whether or not to put stickied conversations at the top.
      * @return array|bool An array of matching conversation IDs, or false if there are none.
      */
-    public function getConversationIDs($channelIDs = array(), $searchString = "", $orderBySticky = false)
+    public function getConversationIDs($channelIDs = array(), $searchString = '', $orderBySticky = false)
     {
         $this->reset();
 
-        $this->trigger("getConversationIDsBefore", array(&$channelIDs, &$searchString, &$orderBySticky));
+        $this->trigger('getConversationIDsBefore', array(&$channelIDs, &$searchString, &$orderBySticky));
 
         if ($searchString and ($seconds = $this->isFlooding())) {
-            $this->error("search", sprintf(T("message.waitToSearch"), $seconds));
+            $this->error('search', sprintf(T('message.waitToSearch'), $seconds));
             return false;
         }
 
         // Initialize the SQL query that will return the resulting conversation IDs.
-        $this->sql = ET::SQL()->select("c.conversationId")->from("conversation c");
+        $this->sql = ET::SQL()->select('c.conversationId')->from('conversation c');
 
         // Only get conversations in the specified channels.
         if ($channelIDs) {
-            $this->sql->where("c.channelId IN (:channelIds)")->bind(":channelIds", $channelIDs);
+            $this->sql->where('c.channelId IN (:channelIds)')->bind(':channelIds', $channelIDs);
         }
 
         // Process the search string into individial terms. Replace all "-" signs with "+!", and then
         // split the string by "+". Negated terms will then be prefixed with "!". Only keep the first
         // 5 terms, just to keep the load on the database down!
-        $terms = !empty($searchString) ? explode("+", strtolower(str_replace("-", "+!", trim($searchString, " +-")))) : array();
+        $terms = !empty($searchString) ? explode('+', strtolower(str_replace('-', '+!', trim($searchString, ' +-')))) : array();
         $terms = array_slice(array_filter($terms), 0, 5);
 
         // Take each term, match it with a gambit, and execute the gambit's function.
@@ -326,12 +326,12 @@ class ETSearchModel extends ETModel
 
         // Are we dealing with a negated search term, ie. prefixed with a "!"?
             $term = trim($term);
-            if ($negate = ($term[0] == "!")) {
-                $term = trim($term, "! ");
+            if ($negate = ($term[0] == '!')) {
+                $term = trim($term, '! ');
             }
 
-            if ($term[0] == "#") {
-                $term = ltrim($term, "#");
+            if ($term[0] == '#') {
+                $term = ltrim($term, '#');
 
                 // If the term is an alias, translate it into the appropriate gambit.
                 if (array_key_exists($term, self::$aliases)) {
@@ -350,7 +350,7 @@ class ETSearchModel extends ETModel
 
             // If we didn't find a gambit, use this term as a fulltext term.
             if ($negate) {
-                $term = "-" . str_replace(" ", " -", $term);
+                $term = '-' . str_replace(' ', ' -', $term);
             }
             $this->fulltext($term);
         }
@@ -359,15 +359,15 @@ class ETSearchModel extends ETModel
         // Order by sticky and then last post time.
         if (!count($this->orderBy)) {
             if ($orderBySticky) {
-                $this->orderBy("c.sticky DESC");
+                $this->orderBy('c.sticky DESC');
             }
-            $this->orderBy("c.lastPostTime DESC");
+            $this->orderBy('c.lastPostTime DESC');
         }
 
         // If we're not including ignored conversations, add a where predicate to the query to exclude them.
         if (!$this->includeIgnored and ET::$session->user) {
-            $q = ET::SQL()->select("conversationId")->from("member_conversation")->where("type='member'")->where("id=:memberIdIgnored")->where("ignored=1")->get();
-            $this->sql->where("conversationId NOT IN ($q)")->bind(":memberIdIgnored", ET::$session->userId);
+            $q = ET::SQL()->select('conversationId')->from('member_conversation')->where("type='member'")->where('id=:memberIdIgnored')->where('ignored=1')->get();
+            $this->sql->where("conversationId NOT IN ($q)")->bind(':memberIdIgnored', ET::$session->userId);
         }
 
         // Now we need to loop through the ID filters and run them one-by-one. When a query returns a selection
@@ -375,7 +375,7 @@ class ETSearchModel extends ETModel
         // and so on, until we have a list of IDs to pass to the final query.
         $goodConversationIDs = array();
         $badConversationIDs = array();
-        $idCondition = "";
+        $idCondition = '';
         foreach ($this->idFilters as $v) {
             list($sql, $negate) = $v;
 
@@ -409,16 +409,16 @@ class ETSearchModel extends ETModel
 
             // This will be the condition for the next query that restricts or eliminates conversation IDs.
             if (count($goodConversationIDs)) {
-                $idCondition = "conversationId IN (" . implode(",", $goodConversationIDs) . ")";
+                $idCondition = 'conversationId IN (' . implode(',', $goodConversationIDs) . ')';
             } elseif (count($badConversationIDs)) {
-                $idCondition = "conversationId NOT IN (" . implode(",", $badConversationIDs) . ")";
+                $idCondition = 'conversationId NOT IN (' . implode(',', $badConversationIDs) . ')';
             }
         }
 
         // Reverse the order if necessary - swap DESC and ASC.
         if ($this->orderReverse) {
             foreach ($this->orderBy as $k => $v) {
-                $this->orderBy[$k] = strtr($this->orderBy[$k], array("DESC" => "ASC", "ASC" => "DESC"));
+                $this->orderBy[$k] = strtr($this->orderBy[$k], array('DESC' => 'ASC', 'ASC' => 'DESC'));
             }
         }
 
@@ -426,17 +426,17 @@ class ETSearchModel extends ETModel
         if (count($this->fulltext)) {
 
         // Run a query against the posts table to get matching conversation IDs.
-            $fulltextString = implode(" ", $this->fulltext);
+            $fulltextString = implode(' ', $this->fulltext);
             $fulltextQuery = ET::SQL()
-            ->select("DISTINCT conversationId")
-            ->from("post")
-            ->where("MATCH (title, content) AGAINST (:fulltext IN BOOLEAN MODE)")
+            ->select('DISTINCT conversationId')
+            ->from('post')
+            ->where('MATCH (title, content) AGAINST (:fulltext IN BOOLEAN MODE)')
             ->where($idCondition)
-            ->orderBy("MATCH (title, content) AGAINST (:fulltextOrder) DESC")
-            ->bind(":fulltext", $fulltextString)
-            ->bind(":fulltextOrder", $fulltextString);
+            ->orderBy('MATCH (title, content) AGAINST (:fulltextOrder) DESC')
+            ->bind(':fulltext', $fulltextString)
+            ->bind(':fulltextOrder', $fulltextString);
 
-            $this->trigger("fulltext", array($fulltextQuery, $this->fulltext));
+            $this->trigger('fulltext', array($fulltextQuery, $this->fulltext));
 
             $result = $fulltextQuery->exec();
             $ids = array();
@@ -446,16 +446,16 @@ class ETSearchModel extends ETModel
 
             // Change the ID condition to this list of matching IDs, and order by relevance.
             if (count($ids)) {
-                $idCondition = "conversationId IN (" . implode(",", $ids) . ")";
+                $idCondition = 'conversationId IN (' . implode(',', $ids) . ')';
             } else {
                 return false;
             }
-            $this->orderBy = array("FIELD(c.conversationId," . implode(",", $ids) . ")");
+            $this->orderBy = array('FIELD(c.conversationId,' . implode(',', $ids) . ')');
         }
 
         // Set a default limit if none has previously been set.
         if (!$this->limit) {
-            $this->limit = C("esoTalk.search.limit");
+            $this->limit = C('esoTalk.search.limit');
         }
 
         // Finish constructing the final query using the ID whitelist/blacklist we've come up with.
@@ -478,7 +478,7 @@ class ETSearchModel extends ETModel
         // If there's one more result than we actually need, indicate that there are "more results."
         if (count($conversationIDs) == $this->limit + 1) {
             array_pop($conversationIDs);
-            if ($this->limit < C("esoTalk.search.limitMax")) {
+            if ($this->limit < C('esoTalk.search.limitMax')) {
                 $this->areMoreResults = true;
             }
         }
@@ -498,25 +498,25 @@ class ETSearchModel extends ETModel
     {
         // Construct a query to get details for all of the specified conversations.
         $sql = ET::SQL()
-        ->select("s.*") // Select the status fields first so that the conversation fields take precedence.
-        ->select("c.*")
-        ->select("sm.memberId", "startMemberId")
-        ->select("sm.username", "startMember")
-        ->select("sm.avatarFormat", "startMemberAvatarFormat")
-        ->select("lpm.memberId", "lastPostMemberId")
-        ->select("lpm.username", "lastPostMember")
-        ->select("lpm.email", "lastPostMemberEmail")
-        ->select("lpm.avatarFormat", "lastPostMemberAvatarFormat")
-        ->select("IF((IF(c.lastPostTime IS NOT NULL,c.lastPostTime,c.startTime)>:markedAsRead AND (s.lastRead IS NULL OR s.lastRead<c.countPosts)),(c.countPosts - IF(s.lastRead IS NULL,0,s.lastRead)),0)", "unread")
-        ->select("p.content", "firstPost")
-        ->from("conversation c")
-        ->from("member_conversation s", "s.conversationId=c.conversationId AND s.type='member' AND s.id=:memberId", "left")
-        ->from("member sm", "c.startMemberId=sm.memberId", "left")
-        ->from("member lpm", "c.lastPostMemberId=lpm.memberId", "left")
-        ->from("channel ch", "c.channelId=ch.channelId", "left")
-        ->from("post p", "c.sticky AND c.conversationId=p.conversationId AND c.startTime=p.time", "left")
-        ->bind(":markedAsRead", ET::$session->preference("markedAllConversationsAsRead"))
-        ->bind(":memberId", ET::$session->userId);
+        ->select('s.*') // Select the status fields first so that the conversation fields take precedence.
+        ->select('c.*')
+        ->select('sm.memberId', 'startMemberId')
+        ->select('sm.username', 'startMember')
+        ->select('sm.avatarFormat', 'startMemberAvatarFormat')
+        ->select('lpm.memberId', 'lastPostMemberId')
+        ->select('lpm.username', 'lastPostMember')
+        ->select('lpm.email', 'lastPostMemberEmail')
+        ->select('lpm.avatarFormat', 'lastPostMemberAvatarFormat')
+        ->select('IF((IF(c.lastPostTime IS NOT NULL,c.lastPostTime,c.startTime)>:markedAsRead AND (s.lastRead IS NULL OR s.lastRead<c.countPosts)),(c.countPosts - IF(s.lastRead IS NULL,0,s.lastRead)),0)', 'unread')
+        ->select('p.content', 'firstPost')
+        ->from('conversation c')
+        ->from('member_conversation s', "s.conversationId=c.conversationId AND s.type='member' AND s.id=:memberId", 'left')
+        ->from('member sm', 'c.startMemberId=sm.memberId', 'left')
+        ->from('member lpm', 'c.lastPostMemberId=lpm.memberId', 'left')
+        ->from('channel ch', 'c.channelId=ch.channelId', 'left')
+        ->from('post p', 'c.sticky AND c.conversationId=p.conversationId AND c.startTime=p.time', 'left')
+        ->bind(':markedAsRead', ET::$session->preference('markedAllConversationsAsRead'))
+        ->bind(':memberId', ET::$session->userId);
 
         // If we need to, filter out all conversations that the user isn't allowed to see.
         if ($checkForPermission) {
@@ -527,11 +527,11 @@ class ETSearchModel extends ETModel
         ET::conversationModel()->addLabels($sql);
 
         // Limit the results to the specified conversation IDs
-        $sql->where("c.conversationId IN (:conversationIds)")->orderBy("FIELD(c.conversationId,:conversationIdsOrder)");
-        $sql->bind(":conversationIds", $conversationIDs, PDO::PARAM_INT);
-        $sql->bind(":conversationIdsOrder", $conversationIDs, PDO::PARAM_INT);
+        $sql->where('c.conversationId IN (:conversationIds)')->orderBy('FIELD(c.conversationId,:conversationIdsOrder)');
+        $sql->bind(':conversationIds', $conversationIDs, PDO::PARAM_INT);
+        $sql->bind(':conversationIdsOrder', $conversationIDs, PDO::PARAM_INT);
 
-        $this->trigger("beforeGetResults", array(&$sql));
+        $this->trigger('beforeGetResults', array(&$sql));
 
         // Execute the query and put the details of the conversations into an array.
         $result = $sql->exec();
@@ -541,13 +541,13 @@ class ETSearchModel extends ETModel
         while ($row = $result->nextRow()) {
 
         // Expand the comma-separated label flags into a workable array of active labels.
-            $row["labels"] = $model->expandLabels($row["labels"]);
+            $row['labels'] = $model->expandLabels($row['labels']);
 
-            $row["replies"] = max(0, $row["countPosts"] - 1);
+            $row['replies'] = max(0, $row['countPosts'] - 1);
             $results[] = $row;
         }
 
-        $this->trigger("afterGetResults", array(&$results));
+        $this->trigger('afterGetResults', array(&$results));
 
         return $results;
     }
@@ -579,14 +579,14 @@ class ETSearchModel extends ETModel
     {
         // Process the search string into individial terms. Replace all "-" signs with "+!", and then
         // split the string by "+". Negated terms will then be prefixed with "!".
-        $terms = !empty($searchString) ? explode("+", strtolower(str_replace("-", "+!", trim($searchString, " +-")))) : array();
+        $terms = !empty($searchString) ? explode('+', strtolower(str_replace('-', '+!', trim($searchString, ' +-')))) : array();
 
         // Take each term, match it with a gambit, and execute the gambit's function.
         foreach ($terms as $k => $term) {
             $term = $terms[$k] = trim($term);
 
-            if ($term[0] == "#") {
-                $term = ltrim($term, "#");
+            if ($term[0] == '#') {
+                $term = ltrim($term, '#');
 
                 // If the term is an alias, translate it into the appropriate gambit.
                 if (array_key_exists($term, self::$aliases)) {
@@ -601,7 +601,7 @@ class ETSearchModel extends ETModel
             }
         }
 
-        return implode(" + ", $terms);
+        return implode(' + ', $terms);
     }
 
 
@@ -625,17 +625,17 @@ class ETSearchModel extends ETModel
         }
 
         $q = ET::SQL()
-        ->select("c2.conversationId")
-        ->from("conversation c2")
-        ->from("member_conversation s2", "c2.conversationId=s2.conversationId AND s2.type='member' AND s2.id=:gambitUnread_memberId", "left")
-        ->where("s2.lastRead>=c2.countPosts")
+        ->select('c2.conversationId')
+        ->from('conversation c2')
+        ->from('member_conversation s2', "c2.conversationId=s2.conversationId AND s2.type='member' AND s2.id=:gambitUnread_memberId", 'left')
+        ->where('s2.lastRead>=c2.countPosts')
         ->get();
 
         $search->sql
         ->where("c.conversationId NOT IN ($q)")
-        ->where("c.lastPostTime>=:gambitUnread_markedAsRead")
-        ->bind(":gambitUnread_memberId", ET::$session->userId)
-        ->bind(":gambitUnread_markedAsRead", ET::$session->preference("markedAllConversationsAsRead"));
+        ->where('c.lastPostTime>=:gambitUnread_markedAsRead')
+        ->bind(':gambitUnread_memberId', ET::$session->userId)
+        ->bind(':gambitUnread_markedAsRead', ET::$session->preference('markedAllConversationsAsRead'));
     }
 
 
@@ -651,12 +651,12 @@ class ETSearchModel extends ETModel
         }
 
         $sql = ET::SQL()
-        ->select("DISTINCT conversationId")
-        ->from("member_conversation")
+        ->select('DISTINCT conversationId')
+        ->from('member_conversation')
         ->where("type='member'")
-        ->where("id=:memberId")
-        ->where("starred=1")
-        ->bind(":memberId", ET::$session->userId);
+        ->where('id=:memberId')
+        ->where('starred=1')
+        ->bind(':memberId', ET::$session->userId);
 
         $search->addIDFilter($sql, $negate);
     }
@@ -669,7 +669,7 @@ class ETSearchModel extends ETModel
      */
     public static function gambitPrivate(&$search, $term, $negate)
     {
-        $search->sql->where("c.private=" . ($negate ? "0" : "1"));
+        $search->sql->where('c.private=' . ($negate ? '0' : '1'));
     }
 
 
@@ -686,12 +686,12 @@ class ETSearchModel extends ETModel
         $search->includeIgnored = true;
 
         $sql = ET::SQL()
-        ->select("DISTINCT conversationId")
-        ->from("member_conversation")
+        ->select('DISTINCT conversationId')
+        ->from('member_conversation')
         ->where("type='member'")
-        ->where("id=:memberId")
-        ->where("ignored=1")
-        ->bind(":memberId", ET::$session->userId);
+        ->where('id=:memberId')
+        ->where('ignored=1')
+        ->bind(':memberId', ET::$session->userId);
 
         $search->addIDFilter($sql);
     }
@@ -709,12 +709,12 @@ class ETSearchModel extends ETModel
             return;
         }
         $sql = ET::SQL()
-        ->select("DISTINCT conversationId")
-        ->from("member_conversation")
+        ->select('DISTINCT conversationId')
+        ->from('member_conversation')
         ->where("type='member'")
-        ->where("id=:memberId")
-        ->where("draft IS NOT NULL")
-        ->bind(":memberId", ET::$session->userId);
+        ->where('id=:memberId')
+        ->where('draft IS NOT NULL')
+        ->bind(':memberId', ET::$session->userId);
 
         $search->addIDFilter($sql, $negate);
     }
@@ -729,32 +729,32 @@ class ETSearchModel extends ETModel
     public function gambitActive(&$search, $term, $negate)
     {
         // Multiply the "amount" part (b) of the regular expression matches by the value of the "unit" part (c).
-        $search->matches["b"] = (int)$search->matches["b"];
-        switch ($search->matches["c"]) {
-        case T("gambit.minute"): $search->matches["b"] *= 60; break;
-        case T("gambit.hour"): $search->matches["b"] *= 3600; break;
-        case T("gambit.day"): $search->matches["b"] *= 86400; break;
-        case T("gambit.week"): $search->matches["b"] *= 604800; break;
-        case T("gambit.month"): $search->matches["b"] *= 2626560; break;
-        case T("gambit.year"): $search->matches["b"] *= 31536000;
+        $search->matches['b'] = (int)$search->matches['b'];
+        switch ($search->matches['c']) {
+        case T('gambit.minute'): $search->matches['b'] *= 60; break;
+        case T('gambit.hour'): $search->matches['b'] *= 3600; break;
+        case T('gambit.day'): $search->matches['b'] *= 86400; break;
+        case T('gambit.week'): $search->matches['b'] *= 604800; break;
+        case T('gambit.month'): $search->matches['b'] *= 2626560; break;
+        case T('gambit.year'): $search->matches['b'] *= 31536000;
     }
 
         // Set the "quantifier" part (a); default to <= (i.e. "last").
-        $search->matches["a"] = (!$search->matches["a"] or $search->matches["a"] == T("gambit.last")) ? "<=" : $search->matches["a"];
+        $search->matches['a'] = (!$search->matches['a'] or $search->matches['a'] == T('gambit.last')) ? '<=' : $search->matches['a'];
 
         // If the gambit is negated, use the inverse of the selected quantifier.
         if ($negate) {
-            switch ($search->matches["a"]) {
-            case "<": $search->matches["a"] = ">="; break;
-            case "<=": $search->matches["a"] = ">"; break;
-            case ">": $search->matches["a"] = "<="; break;
-            case ">=": $search->matches["a"] = "<";
+            switch ($search->matches['a']) {
+            case '<': $search->matches['a'] = '>='; break;
+            case '<=': $search->matches['a'] = '>'; break;
+            case '>': $search->matches['a'] = '<='; break;
+            case '>=': $search->matches['a'] = '<';
         }
         }
 
         // Apply the condition and force use of an index.
-        $search->sql->where("UNIX_TIMESTAMP() - {$search->matches["b"]} {$search->matches["a"]} c.lastPostTime");
-        $search->sql->useIndex("conversation_lastPostTime");
+        $search->sql->where("UNIX_TIMESTAMP() - {$search->matches['b']} {$search->matches['a']} c.lastPostTime");
+        $search->sql->useIndex('conversation_lastPostTime');
     }
 
 
@@ -769,17 +769,17 @@ class ETSearchModel extends ETModel
     public static function gambitAuthor(&$search, $term, $negate)
     {
         // Get the ID of the member.
-        $term = trim(str_replace("\xc2\xa0", " ", substr($term, strlen(T("gambit.author:")))));
+        $term = trim(str_replace("\xc2\xa0", ' ', substr($term, strlen(T('gambit.author:')))));
 
         // Allow the user to refer to themselves using the "myself" keyword.
-        if ($term == T("gambit.myself")) {
+        if ($term == T('gambit.myself')) {
             $term = (int) ET::$session->userId;
         }
 
         // Apply the condition.
         $search->sql
-        ->where("c.startMemberId " . ($negate ? "!=" : "=") . " :authorId")
-        ->bind(":authorId", (int) $term);
+        ->where('c.startMemberId ' . ($negate ? '!=' : '=') . ' :authorId')
+        ->bind(':authorId', (int) $term);
     }
 
 
@@ -792,19 +792,19 @@ class ETSearchModel extends ETModel
     public static function gambitContributor(&$search, $term, $negate)
     {
         // Get the ID of the member.
-        $term = trim(str_replace("\xc2\xa0", " ", substr($term, strlen(T("gambit.contributor:")))));
+        $term = trim(str_replace("\xc2\xa0", ' ', substr($term, strlen(T('gambit.contributor:')))));
 
         // Allow the user to refer to themselves using the "myself" keyword.
-        if ($term == T("gambit.myself")) {
+        if ($term == T('gambit.myself')) {
             $term = (int) ET::$session->userId;
         }
 
         // Apply the condition.
         $sql = ET::SQL()
-        ->select("DISTINCT conversationId")
-        ->from("post")
-        ->where("memberId = :contributorId")
-        ->bind(":contributorId", (int) $term);
+        ->select('DISTINCT conversationId')
+        ->from('post')
+        ->where('memberId = :contributorId')
+        ->bind(':contributorId', (int) $term);
         $search->addIDFilter($sql, $negate);
     }
 
@@ -821,9 +821,9 @@ class ETSearchModel extends ETModel
         }
 
         // Get the number of results they want.
-        $limit = (int)trim(substr($term, strlen(T("gambit.limit:"))));
+        $limit = (int)trim(substr($term, strlen(T('gambit.limit:'))));
         $limit = max(1, $limit);
-        if (($max = C("esoTalk.search.limitMax")) > 0) {
+        if (($max = C('esoTalk.search.limitMax')) > 0) {
             $limit = min($max, $limit);
         }
 
@@ -840,25 +840,25 @@ class ETSearchModel extends ETModel
     public static function gambitHasNReplies(&$search, $term, $negate)
     {
         // Work out which quantifier to use; default to "=".
-        $search->matches["a"] = (!$search->matches["a"]) ? "=" : $search->matches["a"];
+        $search->matches['a'] = (!$search->matches['a']) ? '=' : $search->matches['a'];
 
         // If the gambit is negated, use the inverse of the quantifier.
         if ($negate) {
-            switch ($search->matches["a"]) {
-            case "<": $search->matches["a"] = ">="; break;
-            case "<=": $search->matches["a"] = ">"; break;
-            case ">": $search->matches["a"] = "<="; break;
-            case ">=": $search->matches["a"] = "<"; break;
-            case "=": $search->matches["a"] = "!=";
+            switch ($search->matches['a']) {
+            case '<': $search->matches['a'] = '>='; break;
+            case '<=': $search->matches['a'] = '>'; break;
+            case '>': $search->matches['a'] = '<='; break;
+            case '>=': $search->matches['a'] = '<'; break;
+            case '=': $search->matches['a'] = '!=';
         }
         }
 
         // Increase the amount by one as we are checking replies, but the column in the conversations
         // table is a post count (it includes the original post.)
-        $search->matches["b"]++;
+        $search->matches['b']++;
 
         // Apply the condition.
-        $search->sql->where("countPosts {$search->matches["a"]} {$search->matches["b"]}");
+        $search->sql->where("countPosts {$search->matches['a']} {$search->matches['b']}");
     }
 
 
@@ -869,8 +869,8 @@ class ETSearchModel extends ETModel
      */
     public static function gambitOrderByReplies(&$search, $term, $negate)
     {
-        $search->orderBy("c.countPosts " . ($negate ? "ASC" : "DESC"));
-        $search->sql->useIndex("conversation_countPosts");
+        $search->orderBy('c.countPosts ' . ($negate ? 'ASC' : 'DESC'));
+        $search->sql->useIndex('conversation_countPosts');
     }
 
 
@@ -883,8 +883,8 @@ class ETSearchModel extends ETModel
      */
     public static function gambitOrderByNewest(&$search, $term, $negate)
     {
-        $search->orderBy("c.startTime " . ($negate ? "ASC" : "DESC"));
-        $search->sql->useIndex("conversation_startTime");
+        $search->orderBy('c.startTime ' . ($negate ? 'ASC' : 'DESC'));
+        $search->sql->useIndex('conversation_startTime');
     }
 
 
@@ -895,7 +895,7 @@ class ETSearchModel extends ETModel
      */
     public static function gambitSticky(&$search, $term, $negate)
     {
-        $search->sql->where("sticky=" . ($negate ? "0" : "1"));
+        $search->sql->where('sticky=' . ($negate ? '0' : '1'));
     }
 
 
@@ -909,7 +909,7 @@ class ETSearchModel extends ETModel
     public static function gambitRandom(&$search, $term, $negate)
     {
         if (!$negate) {
-            $search->orderBy("RAND()");
+            $search->orderBy('RAND()');
         }
     }
 
@@ -934,7 +934,7 @@ class ETSearchModel extends ETModel
      */
     public static function gambitLocked(&$search, $term, $negate)
     {
-        $search->sql->where("locked=" . ($negate ? "0" : "1"));
+        $search->sql->where('locked=' . ($negate ? '0' : '1'));
     }
 
 
@@ -946,38 +946,38 @@ class ETSearchModel extends ETModel
      */
     public static function gambitTitle(&$search, $term, $negate)
     {
-        $term = trim(substr($term, strlen(T("gambit.title:"))));
+        $term = trim(substr($term, strlen(T('gambit.title:'))));
 
-        $search->sql->where("title " . ($negate ? "NOT" : "") . " LIKE :titleTerm")
-        ->bind(":titleTerm", "%" . $term . "%");
+        $search->sql->where('title ' . ($negate ? 'NOT' : '') . ' LIKE :titleTerm')
+        ->bind(':titleTerm', '%' . $term . '%');
     }
 }
 
 // Add default gambits.
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.starred"));', array("ETSearchModel", "gambitStarred"));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.ignored"));', array("ETSearchModel", "gambitIgnored"));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.draft"));', array("ETSearchModel", "gambitDraft"));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.private"));', array("ETSearchModel", "gambitPrivate"));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.sticky"));', array("ETSearchModel", "gambitSticky"));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.locked"));', array("ETSearchModel", "gambitLocked"));
-ETSearchModel::addGambit('return strpos($term, strtolower(T("gambit.author:"))) === 0;', array("ETSearchModel", "gambitAuthor"));
-ETSearchModel::addGambit('return strpos($term, strtolower(T("gambit.contributor:"))) === 0;', array("ETSearchModel", "gambitContributor"));
-ETSearchModel::addGambit('return preg_match(T("gambit.gambitActive"), $term, $this->matches);', array("ETSearchModel", "gambitActive"));
-ETSearchModel::addGambit('return preg_match(T("gambit.gambitHasNReplies"), $term, $this->matches);', array("ETSearchModel", "gambitHasNReplies"));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.order by replies"));', array("ETSearchModel", "gambitOrderByReplies"));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.order by newest"));', array("ETSearchModel", "gambitOrderByNewest"));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.unread"));', array("ETSearchModel", "gambitUnread"));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.reverse"));', array("ETSearchModel", "gambitReverse"));
-ETSearchModel::addGambit('return strpos($term, strtolower(T("gambit.limit:"))) === 0;', array("ETSearchModel", "gambitLimit"));
-ETSearchModel::addGambit('return strpos($term, strtolower(T("gambit.title:"))) === 0;', array("ETSearchModel", "gambitTitle"));
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.starred"));', array('ETSearchModel', 'gambitStarred'));
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.ignored"));', array('ETSearchModel', 'gambitIgnored'));
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.draft"));', array('ETSearchModel', 'gambitDraft'));
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.private"));', array('ETSearchModel', 'gambitPrivate'));
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.sticky"));', array('ETSearchModel', 'gambitSticky'));
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.locked"));', array('ETSearchModel', 'gambitLocked'));
+ETSearchModel::addGambit('return strpos($term, strtolower(T("gambit.author:"))) === 0;', array('ETSearchModel', 'gambitAuthor'));
+ETSearchModel::addGambit('return strpos($term, strtolower(T("gambit.contributor:"))) === 0;', array('ETSearchModel', 'gambitContributor'));
+ETSearchModel::addGambit('return preg_match(T("gambit.gambitActive"), $term, $this->matches);', array('ETSearchModel', 'gambitActive'));
+ETSearchModel::addGambit('return preg_match(T("gambit.gambitHasNReplies"), $term, $this->matches);', array('ETSearchModel', 'gambitHasNReplies'));
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.order by replies"));', array('ETSearchModel', 'gambitOrderByReplies'));
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.order by newest"));', array('ETSearchModel', 'gambitOrderByNewest'));
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.unread"));', array('ETSearchModel', 'gambitUnread'));
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.reverse"));', array('ETSearchModel', 'gambitReverse'));
+ETSearchModel::addGambit('return strpos($term, strtolower(T("gambit.limit:"))) === 0;', array('ETSearchModel', 'gambitLimit'));
+ETSearchModel::addGambit('return strpos($term, strtolower(T("gambit.title:"))) === 0;', array('ETSearchModel', 'gambitTitle'));
 
-if (!C("esoTalk.search.disableRandomGambit")) {
-    ETSearchModel::addGambit('return $term == strtolower(T("gambit.random"));', array("ETSearchModel", "gambitRandom"));
+if (!C('esoTalk.search.disableRandomGambit')) {
+    ETSearchModel::addGambit('return $term == strtolower(T("gambit.random"));', array('ETSearchModel', 'gambitRandom'));
 }
 
 
 // Add default aliases.
-ETSearchModel::addAlias(T("gambit.active today"), T("gambit.active 1 day"));
-ETSearchModel::addAlias(T("gambit.has replies"), T("gambit.has >0 replies"));
-ETSearchModel::addAlias(T("gambit.has no replies"), T("gambit.has 0 replies"));
-ETSearchModel::addAlias(T("gambit.dead"), T("gambit.active >30 day"));
+ETSearchModel::addAlias(T('gambit.active today'), T('gambit.active 1 day'));
+ETSearchModel::addAlias(T('gambit.has replies'), T('gambit.has >0 replies'));
+ETSearchModel::addAlias(T('gambit.has no replies'), T('gambit.has 0 replies'));
+ETSearchModel::addAlias(T('gambit.dead'), T('gambit.active >30 day'));

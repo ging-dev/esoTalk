@@ -2,7 +2,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -12,19 +12,19 @@ if (!defined("IN_ESOTALK")) {
 
 <ul id='adminMenu' class='tabs big'>
 
-<?php echo $data["defaultMenu"]->getContents(); ?>
+<?php echo $data['defaultMenu']->getContents(); ?>
 
-<?php if ($data["menu"]->count()): ?>
+<?php if ($data['menu']->count()): ?>
 <li class='separator'></li>
 
-<?php echo $data["menu"]->getContents(); ?>
+<?php echo $data['menu']->getContents(); ?>
 <?php endif; ?>
 
 </ul>
 
 <div id='adminContent'>
 
-<?php $this->renderView($data["view"], $data); ?>
+<?php $this->renderView($data['view'], $data); ?>
 
 </div>
 

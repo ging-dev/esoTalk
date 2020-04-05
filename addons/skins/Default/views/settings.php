@@ -2,7 +2,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -12,7 +12,7 @@ if (!defined("IN_ESOTALK")) {
  * @package esoTalk
  */
 
-$form = $data["skinSettingsForm"];
+$form = $data['skinSettingsForm'];
 ?>
 
 <?php echo $form->open(); ?>
@@ -22,8 +22,8 @@ $form = $data["skinSettingsForm"];
 <li class='sep'></li>
 
 <li id='primaryColor'>
-<label><?php echo T("Primary color"); ?></label>
-<?php echo $form->input("primaryColor", "text", array("class" => "color")); ?> <a href='#' class='reset'><?php echo T("Reset"); ?></a>
+<label><?php echo T('Primary color'); ?></label>
+<?php echo $form->input('primaryColor', 'text', array('class' => 'color')); ?> <a href='#' class='reset'><?php echo T('Reset'); ?></a>
 </li>
 
 <li class='sep'></li>

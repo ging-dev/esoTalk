@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -27,7 +27,7 @@ class ETSQLQuery
  * The type of query that is being constructed (select, update, insert, replace, delete, or union).
  * @var string
  */
-    protected $mode = "select";
+    protected $mode = 'select';
 
 
     /**
@@ -153,7 +153,7 @@ class ETSQLQuery
      */
     public function select($expression, $as = false)
     {
-        $this->mode = "select";
+        $this->mode = 'select';
 
         // If an AS name was specified, set a keyed value in the array.
         if ($as !== false) {
@@ -187,15 +187,15 @@ class ETSQLQuery
     {
         // If the first character is an opening bracket, then assume the table is a SELECT query. Otherwise,
         // add the table prefix.
-        if ($table[0] != "(") {
-            $parts = explode(" ", ET::$database->tablePrefix . $table);
-            $parts[0] = "`" . $parts[0] . "`";
-            $table = implode(" ", $parts);
+        if ($table[0] != '(') {
+            $parts = explode(' ', ET::$database->tablePrefix . $table);
+            $parts[0] = '`' . $parts[0] . '`';
+            $table = implode(' ', $parts);
         }
 
         // If a JOIN type or condition was specified, add the table with JOIN syntax.
         if (!empty($type) or !empty($on)) {
-            $this->tables[] = strtoupper($type ? $type : "inner") . " JOIN $table" . (!empty($on) ? " ON ($on)" : "");
+            $this->tables[] = strtoupper($type ? $type : 'inner') . " JOIN $table" . (!empty($on) ? " ON ($on)" : '');
         }
 
         // Otherwise, just add the table name normally.
@@ -352,7 +352,7 @@ class ETSQLQuery
      */
     public function update($table)
     {
-        $this->mode = "update";
+        $this->mode = 'update';
         $this->tables[] = ET::$database->tablePrefix . $table;
         return $this;
     }
@@ -375,7 +375,7 @@ class ETSQLQuery
             $value = $sanitize ? ET::$database->escapeValue($value) : $value;
 
             // For an UPDATE query, simply add the field and value to the SET array.
-            if ($this->mode == "update") {
+            if ($this->mode == 'update') {
                 $this->set[$field] = $value;
             }
 
@@ -398,7 +398,7 @@ class ETSQLQuery
      */
     public function insert($table)
     {
-        $this->mode = "insert";
+        $this->mode = 'insert';
         $this->tables[] = ET::$database->tablePrefix . $table;
         return $this;
     }
@@ -452,7 +452,7 @@ class ETSQLQuery
      */
     public function replace($table)
     {
-        $this->mode = "replace";
+        $this->mode = 'replace';
         $this->tables[] = ET::$database->tablePrefix . $table;
         return $this;
     }
@@ -466,7 +466,7 @@ class ETSQLQuery
      */
     public function delete($table = null)
     {
-        $this->mode = "delete";
+        $this->mode = 'delete';
         if ($table) {
             $this->select[] = $table;
         }
@@ -482,7 +482,7 @@ class ETSQLQuery
      */
     public function union($query)
     {
-        $this->mode = "union";
+        $this->mode = 'union';
         $this->union[] = $query;
         return $this;
     }
@@ -498,7 +498,7 @@ class ETSQLQuery
     protected function indent($value)
     {
         if (is_array($value)) {
-            return array_map(array($this, "indent"), $value);
+            return array_map(array($this, 'indent'), $value);
         } else {
             return str_replace("\n", "\n\t\t", $value);
         }
@@ -512,7 +512,7 @@ class ETSQLQuery
      */
     protected function getWhere()
     {
-        return count($this->where) ? "\nWHERE (" . implode(")\n\tAND (", $this->indent($this->where)) . ")" : "";
+        return count($this->where) ? "\nWHERE (" . implode(")\n\tAND (", $this->indent($this->where)) . ')' : '';
     }
 
 
@@ -523,7 +523,7 @@ class ETSQLQuery
      */
     protected function getOrderBy()
     {
-        return count($this->orderBy) ? "\nORDER BY " . implode(", ", $this->orderBy) : "";
+        return count($this->orderBy) ? "\nORDER BY " . implode(', ', $this->orderBy) : '';
     }
 
 
@@ -543,15 +543,15 @@ class ETSQLQuery
                 $select[] = $v;
             }
         }
-        $select = "SELECT " . implode(", \n\t", $this->indent($select));
+        $select = 'SELECT ' . implode(", \n\t", $this->indent($select));
 
         // Construct some other clauses.
-        $from = count($this->tables) ? "\nFROM " . implode("\n\t", $this->indent($this->tables)) : "";
-        $index = $this->index ? "\nUSE INDEX ($this->index)" : "";
-        $having = count($this->having) ? "\nHAVING (" . implode(") AND (", $this->indent($this->having)) . ")" : "";
-        $groupBy = count($this->groupBy) ? "\nGROUP BY " . implode(", ", $this->groupBy) : "";
-        $limit = $this->limit ? "\nLIMIT $this->limit" : "";
-        $offset = $this->offset ? "\nOFFSET $this->offset" : "";
+        $from = count($this->tables) ? "\nFROM " . implode("\n\t", $this->indent($this->tables)) : '';
+        $index = $this->index ? "\nUSE INDEX ($this->index)" : '';
+        $having = count($this->having) ? "\nHAVING (" . implode(') AND (', $this->indent($this->having)) . ')' : '';
+        $groupBy = count($this->groupBy) ? "\nGROUP BY " . implode(', ', $this->groupBy) : '';
+        $limit = $this->limit ? "\nLIMIT $this->limit" : '';
+        $offset = $this->offset ? "\nOFFSET $this->offset" : '';
 
         // Put the whole query together and return it.
         return $select . $from . $index . $this->getWhere() . $groupBy . $this->getOrderBy() . $limit . $offset;
@@ -566,14 +566,14 @@ class ETSQLQuery
     protected function getUpdate()
     {
         // Put together the tables to update.
-        $tables = implode(", ", $this->tables);
+        $tables = implode(', ', $this->tables);
 
         // Construct the SET clause.
         $set = array();
         foreach ($this->set as $k => $v) {
             $set[] = "$k=$v";
         }
-        $set = implode(", ", $set);
+        $set = implode(', ', $set);
 
         return "UPDATE $tables SET $set " . $this->getWhere();
     }
@@ -587,26 +587,26 @@ class ETSQLQuery
     protected function getInsert()
     {
         // Put together the tables to insert into.
-        $tables = implode(", ", $this->tables);
+        $tables = implode(', ', $this->tables);
 
         // Make a list of fields to insert data into.
-        $fields = implode(", ", $this->insertFields);
+        $fields = implode(', ', $this->insertFields);
 
         // Make a list of rows and their values to insert.
         $rows = array();
         foreach ($this->set as $row) {
-            $rows[] = "(" . implode(", ", $row) . ")";
+            $rows[] = '(' . implode(', ', $row) . ')';
         }
-        $values = implode(", ", $rows);
+        $values = implode(', ', $rows);
 
         // Construct the ON DUPLICATE KEY UPDATE clause.
         $onDuplicateKey = array();
         foreach ($this->setDuplicateKey as $k => $v) {
             $onDuplicateKey[] = "$k=$v";
         }
-        $onDuplicateKey = implode(", ", $onDuplicateKey);
+        $onDuplicateKey = implode(', ', $onDuplicateKey);
 
-        return "INSERT INTO $tables ($fields) VALUES $values" . ($onDuplicateKey ? " ON DUPLICATE KEY UPDATE $onDuplicateKey" : "");
+        return "INSERT INTO $tables ($fields) VALUES $values" . ($onDuplicateKey ? " ON DUPLICATE KEY UPDATE $onDuplicateKey" : '');
     }
 
 
@@ -619,7 +619,7 @@ class ETSQLQuery
     {
         // Simply construct an INSERT query, replacing the word INSERT with REPLACE.
         $query = $this->getInsert();
-        $query = "REPLACE" . substr($query, 6);
+        $query = 'REPLACE' . substr($query, 6);
         return $query;
     }
 
@@ -631,7 +631,7 @@ class ETSQLQuery
      */
     protected function getDelete()
     {
-        $tables = implode(", ", $this->select);
+        $tables = implode(', ', $this->select);
         $from = implode("\n\t", $this->indent($this->tables));
 
         return "DELETE $tables FROM $from " . $this->getWhere();
@@ -648,15 +648,15 @@ class ETSQLQuery
         // Convert the queries that we want to UNION to strings.
         $selects = $this->union;
         foreach ($selects as &$sql) {
-            $sql = "\t(" . $sql->get() . ")";
+            $sql = "\t(" . $sql->get() . ')';
         }
 
         // Implode them with the UNION keyword.
         $selects = implode("\nUNION\n", $this->indent($selects));
 
         // Add order by, limit, and offset clauses.
-        $limit = $this->limit ? "\nLIMIT $this->limit" : "";
-        $offset = $this->offset ? "\nOFFSET $this->offset" : "";
+        $limit = $this->limit ? "\nLIMIT $this->limit" : '';
+        $offset = $this->offset ? "\nOFFSET $this->offset" : '';
 
         // Put the query together.
         return $selects . $this->getOrderBy() . $limit . $offset;
@@ -674,32 +674,32 @@ class ETSQLQuery
         // Run the appropriate get function depending on this query's mode.
         switch ($this->mode) {
 
-        case "select":
+        case 'select':
             $query = $this->getSelect();
             break;
 
-        case "update":
+        case 'update':
             $query = $this->getUpdate();
             break;
 
-        case "insert":
+        case 'insert':
             $query = $this->getInsert();
             break;
 
-        case "replace":
+        case 'replace':
             $query = $this->getReplace();
             break;
 
-        case "delete":
+        case 'delete':
             $query = $this->getDelete();
             break;
 
-        case "union":
+        case 'union':
             $query = $this->getUnion();
             break;
 
         default:
-            $query = "";
+            $query = '';
     }
 
         // Substitute in bound parameter values.

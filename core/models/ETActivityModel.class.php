@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -25,9 +25,9 @@ if (!defined("IN_ESOTALK")) {
  */
 class ETActivityModel extends ETModel
 {
-    const PROJECTION_ACTIVITY = "activity";
-    const PROJECTION_NOTIFICATION = "notification";
-    const PROJECTION_EMAIL = "email";
+    const PROJECTION_ACTIVITY = 'activity';
+    const PROJECTION_NOTIFICATION = 'notification';
+    const PROJECTION_EMAIL = 'email';
 
 
     /**
@@ -52,7 +52,7 @@ class ETActivityModel extends ETModel
      */
     public function __construct()
     {
-        parent::__construct("activity");
+        parent::__construct('activity');
     }
 
 
@@ -114,49 +114,49 @@ class ETActivityModel extends ETModel
 
         // Construct an array of information about the new activity.
         $activity = array(
-        "type" => $type,
-        "memberId" => $member["memberId"],
-        "fromMemberId" => $fromMember ? $fromMember["memberId"] : null,
-        "conversationId" => isset($data["conversationId"]) ? $data["conversationId"] : null,
-        "postId" => isset($data["postId"]) ? $data["postId"] : null,
-        "time" => time()
+        'type' => $type,
+        'memberId' => $member['memberId'],
+        'fromMemberId' => $fromMember ? $fromMember['memberId'] : null,
+        'conversationId' => isset($data['conversationId']) ? $data['conversationId'] : null,
+        'postId' => isset($data['postId']) ? $data['postId'] : null,
+        'time' => time()
     );
         $activityId = null;
 
         // If this activity type has notification or activity projections, we'll need to insert the activity into the database.
         if (!empty($projections[self::PROJECTION_NOTIFICATION]) or !empty($projections[self::PROJECTION_ACTIVITY])) {
-            $activityId = parent::create($activity + array("data" => serialize($data)));
+            $activityId = parent::create($activity + array('data' => serialize($data)));
         }
 
         // Set some more information about the activity.
-        $activity["data"] = (array)$data + (array)$emailData;
-        $activity["fromMemberName"] = $fromMember ? $fromMember["username"] : null;
-        $activity["activityId"] = $activityId;
+        $activity['data'] = (array)$data + (array)$emailData;
+        $activity['fromMemberName'] = $fromMember ? $fromMember['username'] : null;
+        $activity['activityId'] = $activityId;
 
         // If this activity type has an email projection, the member wants to receive an email notification
         // for this type, and we haven't set sent them one in a previous call of this method, then let's send one!
-        if (!empty($projections[self::PROJECTION_EMAIL]) and !empty($member["preferences"]["email.$type"]) and !in_array($member["memberId"], $this->membersUsed)) {
+        if (!empty($projections[self::PROJECTION_EMAIL]) and !empty($member['preferences']["email.$type"]) and !in_array($member['memberId'], $this->membersUsed)) {
 
         // Log the member as "used", so we don't send them any more email notifications about the same subject.
-            $this->membersUsed[] = $member["memberId"];
+            $this->membersUsed[] = $member['memberId'];
 
             // Load the member's language into esoTalk's memory.
             ET::saveLanguageState();
-            ET::loadLanguage(@$member["preferences"]["language"]);
+            ET::loadLanguage(@$member['preferences']['language']);
 
             // Get the email content by calling the type's email projection function.
             list($subject, $body) = call_user_func($projections[self::PROJECTION_EMAIL], $activity, $member);
 
             // Send the email, prepending/appending a common email header/footer.
-            sendEmail($member["email"], $subject, sprintf(T("email.header"), $member["username"]) . $body . sprintf(T("email.footer"), URL("settings", true)));
+            sendEmail($member['email'], $subject, sprintf(T('email.header'), $member['username']) . $body . sprintf(T('email.footer'), URL('settings', true)));
 
             // Revert back to esoTalk's old language definitions.
             ET::revertLanguageState();
         }
 
-        $this->trigger("sendNotification", array($activity, $member));
+        $this->trigger('sendNotification', array($activity, $member));
 
-        return $activity["activityId"];
+        return $activity['activityId'];
     }
 
 
@@ -200,60 +200,60 @@ class ETActivityModel extends ETModel
     {
         // Construct a query that will get all the activity data from the activity table.
         $activity = ET::SQL()
-        ->select("activityId")
-        ->select("IF(fromMemberId IS NOT NULL,fromMemberId,a.memberId)", "fromMemberId")
-        ->select("m.username", "fromMemberName")
-        ->select("email")
-        ->select("avatarFormat")
-        ->select("type")
-        ->select("data")
-        ->select("NULL", "postId")
-        ->select("NULL", "title")
-        ->select("NULL", "content")
-        ->select("NULL", "start")
-        ->select("time")
-        ->from("activity a")
-        ->from("member m", "m.memberId=IF(fromMemberId IS NOT NULL,fromMemberId,a.memberId)", "left")
-        ->where("a.memberId=:memberId")
-        ->bind(":memberId", $member["memberId"])
-        ->where("a.type IN (:types)")
-        ->bind(":types", $this->getTypesWithProjection(self::PROJECTION_ACTIVITY))
-        ->orderBy("time DESC")
+        ->select('activityId')
+        ->select('IF(fromMemberId IS NOT NULL,fromMemberId,a.memberId)', 'fromMemberId')
+        ->select('m.username', 'fromMemberName')
+        ->select('email')
+        ->select('avatarFormat')
+        ->select('type')
+        ->select('data')
+        ->select('NULL', 'postId')
+        ->select('NULL', 'title')
+        ->select('NULL', 'content')
+        ->select('NULL', 'start')
+        ->select('time')
+        ->from('activity a')
+        ->from('member m', 'm.memberId=IF(fromMemberId IS NOT NULL,fromMemberId,a.memberId)', 'left')
+        ->where('a.memberId=:memberId')
+        ->bind(':memberId', $member['memberId'])
+        ->where('a.type IN (:types)')
+        ->bind(':types', $this->getTypesWithProjection(self::PROJECTION_ACTIVITY))
+        ->orderBy('time DESC')
         ->limit($offset + $limit);
 
         // Construct a query that will get all of the user's most recent posts.
         // All of the posts will be handled through the "post" activity type.
         $posts = ET::SQL()
-        ->select("NULL", "activityId")
-        ->select($member["memberId"], "fromMemberId")
-        ->select(ET::$database->escapeValue($member["username"]), "fromMemberName")
-        ->select(ET::$database->escapeValue($member["email"]), "email")
-        ->select(ET::$database->escapeValue($member["avatarFormat"]), "avatarFormat")
-        ->select("'postActivity'", "type")
-        ->select("NULL", "data")
-        ->select("postId")
-        ->select("c.title", "title")
-        ->select("content")
-        ->select("c.startMemberId=p.memberId AND c.startTime=p.time", "start")
-        ->select("time")
-        ->from("post p")
-        ->from("conversation c", "c.conversationId=p.conversationId", "left")
-        ->where("memberId=:memberId")
-        ->where("p.deleteTime IS NULL")
-        ->bind(":memberId", $member["memberId"])
-        ->where("c.countPosts>0")
-        ->where("c.private=0")
-        ->orderBy("time DESC")
+        ->select('NULL', 'activityId')
+        ->select($member['memberId'], 'fromMemberId')
+        ->select(ET::$database->escapeValue($member['username']), 'fromMemberName')
+        ->select(ET::$database->escapeValue($member['email']), 'email')
+        ->select(ET::$database->escapeValue($member['avatarFormat']), 'avatarFormat')
+        ->select("'postActivity'", 'type')
+        ->select('NULL', 'data')
+        ->select('postId')
+        ->select('c.title', 'title')
+        ->select('content')
+        ->select('c.startMemberId=p.memberId AND c.startTime=p.time', 'start')
+        ->select('time')
+        ->from('post p')
+        ->from('conversation c', 'c.conversationId=p.conversationId', 'left')
+        ->where('memberId=:memberId')
+        ->where('p.deleteTime IS NULL')
+        ->bind(':memberId', $member['memberId'])
+        ->where('c.countPosts>0')
+        ->where('c.private=0')
+        ->orderBy('time DESC')
         ->limit($offset + $limit);
         ET::channelModel()->addPermissionPredicate($posts);
 
-        $this->trigger("getActivityBefore", array($member, $activity, $posts));
+        $this->trigger('getActivityBefore', array($member, $activity, $posts));
 
         // Marry these two queries so we get their activity AND their posts in one resultset.
         $result = ET::SQL()
         ->union($activity)
         ->union($posts)
-        ->orderBy("time DESC")
+        ->orderBy('time DESC')
         ->limit($limit)
         ->offset($offset)
         ->exec();
@@ -264,15 +264,15 @@ class ETActivityModel extends ETModel
         while ($item = $result->nextRow()) {
 
         // If there's no activity type handler for this item and the "activity" projection, discard it.
-            if (empty(self::$types[$item["type"]][self::PROJECTION_ACTIVITY])) {
+            if (empty(self::$types[$item['type']][self::PROJECTION_ACTIVITY])) {
                 continue;
             }
 
             // Expand the activity data.
-            $item["data"] = unserialize($item["data"]);
+            $item['data'] = unserialize($item['data']);
 
             // Run the type/projection's callback function. The return value is the activity description and body.
-            list($item["description"], $item["body"]) = call_user_func_array(self::$types[$item["type"]][self::PROJECTION_ACTIVITY], array(&$item, $member)) + array(null, null);
+            list($item['description'], $item['body']) = call_user_func_array(self::$types[$item['type']][self::PROJECTION_ACTIVITY], array(&$item, $member)) + array(null, null);
 
             $activity[] = $item;
         }
@@ -296,30 +296,30 @@ class ETActivityModel extends ETModel
         }
 
         $result = ET::SQL()
-        ->select("a.fromMemberId")
-        ->select("m.username", "fromMemberName")
-        ->select("m.email")
-        ->select("m.avatarFormat")
-        ->select("a.time")
-        ->select("a.data")
-        ->select("a.type")
-        ->select("a.postId")
-        ->select("a.conversationId")
-        ->select("a.read")
-        ->from("activity a")
-        ->from("member m", "m.memberId=a.fromMemberId", "left")
-        ->from("activity prev", "prev.conversationId=a.conversationId AND prev.memberId=a.memberId AND prev.activityId>a.activityId", "left")
-        ->where("prev.activityId IS NULL")
-        ->where("a.memberId=:userId")
-        ->bind(":userId", ET::$session->userId)
-        ->where("a.type IN (:types)")
-        ->bind(":types", $this->getTypesWithProjection(self::PROJECTION_NOTIFICATION))
-        ->orderBy("a.time DESC")
+        ->select('a.fromMemberId')
+        ->select('m.username', 'fromMemberName')
+        ->select('m.email')
+        ->select('m.avatarFormat')
+        ->select('a.time')
+        ->select('a.data')
+        ->select('a.type')
+        ->select('a.postId')
+        ->select('a.conversationId')
+        ->select('a.read')
+        ->from('activity a')
+        ->from('member m', 'm.memberId=a.fromMemberId', 'left')
+        ->from('activity prev', 'prev.conversationId=a.conversationId AND prev.memberId=a.memberId AND prev.activityId>a.activityId', 'left')
+        ->where('prev.activityId IS NULL')
+        ->where('a.memberId=:userId')
+        ->bind(':userId', ET::$session->userId)
+        ->where('a.type IN (:types)')
+        ->bind(':types', $this->getTypesWithProjection(self::PROJECTION_NOTIFICATION))
+        ->orderBy('a.time DESC')
         ->limit($limit == -1 ? false : $limit);
 
         // If we're only getting unread notifications...
         if ($limit == -1) {
-            $result->where("a.read=0");
+            $result->where('a.read=0');
         }
 
         $result = $result->exec();
@@ -330,18 +330,18 @@ class ETActivityModel extends ETModel
         while ($item = $result->nextRow()) {
 
         // If there's no activity type handler for this item and the "notification" projection, discard it.
-            if (empty(self::$types[$item["type"]][self::PROJECTION_NOTIFICATION])) {
+            if (empty(self::$types[$item['type']][self::PROJECTION_NOTIFICATION])) {
                 continue;
             }
 
             // Expand the activity data.
-            $item["data"] = unserialize($item["data"]);
+            $item['data'] = unserialize($item['data']);
 
             // Work out if the notification is unread.
-            $item["unread"] = !$item["read"];
+            $item['unread'] = !$item['read'];
 
             // Run the type/projection's callback function. The return value is the notification body and link.
-            list($item["body"], $item["link"]) = call_user_func_array(self::$types[$item["type"]][self::PROJECTION_NOTIFICATION], array(&$item)) + array(null, null);
+            list($item['body'], $item['link']) = call_user_func_array(self::$types[$item['type']][self::PROJECTION_NOTIFICATION], array(&$item)) + array(null, null);
 
             $notifications[] = $item;
         }
@@ -353,20 +353,20 @@ class ETActivityModel extends ETModel
     public function markNotificationsAsRead($type = null, $conversationId = null)
     {
         $query = ET::SQL()
-        ->update("activity")
-        ->set("`read`", 1)
-        ->where("memberId=:memberId")
-        ->where("`read`=0")
-        ->bind(":memberId", ET::$session->userId);
+        ->update('activity')
+        ->set('`read`', 1)
+        ->where('memberId=:memberId')
+        ->where('`read`=0')
+        ->bind(':memberId', ET::$session->userId);
 
         if ($type) {
-            $query->where("type=:type")
-            ->bind(":type", $type);
+            $query->where('type=:type')
+            ->bind(':type', $type);
         }
 
         if ($conversationId) {
-            $query->where("conversationId=:conversationId")
-            ->bind(":conversationId", $conversationId);
+            $query->where('conversationId=:conversationId')
+            ->bind(':conversationId', $conversationId);
         }
 
         $query->exec();
@@ -383,8 +383,8 @@ class ETActivityModel extends ETModel
     public static function postActivity($item, $member)
     {
         return array(
-        sprintf(T($item["start"] ? "%s started the conversation %s." : "%s posted in %s."), name($member["username"]), "<a href='" . URL(postURL($item["postId"])) . "'>" . sanitizeHTML($item["title"]) . "</a>"),
-        ET::formatter()->init($item["content"])->format()->get()
+        sprintf(T($item['start'] ? '%s started the conversation %s.' : '%s posted in %s.'), name($member['username']), "<a href='" . URL(postURL($item['postId'])) . "'>" . sanitizeHTML($item['title']) . '</a>'),
+        ET::formatter()->init($item['content'])->format()->get()
     );
     }
 
@@ -399,8 +399,8 @@ class ETActivityModel extends ETModel
     public static function postNotification(&$item)
     {
         return array(
-        "<i class='star icon-star'></i> " . sprintf(T("%s posted in %s."), name($item["fromMemberName"]), "<strong>" . sanitizeHTML($item["data"]["title"]) . "</strong>"),
-        URL(postURL($item["postId"]))
+        "<i class='star icon-star'></i> " . sprintf(T('%s posted in %s.'), name($item['fromMemberName']), '<strong>' . sanitizeHTML($item['data']['title']) . '</strong>'),
+        URL(postURL($item['postId']))
     );
     }
 
@@ -413,7 +413,7 @@ class ETActivityModel extends ETModel
     public static function joinActivity($item, $member)
     {
         return array(
-        sprintf(T("%s joined the forum."), name($member["username"])),
+        sprintf(T('%s joined the forum.'), name($member['username'])),
         false
     );
     }
@@ -427,10 +427,10 @@ class ETActivityModel extends ETModel
      */
     public static function groupChangeNotification($item)
     {
-        $groups = memberGroup($item["data"]["account"], $item["data"]["groups"], true);
+        $groups = memberGroup($item['data']['account'], $item['data']['groups'], true);
         return array(
-        "<i class='icon-user'></i> " . sprintf(T("%s changed your group to %s."), name($item["fromMemberName"]), "<strong>" . $groups . "</strong>"),
-        URL(memberURL("me"))
+        "<i class='icon-user'></i> " . sprintf(T('%s changed your group to %s.'), name($item['fromMemberName']), '<strong>' . $groups . '</strong>'),
+        URL(memberURL('me'))
     );
     }
 
@@ -443,9 +443,9 @@ class ETActivityModel extends ETModel
      */
     public static function groupChangeActivity($item, $member)
     {
-        $groups = memberGroup($item["data"]["account"], $item["data"]["groups"], true);
+        $groups = memberGroup($item['data']['account'], $item['data']['groups'], true);
         return array(
-        sprintf(T("%s changed %s's group to %s."), name($item["fromMemberName"]), name($member["username"]), "<strong>" . $groups . "</strong>"),
+        sprintf(T("%s changed %s's group to %s."), name($item['fromMemberName']), name($member['username']), '<strong>' . $groups . '</strong>'),
         false
     );
     }
@@ -460,8 +460,8 @@ class ETActivityModel extends ETModel
     public static function mentionNotification($item)
     {
         return array(
-        sprintf("@ " . T("%s mentioned you in %s."), name($item["fromMemberName"]), "<strong>" . sanitizeHTML($item["data"]["title"]) . "</strong>"),
-        URL(postURL($item["data"]["postId"]))
+        sprintf('@ ' . T('%s mentioned you in %s.'), name($item['fromMemberName']), '<strong>' . sanitizeHTML($item['data']['title']) . '</strong>'),
+        URL(postURL($item['data']['postId']))
     );
     }
 
@@ -475,11 +475,11 @@ class ETActivityModel extends ETModel
      */
     public static function mentionEmail($item, $member)
     {
-        $content = ET::formatter()->init($item["data"]["content"])->format()->get();
-        $url = URL(postURL($item["data"]["postId"]), true);
+        $content = ET::formatter()->init($item['data']['content'])->format()->get();
+        $url = URL(postURL($item['data']['postId']), true);
         return array(
-        sprintf(T("email.mention.subject"), name($item["fromMemberName"], false), $item["data"]["title"]),
-        sprintf(T("email.mention.body"), name($item["fromMemberName"]), sanitizeHTML($item["data"]["title"]), $content, "<a href='$url'>$url</a>")
+        sprintf(T('email.mention.subject'), name($item['fromMemberName'], false), $item['data']['title']),
+        sprintf(T('email.mention.body'), name($item['fromMemberName']), sanitizeHTML($item['data']['title']), $content, "<a href='$url'>$url</a>")
     );
     }
 
@@ -494,8 +494,8 @@ class ETActivityModel extends ETModel
     public static function privateAddNotification(&$item)
     {
         return array(
-        label("private") . " " . sprintf(T("%s invited you to %s."), name($item["fromMemberName"]), "<strong>" . sanitizeHTML($item["data"]["title"]) . "</strong>"),
-        URL(conversationURL($item["conversationId"]))
+        label('private') . ' ' . sprintf(T('%s invited you to %s.'), name($item['fromMemberName']), '<strong>' . sanitizeHTML($item['data']['title']) . '</strong>'),
+        URL(conversationURL($item['conversationId']))
     );
     }
 
@@ -507,11 +507,11 @@ class ETActivityModel extends ETModel
      */
     public static function privateAddEmail($item, $member)
     {
-        $content = ET::formatter()->init($item["data"]["content"])->format()->get();
-        $url = URL(conversationURL($item["data"]["conversationId"], $item["data"]["title"]), true);
+        $content = ET::formatter()->init($item['data']['content'])->format()->get();
+        $url = URL(conversationURL($item['data']['conversationId'], $item['data']['title']), true);
         return array(
-        sprintf(T("email.privateAdd.subject"), $item["data"]["title"]),
-        sprintf(T("email.privateAdd.body"), sanitizeHTML($item["data"]["title"]), $content, "<a href='$url'>$url</a>")
+        sprintf(T('email.privateAdd.subject'), $item['data']['title']),
+        sprintf(T('email.privateAdd.body'), sanitizeHTML($item['data']['title']), $content, "<a href='$url'>$url</a>")
     );
     }
 
@@ -523,11 +523,11 @@ class ETActivityModel extends ETModel
      */
     public static function postEmail($item, $member)
     {
-        $content = ET::formatter()->init($item["data"]["content"])->format()->get();
-        $url = URL(conversationURL($item["data"]["conversationId"], $item["data"]["title"]) . "/unread", true);
+        $content = ET::formatter()->init($item['data']['content'])->format()->get();
+        $url = URL(conversationURL($item['data']['conversationId'], $item['data']['title']) . '/unread', true);
         return array(
-        sprintf(T("email.post.subject"), $item["data"]["title"]),
-        sprintf(T("email.post.body"), name($item["fromMemberName"]), sanitizeHTML($item["data"]["title"]), $content, "<a href='$url'>$url</a>")
+        sprintf(T('email.post.subject'), $item['data']['title']),
+        sprintf(T('email.post.body'), name($item['fromMemberName']), sanitizeHTML($item['data']['title']), $content, "<a href='$url'>$url</a>")
     );
     }
 
@@ -540,8 +540,8 @@ class ETActivityModel extends ETModel
     public static function updateAvailableNotification($item)
     {
         return array(
-        "<i class='icon-wrench'></i> " . sprintf(T("A new version of esoTalk (%s) is available."), "<strong>" . $item["data"]["version"] . "</strong>"),
-        !empty($item["data"]["releaseNotes"]) ? $item["data"]["releaseNotes"] : "http://esotalk.org/"
+        "<i class='icon-wrench'></i> " . sprintf(T('A new version of esoTalk (%s) is available.'), '<strong>' . $item['data']['version'] . '</strong>'),
+        !empty($item['data']['releaseNotes']) ? $item['data']['releaseNotes'] : 'http://esotalk.org/'
     );
     }
 
@@ -554,49 +554,49 @@ class ETActivityModel extends ETModel
     public static function unapprovedNotification($item)
     {
         return array(
-        "<i class='icon-user'></i> " . sprintf(T("%s has registered and is awaiting approval."), "<strong>" . name($item["data"]["username"]) . "</strong>"),
-        URL("admin/unapproved")
+        "<i class='icon-user'></i> " . sprintf(T('%s has registered and is awaiting approval.'), '<strong>' . name($item['data']['username']) . '</strong>'),
+        URL('admin/unapproved')
     );
     }
 }
 
 
 // Add default activity types.
-ETActivityModel::addType("post", array(
-    "notification" => array("ETActivityModel", "postNotification"),
-    "email" => array("ETActivityModel", "postEmail")
+ETActivityModel::addType('post', array(
+    'notification' => array('ETActivityModel', 'postNotification'),
+    'email' => array('ETActivityModel', 'postEmail')
 ));
 
-ETActivityModel::addType("postActivity", array(
-    "activity" => array("ETActivityModel", "postActivity"),
+ETActivityModel::addType('postActivity', array(
+    'activity' => array('ETActivityModel', 'postActivity'),
 ));
 
-ETActivityModel::addType("groupChange", array(
-    "activity" => array("ETActivityModel", "groupChangeActivity"),
-    "notification" => array("ETActivityModel", "groupChangeNotification")
+ETActivityModel::addType('groupChange', array(
+    'activity' => array('ETActivityModel', 'groupChangeActivity'),
+    'notification' => array('ETActivityModel', 'groupChangeNotification')
 ));
 
-ETActivityModel::addType("mention", array(
-    "notification" => array("ETActivityModel", "mentionNotification"),
-    "email" => array("ETActivityModel", "mentionEmail")
+ETActivityModel::addType('mention', array(
+    'notification' => array('ETActivityModel', 'mentionNotification'),
+    'email' => array('ETActivityModel', 'mentionEmail')
 ));
 
-ETActivityModel::addType("join", array(
-    "activity" => array("ETActivityModel", "joinActivity")
+ETActivityModel::addType('join', array(
+    'activity' => array('ETActivityModel', 'joinActivity')
 ));
 
 // Define an email to send out when a member is added to a private conversation.
-ETActivityModel::addType("privateAdd", array(
-    "notification" => array("ETActivityModel", "privateAddNotification"),
-    "email" => array("ETActivityModel", "privateAddEmail")
+ETActivityModel::addType('privateAdd', array(
+    'notification' => array('ETActivityModel', 'privateAddNotification'),
+    'email' => array('ETActivityModel', 'privateAddEmail')
 ));
 
 // Notification for when an update to the esoTalk software is available.
-ETActivityModel::addType("updateAvailable", array(
-    "notification" => array("ETActivityModel", "updateAvailableNotification")
+ETActivityModel::addType('updateAvailable', array(
+    'notification' => array('ETActivityModel', 'updateAvailableNotification')
 ));
 
 // Notification for when a new user signs up and needs approval.
-ETActivityModel::addType("unapproved", array(
-    "notification" => array("ETActivityModel", "unapprovedNotification")
+ETActivityModel::addType('unapproved', array(
+    'notification' => array('ETActivityModel', 'unapprovedNotification')
 ));
