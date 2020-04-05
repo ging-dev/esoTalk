@@ -2,7 +2,9 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) exit;
+if (!defined("IN_ESOTALK")) {
+    exit;
+}
 
 /**
  * Displays the member list page, including the filter bar, the letter scrubber, and the list.
@@ -16,13 +18,17 @@ $orderBy = $data["orderBy"];
 // Shortcut function to construct a URL to a member list page, while retaining the same orderBy.
 function makeURL($startFrom = 0, $searchString = "")
 {
-	global $orderBy;
-	$urlParts = array("members", $orderBy);
+    global $orderBy;
+    $urlParts = array("members", $orderBy);
 
-	if ($startFrom > 0 or $startFrom[0] == "p" or $searchString) $urlParts[] = $startFrom;
-	if ($searchString) $urlParts[] = "?search=$searchString";
+    if ($startFrom > 0 or $startFrom[0] == "p" or $searchString) {
+        $urlParts[] = $startFrom;
+    }
+    if ($searchString) {
+        $urlParts[] = "?search=$searchString";
+    }
 
-	return implode("/", $urlParts);
+    return implode("/", $urlParts);
 }
 
 ?>
@@ -47,13 +53,15 @@ array_unshift($letters, "#");
 
 // Work out what letter we are currently viewing by looking at the name of the first member in the results.
 $currentLetter = strtolower($data["members"][0]["username"][0]);
-if (!in_array($currentLetter, $letters)) $currentLetter = "#";
+if (!in_array($currentLetter, $letters)) {
+    $currentLetter = "#";
+}
 
 // Output the letter scrubber items.
 foreach ($letters as $letter) {
-	$selected = ($currentLetter == $letter) ? " selected" : "";
-	$id = $letter == "#" ? 0 : $letter;
-	echo "<li class='scrubber-$id$selected' data-index='$id'><a href='".URL("members/name/$id")."'>".strtoupper($letter)."</a></li>";
+    $selected = ($currentLetter == $letter) ? " selected" : "";
+    $id = $letter == "#" ? 0 : $letter;
+    echo "<li class='scrubber-$id$selected' data-index='$id'><a href='".URL("members/name/$id")."'>".strtoupper($letter)."</a></li>";
 }
 
 ?>

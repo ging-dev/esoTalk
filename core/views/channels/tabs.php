@@ -2,7 +2,9 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) exit;
+if (!defined("IN_ESOTALK")) {
+    exit;
+}
 
 /**
  * Displays the channel breadcrumb tabs in the channel list and the conversations list.
@@ -15,7 +17,7 @@ if (!defined("IN_ESOTALK")) exit;
  * @package esoTalk
  */
 
-// Show the path leading up to the current channel depth. ?>
+// Show the path leading up to the current channel depth.?>
 <li class='pathItem<?php if (isset($data["currentChannels"])): ?> selected<?php endif; ?>'>
 <a href='<?php echo URL("conversations/all"); ?>' data-channel='all' class='channel-all'><?php echo T("All Channels"); ?></a>
 

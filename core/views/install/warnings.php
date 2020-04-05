@@ -2,7 +2,9 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) exit;
+if (!defined("IN_ESOTALK")) {
+    exit;
+}
 
 /**
  * Displays a list of warnings that have occurred within the esoTalk installer.
@@ -21,7 +23,9 @@ if (!defined("IN_ESOTALK")) exit;
 
 <div class='details'>
 
-	<?php foreach ($data["errors"] as $error) echo "<p class='warning'>$error</p><hr>"; ?>
+	<?php foreach ($data["errors"] as $error) {
+    echo "<p class='warning'>$error</p><hr>";
+} ?>
 
 </div>
 
