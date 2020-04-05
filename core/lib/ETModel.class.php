@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -50,7 +51,7 @@ class ETModel extends ETPluggable
     public function __construct($table = "", $primaryKey = "")
     {
         $this->table = $table;
-        $this->primaryKey = $primaryKey ? $primaryKey : $table."Id";
+        $this->primaryKey = $primaryKey ? $primaryKey : $table . "Id";
     }
 
 

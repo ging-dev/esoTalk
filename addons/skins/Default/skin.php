@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -34,7 +35,7 @@ class ETSkin_Default extends ETSkin
  */
     public function handler_init($sender)
     {
-        $sender->addCSSFile((C("esoTalk.https") ? "https" : "http")."://fonts.googleapis.com/css?family=Open+Sans:400,600");
+        $sender->addCSSFile((C("esoTalk.https") ? "https" : "http") . "://fonts.googleapis.com/css?family=Open+Sans:400,600");
         $sender->addCSSFile("core/skin/base.css", true);
         $sender->addCSSFile("core/skin/font-awesome.css", true);
         $sender->addCSSFile($this->resource("styles.css"), true);
@@ -75,7 +76,7 @@ class ETSkin_Default extends ETSkin
 
         $css = file_get_contents($this->resource("colors.css"));
         $css = str_replace(array("{primary}", "{secondary}", "{tertiary}"), array($primary, $secondary, $tertiary), $css);
-        file_put_contents(PATH_CONFIG."/colors.css", $css);
+        file_put_contents(PATH_CONFIG . "/colors.css", $css);
     }
 
 

@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -52,7 +53,7 @@ class ETSession extends ETModel
     public function __construct()
     {
         // Start a session.
-        session_name(C("esoTalk.cookie.name")."_session");
+        session_name(C("esoTalk.cookie.name") . "_session");
         session_start();
         if (empty($_SESSION["token"])) {
             $this->regenerateToken();
@@ -263,7 +264,7 @@ class ETSession extends ETModel
      */
     public function setCookie($name, $value, $expire = 0)
     {
-        return setcookie(C("esoTalk.cookie.name")."_".$name, $value, $expire, C("esoTalk.cookie.path", getWebPath('')), C("esoTalk.cookie.domain"), C("esoTalk.https"), true);
+        return setcookie(C("esoTalk.cookie.name") . "_" . $name, $value, $expire, C("esoTalk.cookie.path", getWebPath('')), C("esoTalk.cookie.domain"), C("esoTalk.https"), true);
     }
 
 
@@ -276,7 +277,7 @@ class ETSession extends ETModel
     {
         $token = $this->getRememberToken($userId);
 
-        $this->setCookie("persistent", $userId.$token, time() + C("esoTalk.cookie.expire"));
+        $this->setCookie("persistent", $userId . $token, time() + C("esoTalk.cookie.expire"));
     }
 
 
@@ -289,7 +290,7 @@ class ETSession extends ETModel
      */
     public function getCookie($name, $default = null)
     {
-        $name = C("esoTalk.cookie.name")."_".$name;
+        $name = C("esoTalk.cookie.name") . "_" . $name;
         return isset($_COOKIE[$name]) ? $_COOKIE[$name] : $default;
     }
 

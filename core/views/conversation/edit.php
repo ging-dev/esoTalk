@@ -32,7 +32,7 @@ echo $form->open(); ?>
 $this->renderView("conversation/channelPath", array("conversation" => $conversation));
 ?>
 
-<a href='<?php echo URL("conversation/changeChannel/".$conversation["conversationId"]); ?>' id='control-changeChannel'><i class='icon-tag'></i> <?php echo T("Change channel"); ?></a>
+<a href='<?php echo URL("conversation/changeChannel/" . $conversation["conversationId"]); ?>' id='control-changeChannel'><i class='icon-tag'></i> <?php echo T("Change channel"); ?></a>
 
 </div>
 

@@ -19,7 +19,7 @@ $member = $data["member"];
 <div class='controls'>
 <span class='time'><?php echo _strftime(T("date.full"), $activity["time"]); ?></span>
 <?php if (($member["memberId"] == ET::$session->userId or $activity["fromMemberId"] == ET::$session->userId) and !empty($activity["activityId"])): ?>
-<a href='<?php echo URL("member/deleteActivity/".$activity["activityId"]."/?token=".ET::$session->token); ?>' class='control-delete' title='<?php echo T("Delete"); ?>'><?php echo T("Delete"); ?></a>
+<a href='<?php echo URL("member/deleteActivity/" . $activity["activityId"] . "/?token=" . ET::$session->token); ?>' class='control-delete' title='<?php echo T("Delete"); ?>'><?php echo T("Delete"); ?></a>
 <?php endif; ?>
 </div>
 <div class='action'>

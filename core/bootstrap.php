@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2013 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -38,21 +39,21 @@ if (ini_get("date.timezone") == "") {
 
 // Define directory constants.
 if (!defined("PATH_CONTROLLERS")) {
-    define("PATH_CONTROLLERS", PATH_CORE."/controllers");
+    define("PATH_CONTROLLERS", PATH_CORE . "/controllers");
 }
 if (!defined("PATH_LIBRARY")) {
-    define("PATH_LIBRARY", PATH_CORE."/lib");
+    define("PATH_LIBRARY", PATH_CORE . "/lib");
 }
 if (!defined("PATH_MODELS")) {
-    define("PATH_MODELS", PATH_CORE."/models");
+    define("PATH_MODELS", PATH_CORE . "/models");
 }
 if (!defined("PATH_VIEWS")) {
-    define("PATH_VIEWS", PATH_CORE."/views");
+    define("PATH_VIEWS", PATH_CORE . "/views");
 }
 
 // Include some essential files.
-require PATH_LIBRARY."/functions.general.php";
-require PATH_LIBRARY."/ET.class.php"; // phone home!
+require PATH_LIBRARY . "/functions.general.php";
+require PATH_LIBRARY . "/ET.class.php"; // phone home!
 
 // Set up error and exception handling.
 function errorHandler($code, $message, $file, $line)
@@ -90,15 +91,15 @@ if (get_magic_quotes_gpc()) {
 //***** 2. INCLUDE CONFIGURATION
 
 // Include our config files.
-ET::loadConfig(PATH_CORE."/config.defaults.php");
+ET::loadConfig(PATH_CORE . "/config.defaults.php");
 
 // If the config path is different from the default, but there's still a config file at the default location, include it.
-if (PATH_CONFIG != PATH_ROOT."/config" and file_exists($file = PATH_ROOT."/config/config.php")) {
+if (PATH_CONFIG != PATH_ROOT . "/config" and file_exists($file = PATH_ROOT . "/config/config.php")) {
     ET::loadConfig($file);
 }
 
 // Include the real config file.
-if (file_exists($file = PATH_CONFIG."/config.php")) {
+if (file_exists($file = PATH_CONFIG . "/config.php")) {
     ET::loadConfig($file);
 }
 
@@ -109,7 +110,7 @@ if (C("esoTalk.debug")) {
 
 // Do we want to force HTTPS?
 if (C("esoTalk.https") and (!array_key_exists("HTTPS", $_SERVER) or $_SERVER["HTTPS"] != "on")) {
-    header("Location: https://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"]);
+    header("Location: https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
     exit;
 }
 
@@ -121,67 +122,67 @@ ET::loadLanguage(C("esoTalk.language"));
 //***** 3. REQUIRE AND REGISTER ESSENTIAL CLASSES
 
 // Require base classes that may be extended.
-require PATH_LIBRARY."/ETFactory.class.php";
-require PATH_LIBRARY."/ETPluggable.class.php";
-require PATH_LIBRARY."/ETController.class.php";
-require PATH_LIBRARY."/ETAdminController.class.php";
-require PATH_LIBRARY."/ETModel.class.php";
-require PATH_LIBRARY."/ETPlugin.class.php";
-require PATH_LIBRARY."/ETSkin.class.php";
+require PATH_LIBRARY . "/ETFactory.class.php";
+require PATH_LIBRARY . "/ETPluggable.class.php";
+require PATH_LIBRARY . "/ETController.class.php";
+require PATH_LIBRARY . "/ETAdminController.class.php";
+require PATH_LIBRARY . "/ETModel.class.php";
+require PATH_LIBRARY . "/ETPlugin.class.php";
+require PATH_LIBRARY . "/ETSkin.class.php";
 
 // Register main classes.
-ETFactory::register("database", "ETDatabase", PATH_LIBRARY."/ETDatabase.class.php");
-ETFactory::register("databaseStructure", "ETDatabaseStructure", PATH_LIBRARY."/ETDatabaseStructure.class.php");
-ETFactory::register("sqlQuery", "ETSQLQuery", PATH_LIBRARY."/ETSQLQuery.class.php");
-ETFactory::register("sqlResult", "ETSQLResult", PATH_LIBRARY."/ETSQLResult.class.php");
-ETFactory::register("sqlRaw", "ETSQLRaw", PATH_LIBRARY."/ETSQLRaw.class.php");
-ETFactory::register("session", "ETSession", PATH_LIBRARY."/ETSession.class.php");
-ETFactory::register("cache", "ETCache", PATH_LIBRARY."/ETCache.class.php");
-ETFactory::register("form", "ETForm", PATH_LIBRARY."/ETForm.class.php");
-ETFactory::register("format", "ETFormat", PATH_LIBRARY."/ETFormat.class.php");
-ETFactory::register("upload", "ETUpload", PATH_LIBRARY."/ETUpload.class.php");
-ETFactory::register("menu", "ETMenu", PATH_LIBRARY."/ETMenu.class.php");
+ETFactory::register("database", "ETDatabase", PATH_LIBRARY . "/ETDatabase.class.php");
+ETFactory::register("databaseStructure", "ETDatabaseStructure", PATH_LIBRARY . "/ETDatabaseStructure.class.php");
+ETFactory::register("sqlQuery", "ETSQLQuery", PATH_LIBRARY . "/ETSQLQuery.class.php");
+ETFactory::register("sqlResult", "ETSQLResult", PATH_LIBRARY . "/ETSQLResult.class.php");
+ETFactory::register("sqlRaw", "ETSQLRaw", PATH_LIBRARY . "/ETSQLRaw.class.php");
+ETFactory::register("session", "ETSession", PATH_LIBRARY . "/ETSession.class.php");
+ETFactory::register("cache", "ETCache", PATH_LIBRARY . "/ETCache.class.php");
+ETFactory::register("form", "ETForm", PATH_LIBRARY . "/ETForm.class.php");
+ETFactory::register("format", "ETFormat", PATH_LIBRARY . "/ETFormat.class.php");
+ETFactory::register("upload", "ETUpload", PATH_LIBRARY . "/ETUpload.class.php");
+ETFactory::register("menu", "ETMenu", PATH_LIBRARY . "/ETMenu.class.php");
 
 // Register models.
-ETFactory::register("searchModel", "ETSearchModel", PATH_MODELS."/ETSearchModel.class.php");
-ETFactory::register("conversationModel", "ETConversationModel", PATH_MODELS."/ETConversationModel.class.php");
-ETFactory::register("memberModel", "ETMemberModel", PATH_MODELS."/ETMemberModel.class.php");
-ETFactory::register("postModel", "ETPostModel", PATH_MODELS."/ETPostModel.class.php");
-ETFactory::register("channelModel", "ETChannelModel", PATH_MODELS."/ETChannelModel.class.php");
-ETFactory::register("groupModel", "ETGroupModel", PATH_MODELS."/ETGroupModel.class.php");
-ETFactory::register("activityModel", "ETActivityModel", PATH_MODELS."/ETActivityModel.class.php");
-ETFactory::register("upgradeModel", "ETUpgradeModel", PATH_MODELS."/ETUpgradeModel.class.php");
+ETFactory::register("searchModel", "ETSearchModel", PATH_MODELS . "/ETSearchModel.class.php");
+ETFactory::register("conversationModel", "ETConversationModel", PATH_MODELS . "/ETConversationModel.class.php");
+ETFactory::register("memberModel", "ETMemberModel", PATH_MODELS . "/ETMemberModel.class.php");
+ETFactory::register("postModel", "ETPostModel", PATH_MODELS . "/ETPostModel.class.php");
+ETFactory::register("channelModel", "ETChannelModel", PATH_MODELS . "/ETChannelModel.class.php");
+ETFactory::register("groupModel", "ETGroupModel", PATH_MODELS . "/ETGroupModel.class.php");
+ETFactory::register("activityModel", "ETActivityModel", PATH_MODELS . "/ETActivityModel.class.php");
+ETFactory::register("upgradeModel", "ETUpgradeModel", PATH_MODELS . "/ETUpgradeModel.class.php");
 
 // If esoTalk hasn't been installed, register the install controller and set it as the default route.
 if (!C("esoTalk.installed")) {
-    ETFactory::registerController("install", "ETInstallController", PATH_CONTROLLERS."/ETInstallController.class.php");
+    ETFactory::registerController("install", "ETInstallController", PATH_CONTROLLERS . "/ETInstallController.class.php");
     ET::$config["esoTalk.defaultRoute"] = "install";
 } elseif (C("esoTalk.version") != ESOTALK_VERSION) {
-    ETFactory::registerController("upgrade", "ETUpgradeController", PATH_CONTROLLERS."/ETUpgradeController.class.php");
+    ETFactory::registerController("upgrade", "ETUpgradeController", PATH_CONTROLLERS . "/ETUpgradeController.class.php");
 }
 
 // Otherwise, register all the default controllers and admin controllers.
 else {
-    ETFactory::registerController("conversations", "ETConversationsController", PATH_CONTROLLERS."/ETConversationsController.class.php");
-    ETFactory::registerController("conversation", "ETConversationController", PATH_CONTROLLERS."/ETConversationController.class.php");
-    ETFactory::registerController("post", "ETPostController", PATH_CONTROLLERS."/ETPostController.class.php");
-    ETFactory::registerController("user", "ETUserController", PATH_CONTROLLERS."/ETUserController.class.php");
-    ETFactory::registerController("settings", "ETSettingsController", PATH_CONTROLLERS."/ETSettingsController.class.php");
-    ETFactory::registerController("channels", "ETChannelsController", PATH_CONTROLLERS."/ETChannelsController.class.php");
-    ETFactory::registerController("member", "ETMemberController", PATH_CONTROLLERS."/ETMemberController.class.php");
-    ETFactory::registerController("members", "ETMembersController", PATH_CONTROLLERS."/ETMembersController.class.php");
+    ETFactory::registerController("conversations", "ETConversationsController", PATH_CONTROLLERS . "/ETConversationsController.class.php");
+    ETFactory::registerController("conversation", "ETConversationController", PATH_CONTROLLERS . "/ETConversationController.class.php");
+    ETFactory::registerController("post", "ETPostController", PATH_CONTROLLERS . "/ETPostController.class.php");
+    ETFactory::registerController("user", "ETUserController", PATH_CONTROLLERS . "/ETUserController.class.php");
+    ETFactory::registerController("settings", "ETSettingsController", PATH_CONTROLLERS . "/ETSettingsController.class.php");
+    ETFactory::registerController("channels", "ETChannelsController", PATH_CONTROLLERS . "/ETChannelsController.class.php");
+    ETFactory::registerController("member", "ETMemberController", PATH_CONTROLLERS . "/ETMemberController.class.php");
+    ETFactory::registerController("members", "ETMembersController", PATH_CONTROLLERS . "/ETMembersController.class.php");
     // ETFactory::registerController("feed", "ETFeedController", PATH_CONTROLLERS."/ETFeedController.class.php");
-    ETFactory::registerController("admin", "ETAdminController", PATH_CONTROLLERS."/ETAdminController.class.php");
+    ETFactory::registerController("admin", "ETAdminController", PATH_CONTROLLERS . "/ETAdminController.class.php");
 
-    ETFactory::registerAdminController("dashboard", "ETDashboardAdminController", PATH_CONTROLLERS."/admin/ETDashboardAdminController.class.php");
-    ETFactory::registerAdminController("settings", "ETSettingsAdminController", PATH_CONTROLLERS."/admin/ETSettingsAdminController.class.php");
-    ETFactory::registerAdminController("appearance", "ETAppearanceAdminController", PATH_CONTROLLERS."/admin/ETAppearanceAdminController.class.php");
-    ETFactory::registerAdminController("channels", "ETChannelsAdminController", PATH_CONTROLLERS."/admin/ETChannelsAdminController.class.php");
-    ETFactory::registerAdminController("plugins", "ETPluginsAdminController", PATH_CONTROLLERS."/admin/ETPluginsAdminController.class.php");
-    ETFactory::registerAdminController("groups", "ETGroupsAdminController", PATH_CONTROLLERS."/admin/ETGroupsAdminController.class.php");
-    ETFactory::registerAdminController("languages", "ETLanguagesAdminController", PATH_CONTROLLERS."/admin/ETLanguagesAdminController.class.php");
+    ETFactory::registerAdminController("dashboard", "ETDashboardAdminController", PATH_CONTROLLERS . "/admin/ETDashboardAdminController.class.php");
+    ETFactory::registerAdminController("settings", "ETSettingsAdminController", PATH_CONTROLLERS . "/admin/ETSettingsAdminController.class.php");
+    ETFactory::registerAdminController("appearance", "ETAppearanceAdminController", PATH_CONTROLLERS . "/admin/ETAppearanceAdminController.class.php");
+    ETFactory::registerAdminController("channels", "ETChannelsAdminController", PATH_CONTROLLERS . "/admin/ETChannelsAdminController.class.php");
+    ETFactory::registerAdminController("plugins", "ETPluginsAdminController", PATH_CONTROLLERS . "/admin/ETPluginsAdminController.class.php");
+    ETFactory::registerAdminController("groups", "ETGroupsAdminController", PATH_CONTROLLERS . "/admin/ETGroupsAdminController.class.php");
+    ETFactory::registerAdminController("languages", "ETLanguagesAdminController", PATH_CONTROLLERS . "/admin/ETLanguagesAdminController.class.php");
     if (C("esoTalk.registration.requireConfirmation") == "approval") {
-        ETFactory::registerAdminController("unapproved", "ETUnapprovedAdminController", PATH_CONTROLLERS."/admin/ETUnapprovedAdminController.class.php");
+        ETFactory::registerAdminController("unapproved", "ETUnapprovedAdminController", PATH_CONTROLLERS . "/admin/ETUnapprovedAdminController.class.php");
     }
 }
 
@@ -190,14 +191,14 @@ else {
 
 if (C("esoTalk.installed")) {
     foreach (C("esoTalk.enabledPlugins") as $v) {
-        if (file_exists($file = PATH_PLUGINS."/".sanitizeFileName($v)."/plugin.php")) {
+        if (file_exists($file = PATH_PLUGINS . "/" . sanitizeFileName($v) . "/plugin.php")) {
             include_once $file;
         }
         $className = "ETPlugin_$v";
         if (!class_exists($className)) {
             continue;
         }
-        ET::$plugins[$v] = new $className("addons/plugins/".$v);
+        ET::$plugins[$v] = new $className("addons/plugins/" . $v);
         ET::$plugins[$v]->boot();
     }
 }
@@ -241,7 +242,7 @@ if (!empty($_GET["p"])) {
 elseif (C("esoTalk.urls.friendly") and isset($_SERVER["REQUEST_URI"])) {
 
     // Remove the base path from the request URI.
-    $request = preg_replace("|^".preg_quote(ET::$webPath)."(/index\.php)?|", "", $_SERVER["REQUEST_URI"]);
+    $request = preg_replace("|^" . preg_quote(ET::$webPath) . "(/index\.php)?|", "", $_SERVER["REQUEST_URI"]);
 
     // If there is a querystring, remove it.
     $selfURL = $request;
@@ -267,7 +268,7 @@ if (empty($request)) {
 if (empty($selfURL)) {
     $selfURL = $request;
     if (!empty($_GET)) {
-        $selfURL .= "?".http_build_query($_GET);
+        $selfURL .= "?" . http_build_query($_GET);
     }
 }
 
@@ -296,12 +297,12 @@ if (C("esoTalk.installed")) {
 
     // Include the skin file and instantiate its class.
     ET::$skinName = $skinName;
-    if (file_exists($file = PATH_SKINS."/$skinName/skin.php")) {
+    if (file_exists($file = PATH_SKINS . "/$skinName/skin.php")) {
         include_once $file;
     }
-    $skinClass = "ETSkin_".$skinName;
+    $skinClass = "ETSkin_" . $skinName;
     if (class_exists($skinClass)) {
-        ET::$skin = new $skinClass("addons/skins/".$skinName);
+        ET::$skin = new $skinClass("addons/skins/" . $skinName);
     }
 }
 
@@ -362,12 +363,12 @@ foreach (ET::$plugins as $plugin) {
 }
 
 // Include the config/custom.php file, a convenient way to override things.
-if (file_exists($file = PATH_CONFIG."/custom.php")) {
+if (file_exists($file = PATH_CONFIG . "/custom.php")) {
     include $file;
 }
 
 // Include render functions. We do this after we initialize plugins so that they can override any functions if they want.
-require PATH_LIBRARY."/functions.render.php";
+require PATH_LIBRARY . "/functions.render.php";
 
 // Initialize the controller.
 ET::$controller->init();

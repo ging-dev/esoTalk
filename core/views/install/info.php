@@ -50,7 +50,7 @@ $form = $data["form"];
 	<br>
 
 	<ul class='form' style='text-align:center'>
-		<li><?php echo $form->button("submit", T("Install esoTalk")." &#155;", array("class" => "submit")); ?></li>
+		<li><?php echo $form->button("submit", T("Install esoTalk") . " &#155;", array("class" => "submit")); ?></li>
 		<li><a href='#advanced' id='advancedLink'><?php echo T("Advanced Options"); ?></a></li>
 	</ul>
 

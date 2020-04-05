@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -117,7 +118,7 @@ class ETSettingsAdminController extends ETAdminController
             $file = $uploader->getUploadedFile("forumHeaderImage");
 
             // Save it as an image, restricting it to a maximum size.
-            $logo = $uploader->saveAsImage($file, PATH_UPLOADS."/logo", 500, 40, "max");
+            $logo = $uploader->saveAsImage($file, PATH_UPLOADS . "/logo", 500, 40, "max");
             $logo = str_replace(PATH_UPLOADS, "uploads", $logo);
 
             // Delete the old logo (if we didn't just overwrite it.)

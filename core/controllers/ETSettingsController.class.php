@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -75,9 +76,9 @@ class ETSettingsController extends ETController
 
         // Make a list of default member panes, and highlight the currently active one.
         $panes = ETFactory::make("menu");
-        $panes->add("general", "<a href='".URL("settings/general")."'>".T("Settings")."</a>");
-        $panes->add("password", "<a href='".URL("settings/password")."'>".T("Change Password or Email")."</a>");
-        $panes->add("notifications", "<a href='".URL("settings/notifications")."'>".T("Notifications")."</a>");
+        $panes->add("general", "<a href='" . URL("settings/general") . "'>" . T("Settings") . "</a>");
+        $panes->add("password", "<a href='" . URL("settings/password") . "'>" . T("Change Password or Email") . "</a>");
+        $panes->add("notifications", "<a href='" . URL("settings/notifications") . "'>" . T("Notifications") . "</a>");
         $panes->highlight($pane);
 
         // Set the member to the current user.
@@ -88,7 +89,7 @@ class ETSettingsController extends ETController
         $actions = ETFactory::make("menu");
 
         // Add a link to go back to the user's member profile.
-        $actions->add("viewProfile", "<a href='".URL("member/me")."'><i class='icon-eye-open'></i> ".T("View your profile")."</a>");
+        $actions->add("viewProfile", "<a href='" . URL("member/me") . "'><i class='icon-eye-open'></i> " . T("View your profile") . "</a>");
 
         $this->trigger("initProfile", array($panes, $controls, $actions));
 
@@ -179,7 +180,7 @@ class ETSettingsController extends ETController
         elseif ($form->validPostBack("removeAvatar")) {
 
         // Delete the avatar file and set the member's avatarFormat to null.
-            @unlink(PATH_UPLOADS."/avatars/".$member["memberId"].".".$member["avatarFormat"]);
+            @unlink(PATH_UPLOADS . "/avatars/" . $member["memberId"] . "." . $member["avatarFormat"]);
             ET::memberModel()->updateById($member["memberId"], array("avatarFormat" => null));
 
             $this->message(T("message.changesSaved"), "success autoDismiss");
@@ -199,11 +200,11 @@ class ETSettingsController extends ETController
      */
     public function fieldAvatar($form)
     {
-        return "<div class='avatarChooser'>".
-        avatar(ET::$session->user).
-        $form->input("avatar", "file").
-        "<small>".sprintf(T("Maximum size of %s. %s."), (ET::uploader()->maxUploadSize() / (1024*1024))." MB", "JPG, GIF, PNG")."</small>".
-        (ET::$session->user["avatarFormat"] ? $form->button("removeAvatar", T("Remove avatar")) : "").
+        return "<div class='avatarChooser'>" .
+        avatar(ET::$session->user) .
+        $form->input("avatar", "file") .
+        "<small>" . sprintf(T("Maximum size of %s. %s."), (ET::uploader()->maxUploadSize() / (1024*1024)) . " MB", "JPG, GIF, PNG") . "</small>" .
+        (ET::$session->user["avatarFormat"] ? $form->button("removeAvatar", T("Remove avatar")) : "") .
         "</div>";
     }
 
@@ -251,7 +252,7 @@ class ETSettingsController extends ETController
      */
     public function fieldEmailPrivateAdd($form)
     {
-        return "<label class='checkbox'>".$form->checkbox("privateAdd")." ".label("private")." ".T("Email me when I'm added to a private conversation")."</label>";
+        return "<label class='checkbox'>" . $form->checkbox("privateAdd") . " " . label("private") . " " . T("Email me when I'm added to a private conversation") . "</label>";
     }
 
 
@@ -264,7 +265,7 @@ class ETSettingsController extends ETController
      */
     public function fieldEmailReplyToStarred($form)
     {
-        return "<label class='checkbox'>".$form->checkbox("post")." <i class='star icon-star'></i> ".T("Email me when someone posts in a conversation I have followed")."</label>";
+        return "<label class='checkbox'>" . $form->checkbox("post") . " <i class='star icon-star'></i> " . T("Email me when someone posts in a conversation I have followed") . "</label>";
     }
 
 
@@ -277,7 +278,7 @@ class ETSettingsController extends ETController
      */
     public function fieldEmailMention($form)
     {
-        return "<label class='checkbox'>".$form->checkbox("mention")." ".T("Email me when someone mentions me in a post")."</label>";
+        return "<label class='checkbox'>" . $form->checkbox("mention") . " " . T("Email me when someone mentions me in a post") . "</label>";
     }
 
 
@@ -290,7 +291,7 @@ class ETSettingsController extends ETController
      */
     public function fieldStarOnReply($form)
     {
-        return "<label class='checkbox'>".$form->checkbox("starOnReply")." ".T("Automatically follow conversations that I reply to")."</label>";
+        return "<label class='checkbox'>" . $form->checkbox("starOnReply") . " " . T("Automatically follow conversations that I reply to") . "</label>";
     }
 
 
@@ -303,7 +304,7 @@ class ETSettingsController extends ETController
      */
     public function fieldStarPrivate($form)
     {
-        return "<label class='checkbox'>".$form->checkbox("starPrivate")." ".T("Automatically follow private conversations that I'm added to")."</label>";
+        return "<label class='checkbox'>" . $form->checkbox("starPrivate") . " " . T("Automatically follow private conversations that I'm added to") . "</label>";
     }
 
 
@@ -316,7 +317,7 @@ class ETSettingsController extends ETController
      */
     public function fieldHideOnline($form)
     {
-        return "<label class='checkbox'>".$form->checkbox("hideOnline")." ".T("Don't allow other users to see when I am online")."</label>";
+        return "<label class='checkbox'>" . $form->checkbox("hideOnline") . " " . T("Don't allow other users to see when I am online") . "</label>";
     }
 
     /**
@@ -329,7 +330,7 @@ class ETSettingsController extends ETController
      */
     public function saveEmailPreference($form, $key, &$preferences)
     {
-        $preferences["email.".$key] = (bool)$form->getValue($key);
+        $preferences["email." . $key] = (bool)$form->getValue($key);
     }
 
 
@@ -383,7 +384,7 @@ class ETSettingsController extends ETController
             $file = $uploader->getUploadedFile($key);
 
             // Save it as an image, cropping it to the configured avatar size.
-            $avatar = $uploader->saveAsImage($file, PATH_UPLOADS."/avatars/".ET::$session->userId, C("esoTalk.avatars.width"), C("esoTalk.avatars.height"), "crop");
+            $avatar = $uploader->saveAsImage($file, PATH_UPLOADS . "/avatars/" . ET::$session->userId, C("esoTalk.avatars.width"), C("esoTalk.avatars.height"), "crop");
 
             // Update the member's avatarFormat field to the avatar file's extension.
             ET::memberModel()->updateById(ET::$session->userId, array("avatarFormat" => pathinfo($avatar, PATHINFO_EXTENSION)));

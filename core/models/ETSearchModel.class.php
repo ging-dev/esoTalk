@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -349,7 +350,7 @@ class ETSearchModel extends ETModel
 
             // If we didn't find a gambit, use this term as a fulltext term.
             if ($negate) {
-                $term = "-".str_replace(" ", " -", $term);
+                $term = "-" . str_replace(" ", " -", $term);
             }
             $this->fulltext($term);
         }
@@ -408,9 +409,9 @@ class ETSearchModel extends ETModel
 
             // This will be the condition for the next query that restricts or eliminates conversation IDs.
             if (count($goodConversationIDs)) {
-                $idCondition = "conversationId IN (".implode(",", $goodConversationIDs).")";
+                $idCondition = "conversationId IN (" . implode(",", $goodConversationIDs) . ")";
             } elseif (count($badConversationIDs)) {
-                $idCondition = "conversationId NOT IN (".implode(",", $badConversationIDs).")";
+                $idCondition = "conversationId NOT IN (" . implode(",", $badConversationIDs) . ")";
             }
         }
 
@@ -445,11 +446,11 @@ class ETSearchModel extends ETModel
 
             // Change the ID condition to this list of matching IDs, and order by relevance.
             if (count($ids)) {
-                $idCondition = "conversationId IN (".implode(",", $ids).")";
+                $idCondition = "conversationId IN (" . implode(",", $ids) . ")";
             } else {
                 return false;
             }
-            $this->orderBy = array("FIELD(c.conversationId,".implode(",", $ids).")");
+            $this->orderBy = array("FIELD(c.conversationId," . implode(",", $ids) . ")");
         }
 
         // Set a default limit if none has previously been set.
@@ -668,7 +669,7 @@ class ETSearchModel extends ETModel
      */
     public static function gambitPrivate(&$search, $term, $negate)
     {
-        $search->sql->where("c.private=".($negate ? "0" : "1"));
+        $search->sql->where("c.private=" . ($negate ? "0" : "1"));
     }
 
 
@@ -777,7 +778,7 @@ class ETSearchModel extends ETModel
 
         // Apply the condition.
         $search->sql
-        ->where("c.startMemberId ".($negate ? "!=" : "=")." :authorId")
+        ->where("c.startMemberId " . ($negate ? "!=" : "=") . " :authorId")
         ->bind(":authorId", (int) $term);
     }
 
@@ -868,7 +869,7 @@ class ETSearchModel extends ETModel
      */
     public static function gambitOrderByReplies(&$search, $term, $negate)
     {
-        $search->orderBy("c.countPosts ".($negate ? "ASC" : "DESC"));
+        $search->orderBy("c.countPosts " . ($negate ? "ASC" : "DESC"));
         $search->sql->useIndex("conversation_countPosts");
     }
 
@@ -882,7 +883,7 @@ class ETSearchModel extends ETModel
      */
     public static function gambitOrderByNewest(&$search, $term, $negate)
     {
-        $search->orderBy("c.startTime ".($negate ? "ASC" : "DESC"));
+        $search->orderBy("c.startTime " . ($negate ? "ASC" : "DESC"));
         $search->sql->useIndex("conversation_startTime");
     }
 
@@ -894,7 +895,7 @@ class ETSearchModel extends ETModel
      */
     public static function gambitSticky(&$search, $term, $negate)
     {
-        $search->sql->where("sticky=".($negate ? "0" : "1"));
+        $search->sql->where("sticky=" . ($negate ? "0" : "1"));
     }
 
 
@@ -933,7 +934,7 @@ class ETSearchModel extends ETModel
      */
     public static function gambitLocked(&$search, $term, $negate)
     {
-        $search->sql->where("locked=".($negate ? "0" : "1"));
+        $search->sql->where("locked=" . ($negate ? "0" : "1"));
     }
 
 
@@ -947,8 +948,8 @@ class ETSearchModel extends ETModel
     {
         $term = trim(substr($term, strlen(T("gambit.title:"))));
 
-        $search->sql->where("title ".($negate ? "NOT" : "")." LIKE :titleTerm")
-        ->bind(":titleTerm", "%".$term."%");
+        $search->sql->where("title " . ($negate ? "NOT" : "") . " LIKE :titleTerm")
+        ->bind(":titleTerm", "%" . $term . "%");
     }
 }
 

@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -42,7 +43,7 @@ class ETPluginsAdminController extends ETAdminController
             while (false !== ($file = readdir($handle))) {
 
             // Make sure the plugin is valid, and include its plugin.php file.
-                if ($file[0] != "." and file_exists($pluginFile = PATH_PLUGINS."/$file/plugin.php") and (include_once $pluginFile)) {
+                if ($file[0] != "." and file_exists($pluginFile = PATH_PLUGINS . "/$file/plugin.php") and (include_once $pluginFile)) {
 
                 // Add the plugin's information and status to the array.
                     $plugins[$file] = array(
@@ -125,12 +126,12 @@ class ETPluginsAdminController extends ETAdminController
             }
 
             // Set up an instance of the plugin so we can call its setup function.
-            if (file_exists($file = PATH_PLUGINS."/".sanitizeFileName($plugin)."/plugin.php")) {
+            if (file_exists($file = PATH_PLUGINS . "/" . sanitizeFileName($plugin) . "/plugin.php")) {
                 include_once $file;
             }
             $className = "ETPlugin_$plugin";
             if (class_exists($className)) {
-                $pluginObject = new $className("addons/plugins/".$plugin);
+                $pluginObject = new $className("addons/plugins/" . $plugin);
 
                 // Call the plugin's setup function. If the setup failed, show a message.
                 if (($msg = $pluginObject->setup(C("$plugin.version"))) !== true) {
@@ -212,17 +213,17 @@ class ETPluginsAdminController extends ETAdminController
         }
 
         // Set up an instance of the plugin so we can call its uninstall function.
-        if (file_exists($file = PATH_PLUGINS."/".sanitizeFileName($plugin)."/plugin.php")) {
+        if (file_exists($file = PATH_PLUGINS . "/" . sanitizeFileName($plugin) . "/plugin.php")) {
             include_once $file;
         }
         $className = "ETPlugin_$plugin";
         if (class_exists($className)) {
-            $pluginObject = new $className;
+            $pluginObject = new $className();
             $pluginObject->uninstall();
         }
 
         // Attempt to remove the directory. If we couldn't, show a "not writable" message.
-        if (!is_writable($file = PATH_PLUGINS) or !is_writable($file = PATH_PLUGINS."/$plugin") or !rrmdir($file)) {
+        if (!is_writable($file = PATH_PLUGINS) or !is_writable($file = PATH_PLUGINS . "/$plugin") or !rrmdir($file)) {
             $this->message(sprintf(T("message.notWritable"), $file), "warning");
         }
 

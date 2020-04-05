@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -168,15 +169,15 @@ class ETController extends ETPluggable
     {
         // Create an array of arguments where the first item is $this.
         $eventArguments = array_merge(array(&$this), $arguments);
-        $eventName = $this->className."_".$method;
+        $eventName = $this->className . "_" . $method;
 
         // Trigger a "before" event for this method.
-        ET::trigger($eventName."_before", $eventArguments);
+        ET::trigger($eventName . "_before", $eventArguments);
 
         // Go through plugins and look for a handler for this controller/method.
         $called = false;
         foreach (ET::$plugins as $plugin) {
-            $actionName = "action_".$eventName;
+            $actionName = "action_" . $eventName;
             if (method_exists($plugin, $actionName)) {
                 call_user_func_array(array($plugin, $actionName), $eventArguments);
                 $called = true;
@@ -186,11 +187,11 @@ class ETController extends ETPluggable
 
         // If one wasn't found, call the method on $this.
         if (!$called) {
-            call_user_func_array(array($this, "action_".$method), $arguments);
+            call_user_func_array(array($this, "action_" . $method), $arguments);
         }
 
         // Trigger an "after" event for this method.
-        ET::trigger($eventName."_after", $eventArguments);
+        ET::trigger($eventName . "_after", $eventArguments);
     }
 
 
@@ -254,7 +255,7 @@ class ETController extends ETPluggable
     {
         // Only show the first 3 notifications.
         $notifications = array_slice($notifications, 0, 3);
-    
+
         foreach ($notifications as $notification) {
 
         // If we've already shown this notification as a message before, don't show it again.
@@ -267,7 +268,7 @@ class ETController extends ETPluggable
             "avatarFormat" => $notification["avatarFormat"],
             "email" => $notification["email"]
         ), "thumb");
-            $this->message("<a href='".$notification["link"]."' class='messageLink'><span class='action'>".$avatar.$notification["body"]."</span></a>", "popup notificationMessage autoDismiss hasSprite");
+            $this->message("<a href='" . $notification["link"] . "' class='messageLink'><span class='action'>" . $avatar . $notification["body"] . "</span></a>", "popup notificationMessage autoDismiss hasSprite");
         }
 
         // Update the user's "notificationCheckTime" preference so these notifications won't be shown again.
@@ -295,21 +296,21 @@ class ETController extends ETPluggable
 
         // If the user IS NOT logged in, add the 'login' and 'sign up' links to the bar.
             if (!ET::$session->user) {
-                $this->addToMenu("user", "join", "<a href='".URL("user/join?return=".urlencode($this->selfURL))."' class='link-join'>".T("Sign Up")."</a>");
-                $this->addToMenu("user", "login", "<a href='".URL("user/login?return=".urlencode($this->selfURL))."' class='link-login'>".T("Log In")."</a>");
+                $this->addToMenu("user", "join", "<a href='" . URL("user/join?return=" . urlencode($this->selfURL)) . "' class='link-join'>" . T("Sign Up") . "</a>");
+                $this->addToMenu("user", "login", "<a href='" . URL("user/login?return=" . urlencode($this->selfURL)) . "' class='link-login'>" . T("Log In") . "</a>");
             }
 
             // If the user IS logged in, we want to display their name and appropriate links.
             else {
-                $this->addToMenu("user", "user", "<a href='".URL("member/me")."'>".avatar(ET::$session->user, "thumb").name(ET::$session->user["username"])."</a>");
+                $this->addToMenu("user", "user", "<a href='" . URL("member/me") . "'>" . avatar(ET::$session->user, "thumb") . name(ET::$session->user["username"]) . "</a>");
 
-                $this->addToMenu("user", "settings", "<a href='".URL("settings")."' class='link-settings'>".T("Settings")."</a>");
+                $this->addToMenu("user", "settings", "<a href='" . URL("settings") . "' class='link-settings'>" . T("Settings") . "</a>");
 
                 if (ET::$session->isAdmin()) {
-                    $this->addToMenu("user", "administration", "<a href='".URL("admin")."' class='link-administration'>".T("Administration")."</a>");
+                    $this->addToMenu("user", "administration", "<a href='" . URL("admin") . "' class='link-administration'>" . T("Administration") . "</a>");
                 }
 
-                $this->addToMenu("user", "logout", "<a href='".URL("user/logout?token=".ET::$session->token)."' class='link-logout'>".T("Log Out")."</a>");
+                $this->addToMenu("user", "logout", "<a href='" . URL("user/logout?token=" . ET::$session->token) . "' class='link-logout'>" . T("Log Out") . "</a>");
             }
 
             // Get the number of members currently online and add it as a statistic.
@@ -322,11 +323,11 @@ class ETController extends ETPluggable
                 ->exec()
                 ->result();
                 $stat = Ts("statistic.online", "statistic.online.plural", number_format($online));
-                $stat = "<a href='".URL("members/online")."' class='link-membersOnline'>$stat</a>";
+                $stat = "<a href='" . URL("members/online") . "' class='link-membersOnline'>$stat</a>";
                 $this->addToMenu("statistics", "statistic-online", $stat);
             }
 
-            $this->addToMenu("meta", "copyright", "<a href='http://esotalk.org/' target='_blank'>".T("Powered by")." esoTalk</a>");
+            $this->addToMenu("meta", "copyright", "<a href='http://esotalk.org/' target='_blank'>" . T("Powered by") . " esoTalk</a>");
 
             // Set up some default JavaScript files and language definitions.
             $this->addJSFile("core/js/lib/jquery.js", true);
@@ -425,11 +426,11 @@ class ETController extends ETPluggable
         $this->trigger("renderBefore");
 
         if ($this->responseType == RESPONSE_TYPE_DEFAULT and ET::$session->user) {
-        
+
         // Fetch all unread notifications so we have a count for the notifications button.
             $notifications = ET::activityModel()->getNotifications(-1);
             $count = count($notifications);
-            $this->addToMenu("user", "notifications", "<a href='".URL("settings/notifications")."' id='notifications' class='button popupButton ".($count ? "new" : "")."'><span>$count</span></a>");
+            $this->addToMenu("user", "notifications", "<a href='" . URL("settings/notifications") . "' id='notifications' class='button popupButton " . ($count ? "new" : "") . "'><span>$count</span></a>");
 
             // Show messages with these notifications.
             $this->notificationMessages($notifications);
@@ -458,7 +459,7 @@ class ETController extends ETPluggable
     }
 
         // Set a content-type header.
-        header("Content-type: ".$this->contentType."; charset=".T("charset", "utf-8"));
+        header("Content-type: " . $this->contentType . "; charset=" . T("charset", "utf-8"));
 
         // If we're just outputting the view on its own, do that now.
         if ($this->responseType === RESPONSE_TYPE_VIEW) {
@@ -481,7 +482,7 @@ class ETController extends ETPluggable
                 }
 
                 // If config/custom.css contains something, add it to be included in the page.
-                if (file_exists($file = PATH_CONFIG."/custom.css") and filesize($file) > 0) {
+                if (file_exists($file = PATH_CONFIG . "/custom.css") and filesize($file) > 0) {
                     $this->addCSSFile("config/custom.css", true);
                 }
 
@@ -502,14 +503,14 @@ class ETController extends ETPluggable
                 if ($logo) {
                     $size = getimagesize($logo);
                 }
-                $data["forumTitle"] = $logo ? "<img src='".getWebPath($logo)."' {$size[3]} alt='$title'/>" : $title;
+                $data["forumTitle"] = $logo ? "<img src='" . getWebPath($logo) . "' {$size[3]} alt='$title'/>" : $title;
 
                 // Add the details for the "back" button.
                 $data["backButton"] = ET::$session->getNavigation($this->navigationId);
 
                 // Get common menu items.
                 foreach ($this->menus as $menu => $items) {
-                    $data[$menu."MenuItems"] = $items->getContents();
+                    $data[$menu . "MenuItems"] = $items->getContents();
                 }
 
                 // Add the body class.
@@ -618,7 +619,7 @@ class ETController extends ETPluggable
         }
 
         $url = ltrim($this->selfURL, "/");
-        $this->redirect(URL("user/login".($url ? "?return=$url" : "")));
+        $this->redirect(URL("user/login" . ($url ? "?return=$url" : "")));
         return false;
     }
 
@@ -684,7 +685,7 @@ class ETController extends ETPluggable
         }
 
         // Otherwise, just return the default view.
-        return PATH_VIEWS."/$view.php";
+        return PATH_VIEWS . "/$view.php";
     }
 
 
@@ -801,11 +802,11 @@ class ETController extends ETPluggable
         $lastModTime = 0;
         foreach ($files as $filename) {
             $filenames[] = str_replace(".", "", pathinfo($filename, PATHINFO_FILENAME));
-            $lastModTime = max($lastModTime, filemtime(PATH_ROOT."/".$filename));
+            $lastModTime = max($lastModTime, filemtime(PATH_ROOT . "/" . $filename));
         }
 
         // Construct a filename for the aggregation file based on the individual filenames.
-        $file = PATH_ROOT."/cache/$type/".implode(",", $filenames).".$type";
+        $file = PATH_ROOT . "/cache/$type/" . implode(",", $filenames) . ".$type";
 
         // If this file doesn't exist, or if it is out of date, generate and write it.
         if (!file_exists($file) or filemtime($file) < $lastModTime) {
@@ -813,11 +814,11 @@ class ETController extends ETPluggable
 
             // Get the contents of each of the files, fixing up image URL paths for CSS files.
             foreach ($files as $f) {
-                $content = file_get_contents(PATH_ROOT."/".$f);
+                $content = file_get_contents(PATH_ROOT . "/" . $f);
                 if ($type == "css") {
-                    $content = preg_replace("/url\(('?)/i", "url($1".getResource(pathinfo($f, PATHINFO_DIRNAME)."/"), $content);
+                    $content = preg_replace("/url\(('?)/i", "url($1" . getResource(pathinfo($f, PATHINFO_DIRNAME) . "/"), $content);
                 }
-                $contents .= $content." ";
+                $contents .= $content . " ";
             }
 
             // Minify and write the contents.
@@ -862,26 +863,26 @@ class ETController extends ETPluggable
             // Otherwise, we need to prepend the full path to each of the files.
             else {
                 foreach ($files as &$file) {
-                    $file = PATH_ROOT."/".$file;
+                    $file = PATH_ROOT . "/" . $file;
                 }
             }
             unset($file);
 
             // For each of the files that we need to include in the page, add a <link> tag.
             foreach ($files as $file) {
-                $head .= "<link rel='stylesheet' href='".getResource($file)."?".@filemtime($file)."'>\n";
+                $head .= "<link rel='stylesheet' href='" . getResource($file) . "?" . @filemtime($file) . "'>\n";
             }
         }
 
         // Output all necessary config variables and language definitions, as well as other variables.
         $esoTalkJS = array(
-        "webPath" => ET::$webPath.((C("esoTalk.urls.friendly") and !C("esoTalk.urls.rewrite")) ? "/index.php" : ""),
+        "webPath" => ET::$webPath . ((C("esoTalk.urls.friendly") and !C("esoTalk.urls.rewrite")) ? "/index.php" : ""),
         "userId" => ET::$session->user ? (int)ET::$session->userId : false,
         "token" => ET::$session->token,
         "debug" => C("esoTalk.debug"),
         "language" => $this->jsLanguage
     ) + (array)$this->jsData;
-        $head .= "<script>var ET=".json_encode($esoTalkJS)."</script>\n";
+        $head .= "<script>var ET=" . json_encode($esoTalkJS) . "</script>\n";
 
         // Add remote JavaScript.
         if (!empty($this->jsFiles["remote"])) {
@@ -902,14 +903,14 @@ class ETController extends ETPluggable
             // Otherwise, we need to prepend the full path to each of the files.
             else {
                 foreach ($files as &$file) {
-                    $file = PATH_ROOT."/".$file;
+                    $file = PATH_ROOT . "/" . $file;
                 }
             }
             unset($file);
 
             // For each of the files that we need to include in the page, add a <script> tag.
             foreach ($files as $file) {
-                $head .= "<script src='".getResource($file)."?".filemtime($file)."'></script>\n";
+                $head .= "<script src='" . getResource($file) . "?" . filemtime($file) . "'></script>\n";
             }
         }
 

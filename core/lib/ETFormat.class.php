@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -115,7 +116,7 @@ class ETFormat extends ETPluggable
     public function firstLine()
     {
         $this->content = substr($this->content, 0, strpos($this->content, "\n"));
-    
+
         return $this;
     }
 
@@ -154,7 +155,7 @@ class ETFormat extends ETPluggable
     {
         // Remove any half-opened HTML tags at the end.
         $this->content = preg_replace('#<[^>]*$#i', "", $this->content);
-    
+
         // Put all opened tags into an array.
         preg_match_all('#<(?!meta|img|br|hr|input\b)\b([a-z]+)(?: .*)?(?<![/|/ ])>#iU', $this->content, $result);
         $openedTags = $result[1];
@@ -171,7 +172,7 @@ class ETFormat extends ETPluggable
 
         // If there's no closing tag for this opening tag, append it.
             if (!in_array($openedTags[$i], $closedTags)) {
-                $this->content .= "</".$openedTags[$i].">";
+                $this->content .= "</" . $openedTags[$i] . ">";
             }
 
             // Otherwise, remove it from the closed tags array.
@@ -195,7 +196,7 @@ class ETFormat extends ETPluggable
         $this->content = trim($this->content);
 
         // Add paragraphs and breakspaces.
-        $this->content = "<p>".str_replace(array("\n\n", "\n"), array("</p><p>", "<br/>"), $this->content)."</p>";
+        $this->content = "<p>" . str_replace(array("\n\n", "\n"), array("</p><p>", "<br/>"), $this->content) . "</p>";
 
         // Strip empty paragraphs.
         $this->content = preg_replace(array("/<p>\s*<\/p>/i", "/(?<=<p>)\s*(?:<br\/>)*/i", "/\s*(?:<br\/>)*\s*(?=<\/p>)/i"), "", $this->content);
@@ -214,8 +215,10 @@ class ETFormat extends ETPluggable
     {
         // Convert normal links - http://www.example.com, www.example.com - using a callback function.
         $this->content = preg_replace_callback(
-        "/(?<=\s|^|>|\()(\w+:\/\/)?((?:\w[\w\-]*\w\.)+(?:[a-z][a-z]+)(?:[\/#][^\s<]*?)?)(?=\)\s|[\s\.,?!>\)]*(?:\s|>|$))/i",
-        array($this, "linksCallback"), $this->content);
+            "/(?<=\s|^|>|\()(\w+:\/\/)?((?:\w[\w\-]*\w\.)+(?:[a-z][a-z]+)(?:[\/#][^\s<]*?)?)(?=\)\s|[\s\.,?!>\)]*(?:\s|>|$))/i",
+            array($this, "linksCallback"),
+            $this->content
+        );
 
         // Convert email links.
         $this->content = preg_replace("/[\w-\.]+@([\w-]+\.)+[\w-]{2,4}/i", "<a href='mailto:$0' class='link-email'>$0</a>", $this->content);
@@ -248,7 +251,7 @@ class ETFormat extends ETPluggable
             return "<iframe class='video' type='text/html' width='$width' height='$height' src='https://player.vimeo.com/video/$id' allowfullscreen frameborder='0'></iframe>";
         }
 
-        return $this->formatLink($matches[1].$matches[2], $matches[0]);
+        return $this->formatLink($matches[1] . $matches[2], $matches[0]);
     }
 
 
@@ -258,17 +261,17 @@ class ETFormat extends ETPluggable
             $text = $url;
         }
         if (!preg_match("/^(\w+:\/\/)/", $url)) {
-            $url = "http://".$url;
+            $url = "http://" . $url;
         }
 
         // If this is an internal link...
         $baseURL = C("esoTalk.baseURL");
         if (substr($url, 0, strlen($baseURL)) == $baseURL) {
-            return "<a href='".$url."' target='_blank' class='link-internal'>".$text."</a>";
+            return "<a href='" . $url . "' target='_blank' class='link-internal'>" . $text . "</a>";
         }
 
         // Otherwise, return an external HTML anchor tag.
-        return "<a href='".$url."' rel='nofollow external' target='_blank' class='link-external'>".$text." <i class='icon-external-link'></i></a>";
+        return "<a href='" . $url . "' rel='nofollow external' target='_blank' class='link-external'>" . $text . " <i class='icon-external-link'></i></a>";
     }
 
 
@@ -283,12 +286,12 @@ class ETFormat extends ETPluggable
         // We do this by matching against 2 or more lines which begin with a number, passing them together to a
         // callback function, and then wrapping each line with <li> tags.
         $this->content = preg_replace_callback("/(?:^[0-9]+[.)]\s+([^\n]*)(?:\n|$)){2,}/m", function ($matches) {
-            return '</p><ol>'.preg_replace("/^[0-9]+[.)]\s+([^\n]*)(?:\n|$)/m", "<li>$1</li>", trim($matches[0])).'</ol><p>';
+            return '</p><ol>' . preg_replace("/^[0-9]+[.)]\s+([^\n]*)(?:\n|$)/m", "<li>$1</li>", trim($matches[0])) . '</ol><p>';
         }, $this->content);
 
         // Same goes for unordered lists, but with a - or a * instead of a number.
         $this->content = preg_replace_callback("/(?:^ *[-*]\s*([^\n]*)(?:\n|$)){2,}/m", function ($matches) {
-            return '</p><ul>'.preg_replace("/^ *[-*]\s*([^\n]*)(?:\n|$)/m", "<li>$1</li>", trim($matches[0])).'</ul><p>';
+            return '</p><ul>' . preg_replace("/^ *[-*]\s*([^\n]*)(?:\n|$)/m", "<li>$1</li>", trim($matches[0])) . '</ul><p>';
         }, $this->content);
 
         return $this;
@@ -309,7 +312,7 @@ class ETFormat extends ETPluggable
         $regexp = "/(.*?)\n?\[quote(?:=(.*?)(]?))?\]\n?(.*?)\n?\[\/quote\]\n{0,2}/is";
         while (preg_match($regexp, $this->content)) {
             $this->content = preg_replace_callback($regexp, function ($matches) use ($self) {
-                return $matches[1].'</p>'.$self->makeQuote($matches[4], $matches[2].$matches[3]).'<p>';
+                return $matches[1] . '</p>' . $self->makeQuote($matches[4], $matches[2] . $matches[3]) . '<p>';
             }, $this->content);
         }
 
@@ -336,7 +339,7 @@ class ETFormat extends ETPluggable
 
         // If we extracted a post ID from the citation, add a "find this post" link.
         if (!empty($postId)) {
-            $quote .= "<a href='".URL(postURL($postId), true)."' rel='post' data-id='$postId' class='control-search postRef'><i class='icon-search'></i></a> ";
+            $quote .= "<a href='" . URL(postURL($postId), true) . "' rel='post' data-id='$postId' class='control-search postRef'><i class='icon-search'></i></a> ";
         }
 
         // If there is a citation, add it.
@@ -373,12 +376,12 @@ class ETFormat extends ETPluggable
     public function mentions()
     {
         $this->content = preg_replace_callback(
-        '/(^|[\s,\.:\]])@([^\s[\]]{2,20})\b/iu',
-        function ($matches) {
-            return $matches[1]."<a href='".URL('member/name/'.urlencode(str_replace('&nbsp;', ' ', $matches[2])), true)."' class='link-member'>@".$matches[2]."</a>";
+            '/(^|[\s,\.:\]])@([^\s[\]]{2,20})\b/iu',
+            function ($matches) {
+            return $matches[1] . "<a href='" . URL('member/name/' . urlencode(str_replace('&nbsp;', ' ', $matches[2])), true) . "' class='link-member'>@" . $matches[2] . "</a>";
         },
-        $this->content
-    );
+            $this->content
+        );
 
         return $this;
     }

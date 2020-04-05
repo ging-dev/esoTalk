@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -24,7 +25,7 @@ class ETUnapprovedAdminController extends ETAdminController
     public function action_index()
     {
         ET::activityModel()->markNotificationsAsRead('unapproved');
-    
+
         $sql = ET::SQL();
         $sql->where("confirmed", 0);
         $sql->orderBy("m.memberId desc");
@@ -55,10 +56,11 @@ class ETUnapprovedAdminController extends ETAdminController
 
         ET::memberModel()->updateById($memberId, array("confirmed" => true));
 
-        sendEmail($member["email"],
-        sprintf(T("email.approved.subject"), $member["username"]),
-        sprintf(T("email.header"), $member["username"]).sprintf(T("email.approved.body"), C("esoTalk.forumTitle"), URL("user/login", true))
-    );
+        sendEmail(
+            $member["email"],
+            sprintf(T("email.approved.subject"), $member["username"]),
+            sprintf(T("email.header"), $member["username"]) . sprintf(T("email.approved.body"), C("esoTalk.forumTitle"), URL("user/login", true))
+        );
 
         $this->message(T("message.changesSaved"), "success autoDismiss");
         $this->redirect(URL("admin/unapproved"));

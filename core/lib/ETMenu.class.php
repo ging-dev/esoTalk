@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -97,7 +98,7 @@ class ETMenu
                     $return .= "<li class='sep'></li>\n";
                 }
             } else {
-                $return .= "<li class='item-$k".(in_array($k, $this->highlight) ? " selected" : "")."'>$v</li>\n";
+                $return .= "<li class='item-$k" . (in_array($k, $this->highlight) ? " selected" : "") . "'>$v</li>\n";
             }
             $i++;
         }

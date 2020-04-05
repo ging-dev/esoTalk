@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -31,7 +32,7 @@ class ETDashboardAdminController extends ETAdminController
         $statistics = array(
 
         // Number of members.
-        "<a href='".URL("members")."'>".T("Members")."</a>" => number_format(ET::SQL()->select("COUNT(*)")->from("member")->exec()->result()),
+        "<a href='" . URL("members") . "'>" . T("Members") . "</a>" => number_format(ET::SQL()->select("COUNT(*)")->from("member")->exec()->result()),
 
         // Number of conversations.
         T("Conversations") => number_format(ET::SQL()->select("COUNT(*)")->from("conversation")->exec()->result()),
@@ -94,7 +95,7 @@ class ETDashboardAdminController extends ETAdminController
             $summary = strip_tags($post["text"]);
             $maxLen = 200;
             if (strlen($summary) > $maxLen) {
-                $summary = substr($summary, 0, $maxLen)."...";
+                $summary = substr($summary, 0, $maxLen) . "...";
             }
 
             $post["summary"] = $summary;

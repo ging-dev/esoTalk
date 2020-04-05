@@ -69,14 +69,14 @@ $form = $data["form"];
 <tr id='permissions-guests'>
 <th><?php echo groupName("guest", true); ?></th>
 <?php foreach ($data["permissions"] as $k => $v): ?>
-<td><?php if ($k == "view"): echo $form->checkbox("permissions[".GROUP_ID_GUEST."][$k]", array("class" => "permission-$k")); endif; ?></td>
+<td><?php if ($k == "view"): echo $form->checkbox("permissions[" . GROUP_ID_GUEST . "][$k]", array("class" => "permission-$k")); endif; ?></td>
 <?php endforeach; ?>
 </tr>
 
 <tr id='permissions-members'>
 <th><?php echo groupName("member", true); ?></th>
 <?php foreach ($data["permissions"] as $k => $v): ?>
-<td><?php if ($k != "moderate"): echo $form->checkbox("permissions[".GROUP_ID_MEMBER."][$k]", array("class" => "permission-$k")); endif; ?></td>
+<td><?php if ($k != "moderate"): echo $form->checkbox("permissions[" . GROUP_ID_MEMBER . "][$k]", array("class" => "permission-$k")); endif; ?></td>
 <?php endforeach; ?>
 </tr>
 
@@ -102,7 +102,7 @@ $form = $data["form"];
 <div class='subText' id='permissions-copy'><?php echo T("Copy permissions from"); ?> <?php
 $copyOptions = array("" => "");
 foreach ($data["channels"] as $id => $channel) {
-    $copyOptions[$id] = str_repeat("&nbsp;", $channel["depth"] * 5).$channel["title"];
+    $copyOptions[$id] = str_repeat("&nbsp;", $channel["depth"] * 5) . $channel["title"];
 }
 echo $form->select("copyPermissions", $copyOptions);
 ?></div>

@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -125,7 +126,7 @@ class ETDatabase extends ETPluggable
     public function connection()
     {
         if (!$this->pdoConnection) {
-            $dsn = "mysql:host=".$this->host.($this->port ? ";port=".$this->port : "").";dbname=".$this->dbName;
+            $dsn = "mysql:host=" . $this->host . ($this->port ? ";port=" . $this->port : "") . ";dbname=" . $this->dbName;
             $this->pdoConnection = @new PDO($dsn, $this->user, $this->password, $this->connectionOptions);
         }
         return $this->pdoConnection;
@@ -288,7 +289,7 @@ class ETDatabase extends ETPluggable
 
         default:
             $value = str_replace(array('\\', "\0", "\n", "\r", "'", '"', "\x1a"), array('\\\\', '\\0', '\\n', '\\r', "\\'", '\\"', '\\Z'), $value);
-            return "'".$value."'";
+            return "'" . $value . "'";
     }
     }
 
@@ -318,7 +319,7 @@ class ETDatabase extends ETPluggable
         // Was there an error?
         if (!$statement) {
             $error = $connection->errorInfo();
-            throw new Exception("SQL Error (".$error[0].", ".$error[1]."): ".$error[2]."<br><br><pre>".$this->highlightQueryErrors($query, $error[2])."</pre>");
+            throw new Exception("SQL Error (" . $error[0] . ", " . $error[1] . "): " . $error[2] . "<br><br><pre>" . $this->highlightQueryErrors($query, $error[2]) . "</pre>");
         }
 
         // Set up a new ETSQLResult object with the result statement.

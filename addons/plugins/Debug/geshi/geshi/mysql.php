@@ -1,4 +1,5 @@
 <?php
+
  /*************************************************************************************
  * mysql.php
  * ---------
@@ -29,7 +30,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  *
  ************************************************************************************/
-  
+
 $language_data = array(
   'LANG_NAME' => 'MySQL',
   'COMMENT_SINGLE' => array(1 =>'--', 2 => '#'),
@@ -81,7 +82,7 @@ $language_data = array(
   'TIMESTAMP', 'TIMESTAMPADD', 'TIMESTAMPDIFF', 'TIME_FORMAT', 'TIME_TO_SEC', 'TO_DAYS',
   'UNIX_TIMESTAMP', 'UTC_DATE', 'UTC_TIME', 'UTC_TIMESTAMP', 'WEEKDAY', 'WEEKOFYEAR',
   'YEARWEEK',
-   
+
    ),
    2 => array(
    'INTEGER', 'SMALLINT', 'DECIMAL', 'NUMERIC', 'FLOAT', 'REAL', 'DOUBLE PRECISION',

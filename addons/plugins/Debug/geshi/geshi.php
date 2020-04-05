@@ -1784,7 +1784,8 @@ class geshi
                                         count($this->highlight_extra_lines) > 0)) {
                                         // strreplace to put close span and open span around multiline newlines
                                         $test_str .= str_replace(
-                                            "\n", "</span>\n<span$attributes>",
+                                            "\n",
+                                            "</span>\n<span$attributes>",
                                             str_replace("\n ", "\n&nbsp;", $rest_of_comment)
                                         );
                                     } else {
@@ -2523,7 +2524,7 @@ class geshi
             }
         } else {
             if ($this->header_type == GESHI_HEADER_PRE) {
-                return "<pre$attributes>$header"  .
+                return "<pre$attributes>$header" .
                     ($this->force_code_block ? '<div>' : '');
             } elseif ($this->header_type == GESHI_HEADER_DIV) {
                 return "<div$attributes>$header" .
@@ -2601,7 +2602,6 @@ class geshi
         if ($footer) {
             if ($this->header_type == GESHI_HEADER_PRE) {
                 $footer = str_replace("\n", '', $footer);
-                ;
             }
             $footer = $this->replace_keywords($footer);
 
@@ -2877,8 +2877,10 @@ class geshi
             if (!$economy_mode || !($economy_mode && $styles == '') && !($economy_mode &&
                 !$this->lexic_permissions['REGEXPS'][$group])) {
                 if (is_array($this->language_data['REGEXPS'][$group]) &&
-                         array_key_exists(GESHI_CLASS,
-                                    $this->language_data['REGEXPS'][$group])) {
+                         array_key_exists(
+                             GESHI_CLASS,
+                             $this->language_data['REGEXPS'][$group]
+                         )) {
                     $stylesheet .= "$selector.";
                     $stylesheet .= $this->language_data['REGEXPS'][$group][GESHI_CLASS];
                     $stylesheet .= " {{$styles}}\n";

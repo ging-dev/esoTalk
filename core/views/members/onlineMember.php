@@ -19,7 +19,7 @@ $member = $data["member"];
 <?php
 $action = ET::memberModel()->getLastActionInfo($member["lastActionTime"], $member["lastActionDetail"]);
 if ($action[0]) {
-    printf(T("is %s"), (!empty($action[1]) ? "<a href='{$action[1]}'>" : "").sanitizeHTML($action[0]).(!empty($action[1]) ? "</a>" : ""));
+    printf(T("is %s"), (!empty($action[1]) ? "<a href='{$action[1]}'>" : "") . sanitizeHTML($action[0]) . (!empty($action[1]) ? "</a>" : ""));
 }
 ?>
 </span>

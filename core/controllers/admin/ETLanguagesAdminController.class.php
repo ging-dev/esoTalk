@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -53,7 +54,7 @@ class ETLanguagesAdminController extends ETAdminController
         }
 
         // Attempt to remove the directory. If we couldn't, show a "not writable" message.
-        if (!is_writable($file = PATH_LANGUAGES) or !is_writable($file = PATH_LANGUAGES."/$language") or !rrmdir($file)) {
+        if (!is_writable($file = PATH_LANGUAGES) or !is_writable($file = PATH_LANGUAGES . "/$language") or !rrmdir($file)) {
             $this->message(sprintf(T("message.notWritable"), $file), "warning");
         }
 

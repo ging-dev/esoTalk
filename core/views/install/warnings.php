@@ -31,4 +31,4 @@ if (!defined("IN_ESOTALK")) {
 
 <br>
 
-<p><a href='<?php echo URL("install/info"); ?>' class='button submit'><?php echo empty($data["fatal"]) ? T("Next Step")." &#155;" : T("Try Again"); ?></a></p>
+<p><a href='<?php echo URL("install/info"); ?>' class='button submit'><?php echo empty($data["fatal"]) ? T("Next Step") . " &#155;" : T("Try Again"); ?></a></p>

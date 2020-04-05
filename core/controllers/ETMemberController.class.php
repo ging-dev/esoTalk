@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -51,7 +52,7 @@ class ETMemberController extends ETController
         ->select("memberId, username")
         ->from("member")
         ->where("username LIKE :name")
-        ->bind(":name", $name."%")
+        ->bind(":name", $name . "%")
         ->exec();
 
         if ($row = $result->firstRow()) {
@@ -125,13 +126,13 @@ class ETMemberController extends ETController
 
         // Sort out what the canonical URL for this page is.
         $url = memberURL($member["memberId"], $member["username"], $pane);
-        $this->pushNavigation("member/".$member["memberId"], "member", URL($url));
+        $this->pushNavigation("member/" . $member["memberId"], "member", URL($url));
         $this->canonicalURL = URL($url, true);
 
         // Make a list of default member panes, and highlight the currently active one.
         $panes = ETFactory::make("menu");
-        $panes->add("activity", "<a href='".URL(memberURL($member["memberId"], $member["username"], "activity"))."'>".T("Activity")."</a>");
-        $panes->add("statistics", "<a href='".URL(memberURL($member["memberId"], $member["username"], "statistics"))."'>".T("Statistics")."</a>");
+        $panes->add("activity", "<a href='" . URL(memberURL($member["memberId"], $member["username"], "activity")) . "'>" . T("Activity") . "</a>");
+        $panes->add("statistics", "<a href='" . URL(memberURL($member["memberId"], $member["username"], "statistics")) . "'>" . T("Statistics") . "</a>");
         $panes->highlight($pane);
 
         // Set up the controls menu (things that can be changed on the member.)
@@ -140,26 +141,26 @@ class ETMemberController extends ETController
 
         // Add the change permissions control (provided the member is not suspended.)
         if ($member["account"] != ACCOUNT_SUSPENDED and $model->canChangePermissions($member)) {
-            $controls->add("permissions", "<a href='".URL("member/permissions/".$member["memberId"])."' id='editPermissionsLink'><i class='icon-lock'></i>".T("Change permissions")."</a>");
+            $controls->add("permissions", "<a href='" . URL("member/permissions/" . $member["memberId"]) . "' id='editPermissionsLink'><i class='icon-lock'></i>" . T("Change permissions") . "</a>");
         }
 
         // Add the rename control.
         if ($model->canRename($member)) {
-            $controls->add("rename", "<a href='".URL("member/rename/".$member["memberId"])."' id='renameLink'><i class='icon-pencil'></i>".T("Change username")."</a>");
+            $controls->add("rename", "<a href='" . URL("member/rename/" . $member["memberId"]) . "' id='renameLink'><i class='icon-pencil'></i>" . T("Change username") . "</a>");
         }
 
         // Add the suspend/unsuspend control, and the "remove avatar" control.
         if ($model->canSuspend($member)) {
             if ($member["avatarFormat"]) {
-                $controls->add("removeAvatar", "<a href='".URL("member/removeAvatar/".$member["memberId"]."?token=".ET::$session->token)."' id='removeAvatarLink'><i class='icon-picture'></i>".T("Remove avatar")."</a>");
+                $controls->add("removeAvatar", "<a href='" . URL("member/removeAvatar/" . $member["memberId"] . "?token=" . ET::$session->token) . "' id='removeAvatarLink'><i class='icon-picture'></i>" . T("Remove avatar") . "</a>");
             }
             $controls->separator();
-            $controls->add("suspend", "<a href='".URL("member/suspend/".$member["memberId"])."' id='suspendLink'><i class='icon-shield'></i>".T($member["account"] == ACCOUNT_SUSPENDED ? "Unsuspend member" : "Suspend member")."</a>");
+            $controls->add("suspend", "<a href='" . URL("member/suspend/" . $member["memberId"]) . "' id='suspendLink'><i class='icon-shield'></i>" . T($member["account"] == ACCOUNT_SUSPENDED ? "Unsuspend member" : "Suspend member") . "</a>");
         }
 
         // Add the delete control.
         if ($model->canDelete($member)) {
-            $controls->add("delete", "<a href='".URL("member/delete/".$member["memberId"])."' id='deleteLink'><i class='icon-remove'></i>".T("Delete member")."</a>");
+            $controls->add("delete", "<a href='" . URL("member/delete/" . $member["memberId"]) . "' id='deleteLink'><i class='icon-remove'></i>" . T("Delete member") . "</a>");
         }
 
         // Set up the actions menu (things that can be done in relation to the member.)
@@ -167,13 +168,13 @@ class ETMemberController extends ETController
 
         // If this is the logged-in user's profile, show a link to their settings page.
         if ($member["memberId"] == ET::$session->userId) {
-            $actions->add("settings", "<a href='".URL("settings")."'><i class='icon-pencil'></i> ".T("Edit your profile")."</a>");
+            $actions->add("settings", "<a href='" . URL("settings") . "'><i class='icon-pencil'></i> " . T("Edit your profile") . "</a>");
         }
 
         // Otherwise, show links to do with the user's private conversations with this member.
         elseif (ET::$session->userId) {
-            $actions->add("privateConversations", "<a href='".URL(searchURL("#private + #contributor:".$member["username"]))."'>".sprintf(T("See the private conversations I've had with %s"), $member["username"])."</a>");
-            $actions->add("privateStart", "<a href='".URL("conversation/start/".urlencode($member["username"])."?token=".ET::$session->token)."'>".sprintf(T("Start a private conversation with %s"), $member["username"])."</a>");
+            $actions->add("privateConversations", "<a href='" . URL(searchURL("#private + #contributor:" . $member["username"])) . "'>" . sprintf(T("See the private conversations I've had with %s"), $member["username"]) . "</a>");
+            $actions->add("privateStart", "<a href='" . URL("conversation/start/" . urlencode($member["username"]) . "?token=" . ET::$session->token) . "'>" . sprintf(T("Start a private conversation with %s"), $member["username"]) . "</a>");
         }
 
         $this->trigger("initProfile", array(&$member, $panes, $controls, $actions));
@@ -310,7 +311,7 @@ class ETMemberController extends ETController
 
         // Construct a form.
         $form = ETFactory::make("form");
-        $form->action = URL("member/permissions/".$member["memberId"]);
+        $form->action = URL("member/permissions/" . $member["memberId"]);
 
         // Get a list of all possible account types, groups, and permission types.
         $accounts = array(ACCOUNT_ADMINISTRATOR, ACCOUNT_MEMBER);
@@ -416,7 +417,7 @@ class ETMemberController extends ETController
         }
 
         // Remove the avatar file.
-        @unlink(PATH_UPLOADS."/avatars/".$member["memberId"].".".$member["avatarFormat"]);
+        @unlink(PATH_UPLOADS . "/avatars/" . $member["memberId"] . "." . $member["avatarFormat"]);
 
         // Clear the member's avatar format field.
         ET::memberModel()->updateById($member["memberId"], array("avatarFormat" => null));
@@ -446,7 +447,7 @@ class ETMemberController extends ETController
 
         // Construct a form.
         $form = ETFactory::make("form");
-        $form->action = URL("member/suspend/".$member["memberId"]);
+        $form->action = URL("member/suspend/" . $member["memberId"]);
 
         $redirectURL = URL(memberURL($member["memberId"], $member["username"]));
         if ($form->isPostBack("cancel")) {
@@ -494,7 +495,7 @@ class ETMemberController extends ETController
 
         // Construct a form.
         $form = ETFactory::make("form");
-        $form->action = URL("member/rename/".$member["memberId"]);
+        $form->action = URL("member/rename/" . $member["memberId"]);
 
         $redirectURL = URL(memberURL($member["memberId"], $member["username"]));
         if ($form->isPostBack("cancel")) {
@@ -544,7 +545,7 @@ class ETMemberController extends ETController
 
         // Construct a form.
         $form = ETFactory::make("form");
-        $form->action = URL("member/delete/".$member["memberId"]);
+        $form->action = URL("member/delete/" . $member["memberId"]);
 
         $redirectURL = URL(memberURL($member["memberId"], $member["username"]));
         if ($form->isPostBack("cancel")) {

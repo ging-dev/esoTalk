@@ -16,7 +16,7 @@ if (!defined("IN_ESOTALK")) {
 <div class='sheetContent'>
 
 <h3><?php echo T("Members Online"); ?><?php if (count($data["members"])) {
-    echo " (".count($data["members"]).")";
+    echo " (" . count($data["members"]) . ")";
 } ?></h3>
 
 <div class='sheetBody'>

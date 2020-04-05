@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -116,10 +117,10 @@ function rrmdir($dir)
         $objects = scandir($dir);
         foreach ($objects as $object) {
             if ($object != "." and $object != "..") {
-                if (filetype($dir."/".$object) == "dir") {
-                    rrmdir($dir."/".$object);
+                if (filetype($dir . "/" . $object) == "dir") {
+                    rrmdir($dir . "/" . $object);
                 } else {
-                    unlink($dir."/".$object);
+                    unlink($dir . "/" . $object);
                 }
             }
         }
@@ -211,7 +212,7 @@ function minifyCSS($css)
  */
 function minifyJS($js)
 {
-    require_once PATH_LIBRARY."/vendor/jsmin.php";
+    require_once PATH_LIBRARY . "/vendor/jsmin.php";
     return JSMin::minify($js);
 }
 
@@ -229,7 +230,7 @@ function minifyJS($js)
 function sendEmail($to, $subject, $body)
 {
     try {
-        $phpmailer = PATH_LIBRARY.'/vendor/class.phpmailer.php';
+        $phpmailer = PATH_LIBRARY . '/vendor/class.phpmailer.php';
         require_once($phpmailer);
         $mail = new PHPMailer(true);
 
@@ -312,7 +313,7 @@ function parseRequest($parts, $controllers)
             // Search for a plugin with this method. If found, use that.
             $found = false;
             foreach (ET::$plugins as $plugin) {
-                if (method_exists($plugin, "action_".$c."Controller_".$method)) {
+                if (method_exists($plugin, "action_" . $c . "Controller_" . $method)) {
                     $found = true;
                     break;
                 }
@@ -442,7 +443,7 @@ function slug($string)
 {
     // If there are any characters other than basic alphanumeric, space, punctuation, then we need to attempt transliteration.
     if (preg_match("/[^\x20-\x7f]/", $string)) {
-    
+
         // Thanks to krakos for this code! http://esotalk.org/forum/582-unicode-in-usernames-and-url-s
         if (function_exists('transliterator_transliterate')) {
 
@@ -654,7 +655,7 @@ function colorPack($rgb, $normalize = false)
     foreach ($rgb as $k => $v) {
         $out |= (($v * ($normalize ? 255 : 1)) << (16 - $k * 8));
     }
-    return "#".str_pad(dechex($out), 6, 0, STR_PAD_LEFT);
+    return "#" . str_pad(dechex($out), 6, 0, STR_PAD_LEFT);
 }
 
 
@@ -677,7 +678,7 @@ if (!function_exists("json_encode")) {
             }
             if (is_string($a)) {
                 static $jsonReplaces = array(array("\\", "/", "\n", "\t", "\r", "\b", "\f", '"'), array('\\\\', '\\/', '\\n', '\\t', '\\r', '\\b', '\\f', '\"'));
-                return '"'.str_replace($jsonReplaces[0], $jsonReplaces[1], $a).'"';
+                return '"' . str_replace($jsonReplaces[0], $jsonReplaces[1], $a) . '"';
             } else {
                 return $a;
             }
@@ -695,12 +696,12 @@ if (!function_exists("json_encode")) {
             foreach ($a as $v) {
                 $result[] = json_encode($v);
             }
-            return '['.implode(',', $result).']';
+            return '[' . implode(',', $result) . ']';
         } else {
             foreach ($a as $k => $v) {
-                $result[] = '"'.($k).'":'.json_encode($v);
+                $result[] = '"' . ($k) . '":' . json_encode($v);
             }
-            return '{'.implode(',', $result).'}';
+            return '{' . implode(',', $result) . '}';
         }
     }
 }
@@ -760,7 +761,7 @@ function URL($url = "", $absolute = false)
     if (preg_match('/^(https?\:)?\/\//', $url)) {
         return $url;
     }
-    
+
     // Strip off the hash.
     $hash = strstr($url, "#");
     if ($hash) {
@@ -775,7 +776,7 @@ function URL($url = "", $absolute = false)
 
     // If we don't have nice urls, use ?p=controller/method/argument instead.
     if (!C("esoTalk.urls.friendly") and $url) {
-        $link = "?p=".$url;
+        $link = "?p=" . $url;
         if ($query) {
             $query[0] = "&";
         }
@@ -790,7 +791,7 @@ function URL($url = "", $absolute = false)
     if (C("esoTalk.urls.friendly") and !C("esoTalk.urls.rewrite")) {
         $link = "index.php/$link";
     }
-    return $absolute ? rtrim(C("esoTalk.baseURL"), "/")."/".$link : getWebPath($link);
+    return $absolute ? rtrim(C("esoTalk.baseURL"), "/") . "/" . $link : getWebPath($link);
 }
 
 
@@ -827,7 +828,7 @@ function getWebPath($path)
         $path = getRelativePath($path);
 
         // Prepend the web path.
-        $path = ET::$webPath."/".ltrim($path, "/");
+        $path = ET::$webPath . "/" . ltrim($path, "/");
     }
     return $path;
 }
@@ -852,9 +853,9 @@ function getResource($path, $absolute = false)
         // Prepend the web path.
         $path = ltrim($path, "/");
         if ($c = C("esoTalk.resourceURL")) {
-            $path = $c.$path;
+            $path = $c . $path;
         } else {
-            $path = $absolute ? rtrim(C("esoTalk.baseURL"), "/")."/".$path : ET::$webPath."/".$path;
+            $path = $absolute ? rtrim(C("esoTalk.baseURL"), "/") . "/" . $path : ET::$webPath . "/" . $path;
         }
     }
     return $path;
@@ -879,7 +880,7 @@ function redirect($destination, $code = 302)
 
     // Clear the output buffer, and send the location header.
     @ob_end_clean();
-    header("Location: ".sanitizeForHTTP($destination), true, $code);
+    header("Location: " . sanitizeForHTTP($destination), true, $code);
     exit;
 }
 
@@ -984,7 +985,7 @@ function smartTime($then, $precise = false)
 
     // Otherwise, show the month, day, and year.
     else {
-        return strftime(($precise ? "%e " : "")."%b %Y", $then);
+        return strftime(($precise ? "%e " : "") . "%b %Y", $then);
     }
 }
 

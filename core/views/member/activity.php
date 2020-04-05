@@ -38,7 +38,7 @@ if (!isset($activity[$k - 1]["time"]) or relativeTime($activity[$k - 1]["time"],
 </ol>
 
 <?php if ($data["showViewMoreLink"]):
-echo "<a href='".URL(memberURL($member["memberId"], $member["username"], "activity")."/".($data["page"] + 2))."' class='button' id='viewMoreActivity'>".T("View more")."</a>";
+echo "<a href='" . URL(memberURL($member["memberId"], $member["username"], "activity") . "/" . ($data["page"] + 2)) . "' class='button' id='viewMoreActivity'>" . T("View more") . "</a>";
 endif; ?>
 
 <?php

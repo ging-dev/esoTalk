@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -52,7 +53,7 @@ class ETChannelsAdminController extends ETAdminController
 
         // Set up a form!
         $form = ETFactory::make("form");
-        $form->action = URL("admin/channels/edit/".$channel["channelId"]);
+        $form->action = URL("admin/channels/edit/" . $channel["channelId"]);
         $form->setValues($channel);
         $form->setValues((array)$channel["attributes"]);
 
@@ -183,10 +184,10 @@ class ETChannelsAdminController extends ETAdminController
         $permissions = array("view" => "View", "reply" => "Reply", "start" => "Start", "moderate" => "Moderate");
 
         // Set which permission checkboxes should be checked on the form!
-        $form->setValue("permissions[".GROUP_ID_GUEST."][view]", 1);
-        $form->setValue("permissions[".GROUP_ID_MEMBER."][view]", 1);
-        $form->setValue("permissions[".GROUP_ID_MEMBER."][reply]", 1);
-        $form->setValue("permissions[".GROUP_ID_MEMBER."][start]", 1);
+        $form->setValue("permissions[" . GROUP_ID_GUEST . "][view]", 1);
+        $form->setValue("permissions[" . GROUP_ID_MEMBER . "][view]", 1);
+        $form->setValue("permissions[" . GROUP_ID_MEMBER . "][reply]", 1);
+        $form->setValue("permissions[" . GROUP_ID_MEMBER . "][start]", 1);
 
         // If the form was submitted...
         if ($form->validPostBack("save")) {
@@ -240,7 +241,7 @@ class ETChannelsAdminController extends ETAdminController
 
         // Set up the form.
         $form = ETFactory::make("form");
-        $form->action = URL("admin/channels/delete/".$channelId);
+        $form->action = URL("admin/channels/delete/" . $channelId);
         $form->setValue("method", "move");
 
         // If the form was submitted...

@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -27,7 +28,7 @@ class ETConversationsController extends ETController
         if (!$this->allowed()) {
             return;
         }
-    
+
         list($channelInfo, $currentChannels, $channelIds, $includeDescendants) = $this->getSelectedChannels($channelSlug);
 
         // Now we need to construct some arrays to determine which channel "tabs" to show in the view.
@@ -115,7 +116,7 @@ class ETConversationsController extends ETController
         foreach ($currentChannels as $channel) {
             $slugs[] = $channelInfo[$channel]["slug"];
         }
-        $url = "conversations/".urlencode(($k = implode(" ", $slugs)) ? $k : "all").($searchString ? "?search=".urlencode($searchString) : "");
+        $url = "conversations/" . urlencode(($k = implode(" ", $slugs)) ? $k : "all") . ($searchString ? "?search=" . urlencode($searchString) : "");
         $this->pushNavigation("conversations", "search", URL($url));
         $this->canonicalURL = URL($url, true);
 
@@ -132,8 +133,8 @@ class ETConversationsController extends ETController
 
             // Mark as read controls
             if (ET::$session->user) {
-                $controls->add("markAllAsRead", "<a href='".URL("conversations/markAllAsRead/?token=".ET::$session->token."' id='control-markAllAsRead'><i class='icon-check'></i> ".T("Mark all as read")."</a>"));
-                $controls->add("markListedAsRead", "<a href='".URL("conversations/".sanitizeHTML($channelSlug)."/?search=".urlencode($searchString)."&markAsRead=1&token=".ET::$session->token."' id='control-markListedAsRead'><i class='icon-list'></i> ".T("Mark listed as read")."</a>"));
+                $controls->add("markAllAsRead", "<a href='" . URL("conversations/markAllAsRead/?token=" . ET::$session->token . "' id='control-markAllAsRead'><i class='icon-check'></i> " . T("Mark all as read") . "</a>"));
+                $controls->add("markListedAsRead", "<a href='" . URL("conversations/" . sanitizeHTML($channelSlug) . "/?search=" . urlencode($searchString) . "&markAsRead=1&token=" . ET::$session->token . "' id='control-markListedAsRead'><i class='icon-list'></i> " . T("Mark listed as read") . "</a>"));
             }
 
             // Add the default gambits to the gambit cloud: gambit text => css class to apply.
@@ -150,8 +151,8 @@ class ETConversationsController extends ETController
                 T("gambit.locked") => array("gambit-locked", "icon-lock"),
             ),
             "member" => array(
-                T("gambit.author:").T("gambit.member") => array("gambit-author", "icon-user"),
-                T("gambit.contributor:").T("gambit.member") => array("gambit-contributor", "icon-user"),
+                T("gambit.author:") . T("gambit.member") => array("gambit-author", "icon-user"),
+                T("gambit.contributor:") . T("gambit.member") => array("gambit-contributor", "icon-user"),
             ),
             "replies" => array(
                 T("gambit.has replies") => array("gambit-hasReplies", "icon-comment"),
@@ -159,7 +160,7 @@ class ETConversationsController extends ETController
                 T("gambit.order by replies") => array("gambit-orderByReplies", "icon-list-ol"),
             ),
             "text" => array(
-                T("gambit.title:")." ?" => array("gambit-title", "icon-font")
+                T("gambit.title:") . " ?" => array("gambit-title", "icon-font")
             ),
             "misc" => array(
                 T("gambit.random") => array("gambit-random", "icon-random"),
@@ -174,19 +175,19 @@ class ETConversationsController extends ETController
                 addToArrayString($gambits["main"], T("gambit.draft"), array("gambit-draft", "icon-pencil"), 3);
                 addToArrayString($gambits["main"], T("gambit.ignored"), array("gambit-ignored", "icon-eye-close"), 4);
                 addToArrayString($gambits["time"], T("gambit.unread"), array("gambit-unread", "icon-inbox"), 0);
-                addToArrayString($gambits["member"], T("gambit.author:").T("gambit.myself"), array("gambit-authorMyself", "icon-smile"), 0);
-                addToArrayString($gambits["member"], T("gambit.contributor:").T("gambit.myself"), array("gambit-contributorMyself", "icon-smile"), 2);
+                addToArrayString($gambits["member"], T("gambit.author:") . T("gambit.myself"), array("gambit-authorMyself", "icon-smile"), 0);
+                addToArrayString($gambits["member"], T("gambit.contributor:") . T("gambit.myself"), array("gambit-contributorMyself", "icon-smile"), 2);
             }
 
             $this->trigger("constructGambitsMenu", array(&$gambits));
 
             // Construct the gambits menu based on the above arrays.
             $gambitsMenu = ETFactory::make("menu");
-            $linkPrefix = "conversations/".sanitizeHTML($channelSlug)."/?search=".urlencode(((!empty($searchString) ? $searchString." + " : "")));
+            $linkPrefix = "conversations/" . sanitizeHTML($channelSlug) . "/?search=" . urlencode(((!empty($searchString) ? $searchString . " + " : "")));
 
             foreach ($gambits as $section => $items) {
                 foreach ($items as $gambit => $classes) {
-                    $gambitsMenu->add($classes[0], "<a href='".URL($linkPrefix.urlencode("#".$gambit))."' class='{$classes[0]}' data-gambit='$gambit'>".(!empty($classes[1]) ? "<i class='{$classes[1]}'></i> " : "")."$gambit</a>");
+                    $gambitsMenu->add($classes[0], "<a href='" . URL($linkPrefix . urlencode("#" . $gambit)) . "' class='{$classes[0]}' data-gambit='$gambit'>" . (!empty($classes[1]) ? "<i class='{$classes[1]}'></i> " : "") . "$gambit</a>");
                 }
                 end($gambits);
                 if ($section !== key($gambits)) {
@@ -206,10 +207,10 @@ class ETConversationsController extends ETController
             }
 
             // Add meta tags to the header.
-            $this->addToHead("<meta name='keywords' content='".sanitizeHTML(($k = C("esoTalk.meta.keywords")) ? $k : implode(",", $keywords))."'>");
+            $this->addToHead("<meta name='keywords' content='" . sanitizeHTML(($k = C("esoTalk.meta.keywords")) ? $k : implode(",", $keywords)) . "'>");
             $lastKeyword = reset(array_splice($keywords, count($keywords) - 1, 1));
-            $this->addToHead("<meta name='description' content='".sanitizeHTML(($d = C("esoTalk.meta.description")) ? $d
-            : sprintf(T("forumDescription"), C("esoTalk.forumTitle"), implode(", ", $keywords), $lastKeyword))."'>");
+            $this->addToHead("<meta name='description' content='" . sanitizeHTML(($d = C("esoTalk.meta.description")) ? $d
+            : sprintf(T("forumDescription"), C("esoTalk.forumTitle"), implode(", ", $keywords), $lastKeyword)) . "'>");
 
             // If this is not technically the homepage (if it's a search page) the we don't want it to be indexed.
             if ($searchString) {
@@ -248,7 +249,7 @@ class ETConversationsController extends ETController
             foreach ($stats as $k => $v) {
                 $stat = Ts("statistic.$k", "statistic.$k.plural", number_format($v));
                 if ($k == "member" and (C("esoTalk.members.visibleToGuests") or ET::$session->user)) {
-                    $stat = "<a href='".URL("members")."'>$stat</a>";
+                    $stat = "<a href='" . URL("members") . "'>$stat</a>";
                 }
                 $this->addToMenu("statistics", "statistic-$k", $stat, array("before" => "statistic-online"));
             }
