@@ -2,7 +2,9 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) exit;
+if (!defined("IN_ESOTALK")) {
+    exit;
+}
 
 /**
  * The ETSkin class defines a skin. All skins should extend this class.
@@ -11,6 +13,6 @@ if (!defined("IN_ESOTALK")) exit;
  *
  * @package esoTalk
  */
-class ETSkin extends ETPlugin {
-
+class ETSkin extends ETPlugin
+{
 }

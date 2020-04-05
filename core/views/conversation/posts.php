@@ -2,7 +2,9 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) exit;
+if (!defined("IN_ESOTALK")) {
+    exit;
+}
 
 /**
  * Shows a collection of posts as list items.
@@ -18,8 +20,9 @@ foreach ($data["posts"] as $k => $post):
 $formattedPost = $this->formatPostForTemplate($post, $data["conversation"]);
 
 // If the post before this one is by the same member as this one, hide the avatar.
-if ($prevPost and empty($prevPost["deleteMemberId"]) and $prevPost["memberId"] == $post["memberId"])
-	$formattedPost["hideAvatar"] = true;
+if ($prevPost and empty($prevPost["deleteMemberId"]) and $prevPost["memberId"] == $post["memberId"]) {
+    $formattedPost["hideAvatar"] = true;
+}
 
 $thisPostTime = relativeTime($post["time"]);
 

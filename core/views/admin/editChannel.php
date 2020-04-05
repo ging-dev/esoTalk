@@ -2,7 +2,9 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) exit;
+if (!defined("IN_ESOTALK")) {
+    exit;
+}
 
 /**
  * Displays a sheet with a form to edit a channel's details and permissions.
@@ -99,7 +101,9 @@ $form = $data["form"];
 
 <div class='subText' id='permissions-copy'><?php echo T("Copy permissions from"); ?> <?php
 $copyOptions = array("" => "");
-foreach ($data["channels"] as $id => $channel) $copyOptions[$id] = str_repeat("&nbsp;", $channel["depth"] * 5).$channel["title"];
+foreach ($data["channels"] as $id => $channel) {
+    $copyOptions[$id] = str_repeat("&nbsp;", $channel["depth"] * 5).$channel["title"];
+}
 echo $form->select("copyPermissions", $copyOptions);
 ?></div>
 

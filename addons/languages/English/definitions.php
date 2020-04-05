@@ -3,14 +3,14 @@
 // This file is part of esoTalk. Please see the included license file for usage information.
 
 ET::$languageInfo["English"] = array(
-	"locale" => "en_US",
-	"name" => "English",
-	"description" => "A casual English language pack.",
-	"version" => ESOTALK_VERSION,
-	"author" => "esoTalk Team",
-	"authorEmail" => "support@esotalk.org",
-	"authorURL" => "http://esotalk.org",
-	"license" => "GPLv2"
+    "locale" => "en_US",
+    "name" => "English",
+    "description" => "A casual English language pack.",
+    "version" => ESOTALK_VERSION,
+    "author" => "esoTalk Team",
+    "authorEmail" => "support@esotalk.org",
+    "authorURL" => "http://esotalk.org",
+    "license" => "GPLv2"
 );
 
 // Define the character set that this language uses.

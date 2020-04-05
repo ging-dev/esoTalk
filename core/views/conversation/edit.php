@@ -2,7 +2,9 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) exit;
+if (!defined("IN_ESOTALK")) {
+    exit;
+}
 
 /**
  * Displays a page to edit or start a new conversation.
@@ -22,11 +24,11 @@ echo $form->open(); ?>
 
 <?php
 
-// Title ?>
+// Title?>
 <h1 id='conversationTitle'><?php echo $form->input("title", "text", array("placeholder" => T("Enter a conversation title"), "tabindex" => 100, "maxlength" => 100)); ?></h1>
 <?php
 
-// Channel 
+// Channel
 $this->renderView("conversation/channelPath", array("conversation" => $conversation));
 ?>
 
@@ -53,9 +55,9 @@ if (!$conversation["conversationId"]): ?>
 <div id='conversationReply'>
 <?php
 $this->renderView("conversation/reply", array(
-	"form" => $form,
-	"conversation" => $conversation,
-	"controls" => $data["replyControls"]
+    "form" => $form,
+    "conversation" => $conversation,
+    "controls" => $data["replyControls"]
 ));
 ?>
 </div>
