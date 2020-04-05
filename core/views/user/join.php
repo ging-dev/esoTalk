@@ -2,7 +2,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -12,12 +12,12 @@ if (!defined("IN_ESOTALK")) {
  * @package esoTalk
  */
 
-$form = $data["form"];
+$form = $data['form'];
 ?>
 <div id='joinSheet' class='sheet'>
 <div class='sheetContent'>
 
-<h3><?php echo T("Sign Up"); ?></h3>
+<h3><?php echo T('Sign Up'); ?></h3>
 
 <?php echo $form->open(); ?>
 
@@ -48,9 +48,9 @@ foreach ($form->getFieldsInSection($k) as $field): ?>
 </div>
 
 <div class='buttons'>
-<small><?php printf(T("Already have an account? <a href='%s' class='link-login'>Log in!</a>"), URL("user/login")); ?></small>
+<small><?php printf(T("Already have an account? <a href='%s' class='link-login'>Log in!</a>"), URL('user/login')); ?></small>
 <?php
-echo $form->button("submit", T("Sign Up"), array("class" => "big submit"));
+echo $form->button('submit', T('Sign Up'), array('class' => 'big submit'));
 echo $form->cancelButton();
 ?>
 </div>

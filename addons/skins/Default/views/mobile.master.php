@@ -2,7 +2,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -15,9 +15,9 @@ if (!defined("IN_ESOTALK")) {
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset='<?php echo T("charset", "utf-8"); ?>'>
-<title><?php echo sanitizeHTML($data["pageTitle"]); ?></title>
-<?php echo $data["head"]; ?>
+<meta charset='<?php echo T('charset', 'utf-8'); ?>'>
+<title><?php echo sanitizeHTML($data['pageTitle']); ?></title>
+<?php echo $data['head']; ?>
 <script>
 // Turn off JS effects and fixed positions, and disable tooltips.
 jQuery.fx.off = true;
@@ -33,13 +33,13 @@ $(function() {
 </script>
 </head>
 
-<body class='<?php echo $data["bodyClass"]; ?>'>
-<?php $this->trigger("pageStart"); ?>
+<body class='<?php echo $data['bodyClass']; ?>'>
+<?php $this->trigger('pageStart'); ?>
 
 <div id='messages'>
-<?php foreach ($data["messages"] as $message): ?>
+<?php foreach ($data['messages'] as $message): ?>
 <div class='messageWrapper'>
-<div class='message <?php echo $message["className"]; ?>' data-id='<?php echo @$message["id"]; ?>'><?php echo $message["message"]; ?></div>
+<div class='message <?php echo $message['className']; ?>' data-id='<?php echo @$message['id']; ?>'><?php echo $message['message']; ?></div>
 </div>
 <?php endforeach; ?>
 </div>
@@ -51,17 +51,17 @@ $(function() {
 <div id='hdr-content'>
 <div id='hdr-inner'>
 
-<?php if ($data["backButton"]): ?>
-<a href='<?php echo $data["backButton"]["url"]; ?>' id='backButton' title='<?php echo T("Back to {$data["backButton"]["type"]}"); ?>'><i class="icon-chevron-left"></i></a>
+<?php if ($data['backButton']): ?>
+<a href='<?php echo $data['backButton']['url']; ?>' id='backButton' title='<?php echo T("Back to {$data['backButton']['type']}"); ?>'><i class="icon-chevron-left"></i></a>
 <?php endif; ?>
 
 <ul id='userMenu' class='menu'>
-<li><a href='<?php echo URL("conversation/start"); ?>' class='link-newConversation'><?php echo T("New Conversation"); ?></a></li>
+<li><a href='<?php echo URL('conversation/start'); ?>' class='link-newConversation'><?php echo T('New Conversation'); ?></a></li>
 <li class='sep'></li>
-<?php echo $data["userMenuItems"]; ?>
+<?php echo $data['userMenuItems']; ?>
 </ul>
 
-<h1 id='forumTitle'><a href='<?php echo URL(""); ?>'><?php echo C("esoTalk.forumTitle"); ?></a></h1>
+<h1 id='forumTitle'><a href='<?php echo URL(''); ?>'><?php echo C('esoTalk.forumTitle'); ?></a></h1>
 
 </div>
 </div>
@@ -70,7 +70,7 @@ $(function() {
 <!-- BODY -->
 <div id='body'>
 <div id='body-content'>
-<?php echo $data["content"]; ?>
+<?php echo $data['content']; ?>
 </div>
 </div>
 
@@ -78,11 +78,11 @@ $(function() {
 <div id='ftr'>
 <div id='ftr-content'>
 <ul class='menu'>
-<?php echo $data["metaMenuItems"]; ?>
+<?php echo $data['metaMenuItems']; ?>
 </ul>
 </div>
 </div>
-<?php $this->trigger("pageEnd"); ?>
+<?php $this->trigger('pageEnd'); ?>
 
 </div>
 

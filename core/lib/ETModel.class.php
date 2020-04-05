@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -48,10 +48,10 @@ class ETModel extends ETPluggable
      * 		be used if this is not provided.
      * @return void
      */
-    public function __construct($table = "", $primaryKey = "")
+    public function __construct($table = '', $primaryKey = '')
     {
         $this->table = $table;
-        $this->primaryKey = $primaryKey ? $primaryKey : $table . "Id";
+        $this->primaryKey = $primaryKey ? $primaryKey : $table . 'Id';
     }
 
 
@@ -137,7 +137,7 @@ class ETModel extends ETPluggable
     public function count($wheres = array())
     {
         return ET::SQL()
-        ->select("COUNT(*)", "count")
+        ->select('COUNT(*)', 'count')
         ->from($this->table)
         ->where($wheres)
         ->exec()
@@ -154,7 +154,7 @@ class ETModel extends ETPluggable
     public function getWithSQL($sql)
     {
         return $sql
-        ->select("*")
+        ->select('*')
         ->from($this->table)
         ->exec()
         ->allRows();

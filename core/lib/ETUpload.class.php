@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -25,7 +25,7 @@ class ETUpload extends ETPluggable
  */
     public function maxUploadSize()
     {
-        return min(iniToBytes(ini_get("post_max_size")), iniToBytes(ini_get("upload_max_filesize")));
+        return min(iniToBytes(ini_get('post_max_size')), iniToBytes(ini_get('upload_max_filesize')));
     }
 
 
@@ -41,24 +41,24 @@ class ETUpload extends ETPluggable
         $error = false;
 
         // If the uploaded file doesn't exist, then we have to fail.
-        if (!isset($_FILES[$key]) or !is_uploaded_file($_FILES[$key]["tmp_name"])) {
-            $error = T("message.fileUploadFailed");
+        if (!isset($_FILES[$key]) or !is_uploaded_file($_FILES[$key]['tmp_name'])) {
+            $error = T('message.fileUploadFailed');
         }
 
         // Otherwise, check for an error.
         else {
             $file = $_FILES[$key];
-            switch ($file["error"]) {
+            switch ($file['error']) {
             case 1:
             case 2:
-                $error = sprintf(T("message.fileUploadTooBig"), ini_get("upload_max_filesize"));
+                $error = sprintf(T('message.fileUploadTooBig'), ini_get('upload_max_filesize'));
                 break;
             case 3:
             case 4:
             case 6:
             case 7:
             case 8:
-                $error = T("message.fileUploadFailed");
+                $error = T('message.fileUploadFailed');
         }
         }
 
@@ -69,7 +69,7 @@ class ETUpload extends ETPluggable
 
         // Otherwise, return the path to the uploaded file.
         else {
-            return $file["tmp_name"];
+            return $file['tmp_name'];
         }
     }
 
@@ -85,7 +85,7 @@ class ETUpload extends ETPluggable
     {
         // Attempt to move the uploaded file to the destination. If we can't, throw an exception.
         if (!move_uploaded_file($source, $destination)) {
-            throw new Exception(sprintf(T("message.fileUploadFailedMove"), $destination));
+            throw new Exception(sprintf(T('message.fileUploadFailedMove'), $destination));
         }
 
         return $destination;
@@ -107,12 +107,12 @@ class ETUpload extends ETPluggable
      * 		max: the output image will be at most $width by $height, but can be less if the input image is smaller.
      * @return string The destination file that was saved, including the image type extension.
      */
-    public function saveAsImage($source, $destination, $width, $height, $sizeMode = "max")
+    public function saveAsImage($source, $destination, $width, $height, $sizeMode = 'max')
     {
         // Get information about the source image and make sure it actually is an image.
         $size = getimagesize($source);
         if ($size === false) {
-            throw new Exception(T("message.fileUploadNotImage"));
+            throw new Exception(T('message.fileUploadNotImage'));
         }
         list($sourceWidth, $sourceHeight, $type) = $size;
 
@@ -130,12 +130,12 @@ class ETUpload extends ETPluggable
 
         // If we weren't able to create a GD image from the source, throw an exception.
         if (!$image) {
-            throw new Exception(T("message.fileUploadNotImage"));
+            throw new Exception(T('message.fileUploadNotImage'));
         }
 
         // Work out the image type which we will output the image as.
         $outputType = pathinfo($destination, PATHINFO_EXTENSION);
-        $types = array(1 => "gif", 2 => "jpg", 3 => "png");
+        $types = array(1 => 'gif', 2 => 'jpg', 3 => 'png');
 
         // If an extension was specified in the destination, we'll use that and strip the it off of the
         // destination; otherwise, use the type from getimagesize().
@@ -143,8 +143,8 @@ class ETUpload extends ETPluggable
             $outputType = $types[$type];
 
             // We don't support gif output, as it makes transparency difficult.
-            if ($outputType == "gif") {
-                $outputType = "png";
+            if ($outputType == 'gif') {
+                $outputType = 'png';
             }
         } else {
             $destination = substr($destination, 0, -strlen($outputType) - 1);
@@ -155,7 +155,7 @@ class ETUpload extends ETPluggable
         $heightRatio = $height / $sourceHeight;
 
         // If we're cropping, use the larger of the two ratios so we fill the whole image area.
-        if ($sizeMode == "crop") {
+        if ($sizeMode == 'crop') {
             $ratio = max($widthRatio, $heightRatio);
         }
 
@@ -165,12 +165,12 @@ class ETUpload extends ETPluggable
         }
 
         // If the provided width x height is a minimum, the ratio must be no smaller than one.
-        if ($sizeMode == "min") {
+        if ($sizeMode == 'min') {
             $ratio = max(1, $ratio);
         }
 
         // If the provided width x height is a maximum, the ratio must be no greater than one.
-        elseif ($sizeMode == "max") {
+        elseif ($sizeMode == 'max') {
             $ratio = min(1, $ratio);
         }
 
@@ -179,14 +179,14 @@ class ETUpload extends ETPluggable
         $newHeight = ceil($ratio * $sourceHeight);
 
         // Work out the dimensions of the image we are creating.
-        if ($sizeMode == "max" or $sizeMode == "min") {
+        if ($sizeMode == 'max' or $sizeMode == 'min') {
             $width = $newWidth;
             $height = $newHeight;
         }
 
         // Create a new GD image of the specified width and height, and make sure we can handle transparency.
         $newImage = imagecreatetruecolor($width, $height);
-        if ($outputType == "png") {
+        if ($outputType == 'png') {
             imagecolortransparent($newImage, imagecolorallocate($newImage, 0, 0, 0));
             imagealphablending($newImage, false);
             imagesavealpha($newImage, true);
@@ -201,11 +201,11 @@ class ETUpload extends ETPluggable
 
         // Save the image to the correct destination and format.
         switch ($outputType) {
-        case "png":
+        case 'png':
             imagepng($newImage, $outputFile = "$destination.png");
             break;
 
-        case "gif":
+        case 'gif':
             imagegif($newImage, $outputFile = "$destination.gif");
             break;
 

@@ -2,7 +2,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -12,13 +12,13 @@ if (!defined("IN_ESOTALK")) {
  * @package esoTalk
  */
 
-$channel = $data["channel"];
-$form = $data["form"];
+$channel = $data['channel'];
+$form = $data['form'];
 ?>
 <div class='sheet' id='deleteChannelSheet'>
 <div class='sheetContent'>
 
-<h3><?php echo T("Delete Channel"); ?>: <?php echo sanitizeHTML($channel["title"]); ?></h3>
+<h3><?php echo T('Delete Channel'); ?>: <?php echo sanitizeHTML($channel['title']); ?></h3>
 
 <?php echo $form->open(); ?>
 
@@ -26,24 +26,24 @@ $form = $data["form"];
 
 <div class='section form'>
 
-<p class='help'><?php echo T("message.deleteChannelHelp"); ?></p>
+<p class='help'><?php echo T('message.deleteChannelHelp'); ?></p>
 
 <p class='radio'>
-<label><?php echo $form->radio("method", "move"); ?> <?php echo T("<strong>Move</strong> conversations to the following channel:"); ?></label>
+<label><?php echo $form->radio('method', 'move'); ?> <?php echo T('<strong>Move</strong> conversations to the following channel:'); ?></label>
 <?php
 $moveOptions = array();
-foreach ($data["channels"] as $id => $ch) {
-    if ($id == $channel["channelId"]) {
+foreach ($data['channels'] as $id => $ch) {
+    if ($id == $channel['channelId']) {
         continue;
     }
-    $moveOptions[$id] = str_repeat("&nbsp;", $ch["depth"] * 5) . $ch["title"];
+    $moveOptions[$id] = str_repeat('&nbsp;', $ch['depth'] * 5) . $ch['title'];
 }
-echo $form->select("moveToChannelId", $moveOptions);
+echo $form->select('moveToChannelId', $moveOptions);
 ?>
 </p>
 
 <p class='radio'>
-<label><?php echo $form->radio("method", "delete"); ?> <?php echo T("<strong>Delete</strong> all conversations forever."); ?></label>
+<label><?php echo $form->radio('method', 'delete'); ?> <?php echo T('<strong>Delete</strong> all conversations forever.'); ?></label>
 </p>
 
 </div>
@@ -51,7 +51,7 @@ echo $form->select("moveToChannelId", $moveOptions);
 </div>
 
 <div class='buttons'>
-<?php echo $form->button("delete", T("Delete Channel"), array("class" => "big")); ?>
+<?php echo $form->button('delete', T('Delete Channel'), array('class' => 'big')); ?>
 <?php echo $form->cancelButton(); ?>
 </div>
 

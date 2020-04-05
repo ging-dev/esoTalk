@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -51,7 +51,7 @@ class ETForm extends ETPluggable
      * The "action" attribute of the <form> tag.
      * @var string
      */
-    public $action = "";
+    public $action = '';
 
 
     /**
@@ -77,7 +77,7 @@ class ETForm extends ETPluggable
      * @see addToArrayString
      * @return void
      */
-    public function addSection($id, $title = "", $position = false)
+    public function addSection($id, $title = '', $position = false)
     {
         addToArrayString($this->sections, $id, $title, $position);
     }
@@ -113,8 +113,8 @@ class ETForm extends ETPluggable
             $this->fields[$section] = array();
         }
         addToArrayString($this->fields[$section], $id, array(
-        "renderCallback" => $renderCallback,
-        "processCallback" => $processCallback
+        'renderCallback' => $renderCallback,
+        'processCallback' => $processCallback
     ), $position);
     }
 
@@ -154,7 +154,7 @@ class ETForm extends ETPluggable
         $fields = array();
         if (isset($this->fields[$section])) {
             foreach ($this->fields[$section] as $name => $callbacks) {
-                $fields[$name] = call_user_func_array($callbacks["renderCallback"], array($this));
+                $fields[$name] = call_user_func_array($callbacks['renderCallback'], array($this));
             }
         }
         return $fields;
@@ -171,8 +171,8 @@ class ETForm extends ETPluggable
     {
         foreach ($this->fields as $fields) {
             foreach ($fields as $k => $callbacks) {
-                if ($callbacks["processCallback"] !== null) {
-                    call_user_func_array($callbacks["processCallback"], array($this, $k, &$collector));
+                if ($callbacks['processCallback'] !== null) {
+                    call_user_func_array($callbacks['processCallback'], array($this, $k, &$collector));
                 }
             }
         }
@@ -187,10 +187,10 @@ class ETForm extends ETPluggable
      */
     public function open()
     {
-        $this->addHidden("token", ET::$session->token);
-        $hidden = "";
+        $this->addHidden('token', ET::$session->token);
+        $hidden = '';
         foreach ($this->hiddenInputs as $field) {
-            $hidden .= "<input type='hidden' name='$field' value='" . htmlentities($this->getValue($field), ENT_QUOTES, "UTF-8") . "'/>\n";
+            $hidden .= "<input type='hidden' name='$field' value='" . htmlentities($this->getValue($field), ENT_QUOTES, 'UTF-8') . "'/>\n";
         }
 
         return "<form action='" . sanitizeHTML($this->action) . "' method='post' enctype='multipart/form-data'>\n" . $hidden;
@@ -204,7 +204,7 @@ class ETForm extends ETPluggable
      */
     public function close()
     {
-        return "</form>";
+        return '</form>';
     }
 
 
@@ -214,9 +214,9 @@ class ETForm extends ETPluggable
      * @param string $field An optional field to check the existence of.
      * @return bool
      */
-    public function validPostBack($field = "")
+    public function validPostBack($field = '')
     {
-        return $this->isPostBack($field) and ET::$session->validateToken(@$_POST["token"]);
+        return $this->isPostBack($field) and ET::$session->validateToken(@$_POST['token']);
     }
 
 
@@ -226,7 +226,7 @@ class ETForm extends ETPluggable
      * @param string $field An optional field to check the existence of.
      * @return bool
      */
-    public function isPostBack($field = "")
+    public function isPostBack($field = '')
     {
         return $field ? isset($_POST[$field]) : !empty($_POST);
     }
@@ -241,7 +241,7 @@ class ETForm extends ETPluggable
     public function getError($field)
     {
         if (!empty($this->errors[$field])) {
-            return "<div class='error'>" . $this->errors[$field] . "</div>";
+            return "<div class='error'>" . $this->errors[$field] . '</div>';
         }
     }
 
@@ -270,19 +270,19 @@ class ETForm extends ETPluggable
      * @param string $default The default value to fall back on if no value is found.
      * @return string
      */
-    public function getValue($field, $default = "")
+    public function getValue($field, $default = '')
     {
         if ($this->isPostBack()) {
 
         // If the field is part of a multi-dimensional array (i.e. its name is like this[that][foo], we'll
             // have to parse the field's name to get the correct value from the $_POST array.
-            if (strpos($field, "[") !== false) {
-                $parts = explode("[", $field);
+            if (strpos($field, '[') !== false) {
+                $parts = explode('[', $field);
                 $value = $_POST;
 
                 // Go through each "part" in the field name and drill down into the $_POST array.
                 foreach ($parts as $part) {
-                    $part = rtrim($part, "]");
+                    $part = rtrim($part, ']');
                     $value = @$value[$part];
                 }
 
@@ -295,7 +295,7 @@ class ETForm extends ETPluggable
             // we want to use. This is important especially for checkboxes ($_POST['checkbox']
             // isn't set, but that implies that its value is empty, not whatever $default is.)
             else {
-                return isset($_POST[$field]) ? $_POST[$field] : "";
+                return isset($_POST[$field]) ? $_POST[$field] : '';
             }
         } else {
             return isset($this->values[$field]) ? $this->values[$field] : $default;
@@ -363,35 +363,35 @@ class ETForm extends ETPluggable
      * @param array $attributes An array of attributes to add to the input tag.
      * @return string
      */
-    public function input($name, $type = "text", $attributes = array())
+    public function input($name, $type = 'text', $attributes = array())
     {
-        $attributes["name"] = $name;
+        $attributes['name'] = $name;
 
         // If there's an error for this field, add the "error" class.
         if (!empty($this->errors[$name])) {
-            $this->addClass($attributes, "error");
+            $this->addClass($attributes, 'error');
         }
 
         // If a value attribute is not explicitly specified, get what the value should be.
-        if (!isset($attributes["value"])) {
-            $attributes["value"] = $this->getValue($name);
+        if (!isset($attributes['value'])) {
+            $attributes['value'] = $this->getValue($name);
         }
 
         // If this is a textarea, make some custom HTML.
-        if ($type == "textarea") {
-            $value = htmlentities($attributes["value"], ENT_NOQUOTES, "UTF-8");
-            unset($attributes["value"]);
-            $input = "<textarea" . $this->getAttributes($attributes) . ">$value</textarea>";
+        if ($type == 'textarea') {
+            $value = htmlentities($attributes['value'], ENT_NOQUOTES, 'UTF-8');
+            unset($attributes['value']);
+            $input = '<textarea' . $this->getAttributes($attributes) . ">$value</textarea>";
         }
 
         // But any other type of input we can use the <input> tag.
         else {
-            $input = "<input type='$type'" . $this->getAttributes($attributes) . "/>";
+            $input = "<input type='$type'" . $this->getAttributes($attributes) . '/>';
         }
 
         // Append an error if there is one.
         if (!empty($this->errors[$name])) {
-            $input .= " " . $this->getError($name);
+            $input .= ' ' . $this->getError($name);
         }
 
         return $input;
@@ -406,9 +406,9 @@ class ETForm extends ETPluggable
      */
     protected function getAttributes($attributes)
     {
-        $string = "";
+        $string = '';
         foreach ($attributes as $k => $v) {
-            $string .= " $k='" . htmlentities($v, ENT_QUOTES, "UTF-8") . "'";
+            $string .= " $k='" . htmlentities($v, ENT_QUOTES, 'UTF-8') . "'";
         }
         return $string;
     }
@@ -423,10 +423,10 @@ class ETForm extends ETPluggable
      */
     protected function addClass(&$attributes, $class)
     {
-        if (empty($attributes["class"])) {
-            $attributes["class"] = $class;
+        if (empty($attributes['class'])) {
+            $attributes['class'] = $class;
         } else {
-            $attributes["class"] .= " $class";
+            $attributes['class'] .= " $class";
         }
     }
 
@@ -442,22 +442,22 @@ class ETForm extends ETPluggable
     public function select($name, $options, $attributes = array())
     {
         // Construct the opening select tag.
-        $attributes["name"] = $name;
-        $select = "<select" . $this->getAttributes($attributes) . ">\n";
+        $attributes['name'] = $name;
+        $select = '<select' . $this->getAttributes($attributes) . ">\n";
 
         // Get the currently-selected value of this field.
         $values = (array)$this->getValue($name);
 
         // Loop through the options and add a tag for each one, selecting the appropriate one.
         foreach ($options as $k => $v) {
-            $select .= "<option value='$k'" . (in_array($k, $values) ? " selected='selected'" : "") . ">$v</option>\n";
+            $select .= "<option value='$k'" . (in_array($k, $values) ? " selected='selected'" : '') . ">$v</option>\n";
         }
 
-        $select .= "</select>";
+        $select .= '</select>';
 
         // Append an error if there is one.
         if (!empty($this->errors[$name])) {
-            $select .= " " . $this->getError($name);
+            $select .= ' ' . $this->getError($name);
         }
 
         return $select;
@@ -473,16 +473,16 @@ class ETForm extends ETPluggable
      */
     public function checkbox($name, $attributes = array())
     {
-        if (!isset($attributes["value"])) {
-            $attributes["value"] = 1;
+        if (!isset($attributes['value'])) {
+            $attributes['value'] = 1;
         }
 
         // Check (pun intended) if this checkbox should be checked.
-        if ($this->getValue($name) == $attributes["value"]) {
-            $attributes["checked"] = "checked";
+        if ($this->getValue($name) == $attributes['value']) {
+            $attributes['checked'] = 'checked';
         }
 
-        return $this->input($name, "checkbox", $attributes);
+        return $this->input($name, 'checkbox', $attributes);
     }
 
 
@@ -497,12 +497,12 @@ class ETForm extends ETPluggable
     public function radio($name, $value, $attributes = array())
     {
         // Check if this radio button should be checked.
-        $attributes["value"] = $value;
-        if ($this->getValue($name) == $attributes["value"]) {
-            $attributes["checked"] = "checked";
+        $attributes['value'] = $value;
+        if ($this->getValue($name) == $attributes['value']) {
+            $attributes['checked'] = 'checked';
         }
 
-        return $this->input($name, "radio", $attributes);
+        return $this->input($name, 'radio', $attributes);
     }
 
 
@@ -514,13 +514,13 @@ class ETForm extends ETPluggable
      * @param array $attributes An array of attributes to add to the input tag.
      * @return string
      */
-    public function button($name, $label = "", $attributes = array())
+    public function button($name, $label = '', $attributes = array())
     {
-        $this->addClass($attributes, "button");
-        if (isset($attributes["tag"]) and $attributes["tag"] == "button") {
+        $this->addClass($attributes, 'button');
+        if (isset($attributes['tag']) and $attributes['tag'] == 'button') {
             return "<button type='submit' name='$name'" . $this->getAttributes($attributes) . ">$label</button>";
         } else {
-            return "<input type='submit' name='$name' value='$label'" . $this->getAttributes($attributes) . "/>";
+            return "<input type='submit' name='$name' value='$label'" . $this->getAttributes($attributes) . '/>';
         }
     }
 
@@ -530,9 +530,9 @@ class ETForm extends ETPluggable
      *
      * @return string
      */
-    public function saveButton($name = "save")
+    public function saveButton($name = 'save')
     {
-        return $this->button($name, T("Save Changes"), array("class" => "big submit"));
+        return $this->button($name, T('Save Changes'), array('class' => 'big submit'));
     }
 
 
@@ -541,9 +541,9 @@ class ETForm extends ETPluggable
      *
      * @return string
      */
-    public function cancelButton($name = "cancel")
+    public function cancelButton($name = 'cancel')
     {
-        return $this->button($name, T("Cancel"), array("class" => "big cancel"));
+        return $this->button($name, T('Cancel'), array('class' => 'big cancel'));
     }
 
 

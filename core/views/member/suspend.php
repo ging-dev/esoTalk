@@ -2,7 +2,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -12,29 +12,29 @@ if (!defined("IN_ESOTALK")) {
  * @package esoTalk
  */
 
-$member = $data["member"];
-$form = $data["form"];
-$isSuspended = $member["account"] == ACCOUNT_SUSPENDED;
+$member = $data['member'];
+$form = $data['form'];
+$isSuspended = $member['account'] == ACCOUNT_SUSPENDED;
 ?>
 <div class='sheet' id='suspendSheet'>
 <div class='sheetContent'>
 
 <?php echo $form->open(); ?>
 
-<h3><?php echo T($isSuspended ? "Unsuspend" : "Suspend"); ?> <?php echo $member["username"]; ?></h3>
+<h3><?php echo T($isSuspended ? 'Unsuspend' : 'Suspend'); ?> <?php echo $member['username']; ?></h3>
 
 <div class='sheetBody'>
 
 <div class='section'>
 <p>
-<?php printf(T($isSuspended ? "message.unsuspendMemberHelp" : "message.suspendMemberHelp"), $member["username"]); ?>
+<?php printf(T($isSuspended ? 'message.unsuspendMemberHelp' : 'message.suspendMemberHelp'), $member['username']); ?>
 </p>
 </div>
 
 </div>
 
 <div class='buttons'>
-<?php echo $form->button($isSuspended ? "unsuspend" : "suspend", T($isSuspended ? "Unsuspend" : "Suspend"), array("class" => "big submit")); ?>
+<?php echo $form->button($isSuspended ? 'unsuspend' : 'suspend', T($isSuspended ? 'Unsuspend' : 'Suspend'), array('class' => 'big submit')); ?>
 <?php echo $form->cancelButton(); ?>
 </div>
 

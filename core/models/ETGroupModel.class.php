@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -15,7 +15,7 @@ if (!defined("IN_ESOTALK")) {
  */
 class ETGroupModel extends ETModel
 {
-    const CACHE_KEY = "groups";
+    const CACHE_KEY = 'groups';
 
 
     /**
@@ -32,7 +32,7 @@ class ETGroupModel extends ETModel
      */
     public function __construct()
     {
-        parent::__construct("group");
+        parent::__construct('group');
     }
 
 
@@ -55,10 +55,10 @@ class ETGroupModel extends ETModel
 
             // Still no luck? Let's get all of the groups and their details from the db.
                 $sql = ET::SQL()
-                ->select("g.*")
-                ->from("group g");
+                ->select('g.*')
+                ->from('group g');
 
-                $groups = $sql->exec()->allRows("groupId");
+                $groups = $sql->exec()->allRows('groupId');
 
                 // Store the result in the global cache.
                 ET::$cache->store(self::CACHE_KEY, $groups);
@@ -81,12 +81,12 @@ class ETGroupModel extends ETModel
     public function delete($wheres = array())
     {
         ET::SQL()
-        ->delete("g")
-        ->delete("m")
-        ->delete("c")
-        ->from("group g")
-        ->from("member_group m", "m.groupId=g.groupId", "left")
-        ->from("channel_group c", "c.groupId=g.groupId", "left")
+        ->delete('g')
+        ->delete('m')
+        ->delete('c')
+        ->from('group g')
+        ->from('member_group m', 'm.groupId=g.groupId', 'left')
+        ->from('channel_group c', 'c.groupId=g.groupId', 'left')
         ->where($wheres)
         ->exec();
 
@@ -102,7 +102,7 @@ class ETGroupModel extends ETModel
      */
     public function deleteById($id)
     {
-        return $this->delete(array("g.groupId" => $id));
+        return $this->delete(array('g.groupId' => $id));
     }
 
 

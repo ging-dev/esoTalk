@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -66,7 +66,7 @@ class ETMenu
      */
     public function separator($position = false)
     {
-        addToArrayString($this->items, count($this->items) + 1, "separator", $position);
+        addToArrayString($this->items, count($this->items) + 1, 'separator', $position);
     }
 
 
@@ -89,16 +89,16 @@ class ETMenu
      */
     public function getContents()
     {
-        $return = "";
+        $return = '';
         $i = 0;
         $count = count($this->items);
         foreach ($this->items as $k => $v) {
-            if ($v == "separator") {
+            if ($v == 'separator') {
                 if ($i != 0 and $i != $count - 1) {
                     $return .= "<li class='sep'></li>\n";
                 }
             } else {
-                $return .= "<li class='item-$k" . (in_array($k, $this->highlight) ? " selected" : "") . "'>$v</li>\n";
+                $return .= "<li class='item-$k" . (in_array($k, $this->highlight) ? ' selected' : '') . "'>$v</li>\n";
             }
             $i++;
         }

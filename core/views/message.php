@@ -2,7 +2,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -15,12 +15,12 @@ if (!defined("IN_ESOTALK")) {
 <div class='sheet' id='messageSheet'>
 <div class='sheetContent'>
 
-<h3><?php echo $data["title"]; ?></h3>
+<h3><?php echo $data['title']; ?></h3>
 
-<div class='section help'><?php echo $data["message"]; ?></div>
+<div class='section help'><?php echo $data['message']; ?></div>
 
 <div class='buttons'>
-<a href='<?php echo URL(R("return")); ?>' class='button big'><?php echo T("OK"); ?></a>
+<a href='<?php echo URL(R('return')); ?>' class='button big'><?php echo T('OK'); ?></a>
 </div>
 
 </div>

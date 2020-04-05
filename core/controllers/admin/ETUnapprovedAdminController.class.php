@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -27,12 +27,12 @@ class ETUnapprovedAdminController extends ETAdminController
         ET::activityModel()->markNotificationsAsRead('unapproved');
 
         $sql = ET::SQL();
-        $sql->where("confirmed", 0);
-        $sql->orderBy("m.memberId desc");
+        $sql->where('confirmed', 0);
+        $sql->orderBy('m.memberId desc');
         $members = ET::memberModel()->getWithSQL($sql);
 
-        $this->data("members", $members);
-        $this->render("admin/unapproved");
+        $this->data('members', $members);
+        $this->render('admin/unapproved');
     }
 
 
@@ -49,21 +49,21 @@ class ETUnapprovedAdminController extends ETAdminController
         }
 
         // Get this member's details. If it doesn't exist or is already approved, show an error.
-        if (!($member = ET::memberModel()->getById((int)$memberId)) or $member["confirmed"]) {
-            $this->redirect(URL("admin/unapproved"));
+        if (!($member = ET::memberModel()->getById((int)$memberId)) or $member['confirmed']) {
+            $this->redirect(URL('admin/unapproved'));
             return;
         }
 
-        ET::memberModel()->updateById($memberId, array("confirmed" => true));
+        ET::memberModel()->updateById($memberId, array('confirmed' => true));
 
         sendEmail(
-            $member["email"],
-            sprintf(T("email.approved.subject"), $member["username"]),
-            sprintf(T("email.header"), $member["username"]) . sprintf(T("email.approved.body"), C("esoTalk.forumTitle"), URL("user/login", true))
+            $member['email'],
+            sprintf(T('email.approved.subject'), $member['username']),
+            sprintf(T('email.header'), $member['username']) . sprintf(T('email.approved.body'), C('esoTalk.forumTitle'), URL('user/login', true))
         );
 
-        $this->message(T("message.changesSaved"), "success autoDismiss");
-        $this->redirect(URL("admin/unapproved"));
+        $this->message(T('message.changesSaved'), 'success autoDismiss');
+        $this->redirect(URL('admin/unapproved'));
     }
 
 
@@ -80,15 +80,15 @@ class ETUnapprovedAdminController extends ETAdminController
         }
 
         // Get this member's details. If it doesn't exist or is already approved, show an error.
-        if (!($member = ET::memberModel()->getById((int)$memberId)) or $member["confirmed"]) {
-            $this->redirect(URL("admin/unapproved"));
+        if (!($member = ET::memberModel()->getById((int)$memberId)) or $member['confirmed']) {
+            $this->redirect(URL('admin/unapproved'));
             return;
         }
 
         ET::memberModel()->deleteById($memberId);
 
-        $this->message(T("message.changesSaved"), "success autoDismiss");
-        $this->redirect(URL("admin/unapproved"));
+        $this->message(T('message.changesSaved'), 'success autoDismiss');
+        $this->redirect(URL('admin/unapproved'));
     }
 
 
@@ -103,9 +103,9 @@ class ETUnapprovedAdminController extends ETAdminController
             return;
         }
 
-        ET::memberModel()->delete(array("confirmed" => 0));
+        ET::memberModel()->delete(array('confirmed' => 0));
 
-        $this->message(T("message.changesSaved"), "success autoDismiss");
-        $this->redirect(URL("admin/unapproved"));
+        $this->message(T('message.changesSaved'), 'success autoDismiss');
+        $this->redirect(URL('admin/unapproved'));
     }
 }

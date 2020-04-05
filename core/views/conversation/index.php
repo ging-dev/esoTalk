@@ -2,7 +2,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -14,87 +14,87 @@ if (!defined("IN_ESOTALK")) {
 
 // Just to make things a bit easier.
 global $conversation;
-$conversation = $data["conversation"];
+$conversation = $data['conversation'];
 
 // Shortcut function to construct a URL to a position within the conversation, optionally with a search string.
-function makeURL($startFrom = 0, $searchString = "")
+function makeURL($startFrom = 0, $searchString = '')
 {
     global $conversation;
-    $urlParts = array(conversationURL($conversation["conversationId"], $conversation["title"]));
+    $urlParts = array(conversationURL($conversation['conversationId'], $conversation['title']));
 
-    if ($startFrom > 0 or $startFrom[0] == "p" or $startFrom == "last" or $startFrom == "unread" or $searchString) {
+    if ($startFrom > 0 or $startFrom[0] == 'p' or $startFrom == 'last' or $startFrom == 'unread' or $searchString) {
         $urlParts[] = $startFrom;
     }
     if ($searchString) {
         $urlParts[] = "?search=$searchString";
     }
 
-    return implode("/", $urlParts);
+    return implode('/', $urlParts);
 }
 
 // Work out what general class names to apply to the conversation wrapper.
-$classes = array("channel-" . $conversation["channelId"]);
-if ($conversation["starred"]) {
-    $classes[] = "starred";
+$classes = array('channel-' . $conversation['channelId']);
+if ($conversation['starred']) {
+    $classes[] = 'starred';
 }
-if ($conversation["startMemberId"] == ET::$session->userId) {
-    $classes[] = "mine";
+if ($conversation['startMemberId'] == ET::$session->userId) {
+    $classes[] = 'mine';
 }
 ?>
-<div id='conversation' class='hasScrubber <?php echo implode(" ", $classes); ?>'>
+<div id='conversation' class='hasScrubber <?php echo implode(' ', $classes); ?>'>
 
 <div class='scrubberColumn'>
 <div class='scrubberContent'>
 
-<?php $this->trigger("renderControlsBefore", array($data)); ?>
+<?php $this->trigger('renderControlsBefore', array($data)); ?>
 
 <?php
 // Search within conversation form?>
-<form class='search' id='searchWithinConversation' action='<?php echo URL(conversationURL($conversation["conversationId"], $conversation["title"])); ?>' method='get'>
+<form class='search' id='searchWithinConversation' action='<?php echo URL(conversationURL($conversation['conversationId'], $conversation['title'])); ?>' method='get'>
 <fieldset>
 <i class='icon-search'></i>
-<input name='search' type='text' class='text' value='<?php echo sanitizeHTML($data["searchString"]); ?>' placeholder='<?php echo T("Search"); ?>'/>
-<?php if ($data["searchString"]): ?><a href='<?php echo URL(conversationURL($conversation["conversationId"], $conversation["title"])); ?>' class='control-reset'><i class='icon-remove'></i></a><?php endif; ?>
+<input name='search' type='text' class='text' value='<?php echo sanitizeHTML($data['searchString']); ?>' placeholder='<?php echo T('Search'); ?>'/>
+<?php if ($data['searchString']): ?><a href='<?php echo URL(conversationURL($conversation['conversationId'], $conversation['title'])); ?>' class='control-reset'><i class='icon-remove'></i></a><?php endif; ?>
 </fieldset>
 </form>
 
 <?php
 // Star
-echo starButton($conversation["conversationId"], $conversation["starred"]) . "\n";
+echo starButton($conversation['conversationId'], $conversation['starred']) . "\n";
 ?>
 
 <?php if (!ET::$session->user): ?>
-<a href='<?php echo URL("user/login?return=" . urlencode($this->selfURL) . "/#reply"); ?>' class='button big'><i class="icon-plus"></i> <?php echo T("Post a Reply"); ?></a>
+<a href='<?php echo URL('user/login?return=' . urlencode($this->selfURL) . '/#reply'); ?>' class='button big'><i class="icon-plus"></i> <?php echo T('Post a Reply'); ?></a>
 <?php else: ?>
-<a href='#reply' class='button big' id='jumpToReply'><i class='icon-plus'></i> <?php echo T("Post a Reply"); ?></a>
+<a href='#reply' class='button big' id='jumpToReply'><i class='icon-plus'></i> <?php echo T('Post a Reply'); ?></a>
 <?php endif; ?>
 
-<?php $this->trigger("renderScrubberBefore", array($data)); ?>
+<?php $this->trigger('renderScrubberBefore', array($data)); ?>
 
-<?php if (!$data["searchString"]): ?>
+<?php if (!$data['searchString']): ?>
 <!-- Timeline scrubber -->
 <ul class='scrubber timelineScrubber'>
 <?php
 // Construct the timeline scrubber.
 
 // Get the years/months of today, the last post in the conversation, and the first post in the conversation.
-$currentYear = date("Y");
-$currentMonth = date("n");
-$latestYear = date("Y", $conversation["lastPostTime"]);
-$latestMonth = date("n", $conversation["lastPostTime"]);
-$oldestYear = date("Y", $conversation["startTime"]);
-$oldestMonth = date("n", $conversation["startTime"]);
+$currentYear = date('Y');
+$currentMonth = date('n');
+$latestYear = date('Y', $conversation['lastPostTime']);
+$latestMonth = date('n', $conversation['lastPostTime']);
+$oldestYear = date('Y', $conversation['startTime']);
+$oldestMonth = date('n', $conversation['startTime']);
 
 // Output the "original post" item.?>
-<li class='scrubber-op scrubber-nav' data-index='first'><a href='<?php echo URL(makeURL()); ?>'><i class='icon-arrow-up'></i> <?php echo T("Original Post"); ?></a></li>
+<li class='scrubber-op scrubber-nav' data-index='first'><a href='<?php echo URL(makeURL()); ?>'><i class='icon-arrow-up'></i> <?php echo T('Original Post'); ?></a></li>
 <?php
 
 // Work out the year/month which we are viewing from and should therefore highlight as "selected".
 // If we're not at the start of the conversation, or if a year/month was explicitly specified, set the
 // year/month to that of the first post.
-if ($data["startFrom"] > 0 or !empty($data["year"])) {
-    $startFromYear = date("Y", $data["posts"][0]["time"]);
-    $startFromMonth = date("n", $data["posts"][0]["time"]);
+if ($data['startFrom'] > 0 or !empty($data['year'])) {
+    $startFromYear = date('Y', $data['posts'][0]['time']);
+    $startFromMonth = date('n', $data['posts'][0]['time']);
 } else {
     $startFromYear = null;
     $startFromMonth = null;
@@ -126,35 +126,35 @@ if (!empty($scrubber[$currentYear])) {
 // Go through the array we constructed before and output a scrubber item for each year, and a sub-list of
 // its months.
 foreach ($scrubber as $year => $months) {
-    $selected = ($startFromYear == $year and $startFromMonth <= max($months)) ? " selected" : "";
+    $selected = ($startFromYear == $year and $startFromMonth <= max($months)) ? ' selected' : '';
     echo "<li class='scrubber-{$year}01$selected' data-index='{$year}01'><a href='" . URL(makeURL("$year/1")) . "'>$year</a>";
 
     // Output a sub-list of months.
     if (!empty($months)) {
-        echo "<ul>";
+        echo '<ul>';
         foreach ($months as $month) {
-            $selected = ($startFromYear == $year and $startFromMonth == $month) ? " selected" : "";
-            $name = _strftime("%B", mktime(0, 0, 0, $month, 1));
-            $index = $year . str_pad($month, 2, "0", STR_PAD_LEFT);
+            $selected = ($startFromYear == $year and $startFromMonth == $month) ? ' selected' : '';
+            $name = _strftime('%B', mktime(0, 0, 0, $month, 1));
+            $index = $year . str_pad($month, 2, '0', STR_PAD_LEFT);
             echo "<li class='scrubber-$index$selected' data-index='$index'><a href='" . URL(makeURL("$year/$month")) . "'>$name</a></li>";
         }
-        echo "</ul>";
+        echo '</ul>';
     }
 
-    echo "</li>";
+    echo '</li>';
 }
 
 // Now, with the last 5 months we pulled out before, output a scrubber item for each of them.
 foreach ($recentMonths as $month) {
-    $selected = ($startFromYear == $currentYear and $startFromMonth == $month) ? " selected" : "";
-    $name = _strftime("%B", mktime(0, 0, 0, $month, 1));
-    $index = $currentYear . str_pad($month, 2, "0", STR_PAD_LEFT);
+    $selected = ($startFromYear == $currentYear and $startFromMonth == $month) ? ' selected' : '';
+    $name = _strftime('%B', mktime(0, 0, 0, $month, 1));
+    $index = $currentYear . str_pad($month, 2, '0', STR_PAD_LEFT);
     echo "<li class='scrubber-$index$selected' data-index='$index'><a href='" . URL(makeURL("$currentYear/$month")) . "'>$name</a>";
-    echo "</li>";
+    echo '</li>';
 }
 
 // Always output a "Latest" item.?>
-<li class='scrubber-now scrubber-nav' data-index='last'><a href='<?php echo URL(makeURL("last")); ?>'><i class='icon-arrow-down'></i> <?php echo T("Latest"); ?></a></li>
+<li class='scrubber-now scrubber-nav' data-index='last'><a href='<?php echo URL(makeURL('last')); ?>'><i class='icon-arrow-down'></i> <?php echo T('Latest'); ?></a></li>
 </ul>
 <?php endif; ?>
 
@@ -168,111 +168,111 @@ foreach ($recentMonths as $month) {
 
 // Title?>
 <h1 id='conversationTitle'><?php
-if ($conversation["canModerate"] or $conversation["startMemberId"] == ET::$session->userId): ?><a href='<?php echo URL("conversation/edit/" . $conversation["conversationId"]); ?>'><?php echo sanitizeHTML($conversation["title"]); ?></a><?php
-else: echo sanitizeHTML($conversation["title"]);
+if ($conversation['canModerate'] or $conversation['startMemberId'] == ET::$session->userId): ?><a href='<?php echo URL('conversation/edit/' . $conversation['conversationId']); ?>'><?php echo sanitizeHTML($conversation['title']); ?></a><?php
+else: echo sanitizeHTML($conversation['title']);
 endif;
 ?></h1>
 <?php
 
 // Channel
-$this->renderView("conversation/channelPath", array("conversation" => $conversation));
+$this->renderView('conversation/channelPath', array('conversation' => $conversation));
 
 // Labels?>
 <span class='labels'>
-<?php $this->renderView("conversation/labels", array("labels" => $conversation["labels"])); ?>
+<?php $this->renderView('conversation/labels', array('labels' => $conversation['labels'])); ?>
 </span>
 
 </div>
 
 <?php
 // Controls
-if ($data["controlsMenu"]->count()): ?>
+if ($data['controlsMenu']->count()): ?>
 <ul id='conversationControls' class='controls'>
-<?php echo $data["controlsMenu"]->getContents(); ?>
+<?php echo $data['controlsMenu']->getContents(); ?>
 </ul>
 <?php endif; ?>
 
 <?php
 // Members allowed list (only if conversation is private or editable)
-if (count($conversation["membersAllowedSummary"]) or $conversation["startMemberId"] == ET::$session->userId or $conversation["canModerate"]): ?>
+if (count($conversation['membersAllowedSummary']) or $conversation['startMemberId'] == ET::$session->userId or $conversation['canModerate']): ?>
 <div id='conversationPrivacy' class='area'>
-<span class='allowedList action'><?php $this->renderView("conversation/membersAllowedSummary", $data); ?></span>
-<?php if ($conversation["canEditMembersAllowed"]): ?><a href='<?php echo URL("conversation/edit/" . $conversation["conversationId"]); ?>' id='control-changeMembersAllowed'><i class='icon-pencil'></i> <?php echo T("Change"); ?></a><?php endif; ?>
+<span class='allowedList action'><?php $this->renderView('conversation/membersAllowedSummary', $data); ?></span>
+<?php if ($conversation['canEditMembersAllowed']): ?><a href='<?php echo URL('conversation/edit/' . $conversation['conversationId']); ?>' id='control-changeMembersAllowed'><i class='icon-pencil'></i> <?php echo T('Change'); ?></a><?php endif; ?>
 </div>
 <?php endif; ?>
 
 <div id='conversationBody'>
 
 <?php // If we're searching but there are no search results, show an error.
-if ($data["searchString"] and !$conversation["countPosts"]): ?>
+if ($data['searchString'] and !$conversation['countPosts']): ?>
 <div class='area noResults help'>
-<h4><?php echo T("message.noSearchResultsPosts"); ?></h4>
+<h4><?php echo T('message.noSearchResultsPosts'); ?></h4>
 <ul>
-<li><?php echo T("message.fulltextKeywordWarning"); ?></li>
-<li><?php echo T("message.searchAllConversations"); ?></li>
+<li><?php echo T('message.fulltextKeywordWarning'); ?></li>
+<li><?php echo T('message.searchAllConversations'); ?></li>
 </ul>
 </div>
 <?php else: ?>
 
 <!-- Posts -->
-<ol id='conversationPosts' class='postList' start='<?php echo $data["startFrom"] + 1; ?>'>
+<ol id='conversationPosts' class='postList' start='<?php echo $data['startFrom'] + 1; ?>'>
 
-<?php if ($data["startFrom"] > 0): ?>
-<li class='scrubberMore scrubberPrevious'><a href='<?php echo URL(makeURL("p" . (ceil($data["startFrom"] / C("esoTalk.conversation.postsPerPage") + 1) - 1), $data["searchString"])); ?>'>&lsaquo; <?php echo T("Older"); ?></a></li>
+<?php if ($data['startFrom'] > 0): ?>
+<li class='scrubberMore scrubberPrevious'><a href='<?php echo URL(makeURL('p' . (ceil($data['startFrom'] / C('esoTalk.conversation.postsPerPage') + 1) - 1), $data['searchString'])); ?>'>&lsaquo; <?php echo T('Older'); ?></a></li>
 <?php endif; ?>
 
-<?php $this->renderView("conversation/posts", $data); ?>
+<?php $this->renderView('conversation/posts', $data); ?>
 
-<?php if ($data["startFrom"] + C("esoTalk.conversation.postsPerPage") < $conversation["countPosts"]): ?>
-<li class='scrubberMore scrubberNext'><a href='<?php echo URL(makeURL("p" . (floor($data["startFrom"] / C("esoTalk.conversation.postsPerPage") + 1) + 1), $data["searchString"])); ?>'><?php echo T("Newer"); ?> &rsaquo;</a></li>
+<?php if ($data['startFrom'] + C('esoTalk.conversation.postsPerPage') < $conversation['countPosts']): ?>
+<li class='scrubberMore scrubberNext'><a href='<?php echo URL(makeURL('p' . (floor($data['startFrom'] / C('esoTalk.conversation.postsPerPage') + 1) + 1), $data['searchString'])); ?>'><?php echo T('Newer'); ?> &rsaquo;</a></li>
 <?php endif; ?>
 
 </ol>
 
-<?php if (!$data["searchString"]): ?>
+<?php if (!$data['searchString']): ?>
 <!-- Reply area -->
 <div id='conversationReply'>
-<?php echo $data["replyForm"]->open(); ?>
+<?php echo $data['replyForm']->open(); ?>
 
 <?php
 // If we can't reply, we should show some kind of error message.
-if (!$conversation["canReply"]) {
+if (!$conversation['canReply']) {
 
     // If the user simply isn't logged in, show a reply box placeholder saying that they need to log in or sign up.
     if (!ET::$session->user) {
         $post = array(
-            "id" => "reply",
-            "class" => "logInToReply",
-            "title" => "",
-            "body" => sprintf(T("message.logInToReply"), URL("user/login?return=" . urlencode($this->selfURL)), URL("user/join?return=" . urlencode($this->selfURL))),
-            "avatar" => avatar()
+            'id' => 'reply',
+            'class' => 'logInToReply',
+            'title' => '',
+            'body' => sprintf(T('message.logInToReply'), URL('user/login?return=' . urlencode($this->selfURL)), URL('user/join?return=' . urlencode($this->selfURL))),
+            'avatar' => avatar()
         );
 
-        $this->renderView("conversation/post", array("post" => $post));
+        $this->renderView('conversation/post', array('post' => $post));
     }
 
     // If the user is suspended, show an informational message.
     elseif (ET::$session->isSuspended()) {
-        echo "<p class='help'>" . T("message.suspended") . "</p>";
+        echo "<p class='help'>" . T('message.suspended') . '</p>';
     }
 
     // If the conversation is locked...
-    elseif ($conversation["locked"]) {
-        echo "<p class='help'>" . T("message.locked") . "</p>";
+    elseif ($conversation['locked']) {
+        echo "<p class='help'>" . T('message.locked') . '</p>';
     }
 }
 
 // If we can reply, show the reply box.
 else {
-    $this->renderView("conversation/reply", array(
-        "form" => $data["replyForm"],
-        "conversation" => $conversation,
-        "controls" => $data["replyControls"]
+    $this->renderView('conversation/reply', array(
+        'form' => $data['replyForm'],
+        'conversation' => $conversation,
+        'controls' => $data['replyControls']
     ));
 }
 ?>
 
-<?php echo $data["replyForm"]->close(); ?>
+<?php echo $data['replyForm']->close(); ?>
 </div>
 <?php endif; ?>
 

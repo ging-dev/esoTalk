@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -26,10 +26,10 @@ class ETAppearanceAdminController extends ETAdminController
     {
         $skins = $this->getSkins();
 
-        $this->title = T("Appearance");
-        $this->data("skins", $skins);
-        $this->data("skin", C("esoTalk.skin") ? $skins[C("esoTalk.skin")] : array());
-        $this->render("admin/appearance");
+        $this->title = T('Appearance');
+        $this->data('skins', $skins);
+        $this->data('skin', C('esoTalk.skin') ? $skins[C('esoTalk.skin')] : array());
+        $this->render('admin/appearance');
     }
 
 
@@ -47,19 +47,19 @@ class ETAppearanceAdminController extends ETAdminController
             while (false !== ($file = readdir($handle))) {
 
             // Make sure the skin is valid, and include its skin.php file.
-                if ($file[0] != "." and file_exists($skinFile = PATH_SKINS . "/$file/skin.php") and (include_once $skinFile)) {
+                if ($file[0] != '.' and file_exists($skinFile = PATH_SKINS . "/$file/skin.php") and (include_once $skinFile)) {
 
                 // Add the skin's information and status to the array.
                     $skins[$file] = array(
-                    "info" => ET::$skinInfo[$file],
-                    "selected" => $file == C("esoTalk.skin"),
-                    "selectedMobile" => $file == C("esoTalk.mobileSkin"),
-                    "settingsView" => false
+                    'info' => ET::$skinInfo[$file],
+                    'selected' => $file == C('esoTalk.skin'),
+                    'selectedMobile' => $file == C('esoTalk.mobileSkin'),
+                    'settingsView' => false
                 );
 
                     // If this skin's settings function returns a view path, then store it.
-                    if ($skins[$file]["selected"]) {
-                        $skins[$file]["settingsView"] = ET::$skin->settings($this);
+                    if ($skins[$file]['selected']) {
+                        $skins[$file]['settingsView'] = ET::$skin->settings($this);
                     }
                 }
             }
@@ -77,7 +77,7 @@ class ETAppearanceAdminController extends ETAdminController
      * @param string $skin The name of the skin.
      * @return void
      */
-    public function action_activate($skin = "")
+    public function action_activate($skin = '')
     {
         if (!$this->validateToken()) {
             return;
@@ -90,7 +90,7 @@ class ETAppearanceAdminController extends ETAdminController
         }
 
         // Write the new setting to the config file.
-        ET::writeConfig(array("esoTalk.skin" => $skin));
+        ET::writeConfig(array('esoTalk.skin' => $skin));
 
         // Clear skin cache.
         $files = glob(PATH_CACHE . '/css/*.*');
@@ -98,7 +98,7 @@ class ETAppearanceAdminController extends ETAdminController
             unlink(realpath($file));
         }
 
-        $this->redirect(URL("admin/appearance"));
+        $this->redirect(URL('admin/appearance'));
     }
 
 
@@ -108,7 +108,7 @@ class ETAppearanceAdminController extends ETAdminController
      * @param string $skin The name of the skin.
      * @return void
      */
-    public function action_activateMobile($skin = "")
+    public function action_activateMobile($skin = '')
     {
         if (!$this->validateToken()) {
             return;
@@ -121,7 +121,7 @@ class ETAppearanceAdminController extends ETAdminController
         }
 
         // Write the new setting to the config file.
-        ET::writeConfig(array("esoTalk.mobileSkin" => $skin));
+        ET::writeConfig(array('esoTalk.mobileSkin' => $skin));
 
         // Clear skin cache.
         $files = glob(PATH_CACHE . '/css/*.*');
@@ -129,7 +129,7 @@ class ETAppearanceAdminController extends ETAdminController
             unlink(realpath($file));
         }
 
-        $this->redirect(URL("admin/appearance"));
+        $this->redirect(URL('admin/appearance'));
     }
 
 
@@ -139,7 +139,7 @@ class ETAppearanceAdminController extends ETAdminController
      * @param string $skin The name of the skin.
      * @return void
      */
-    public function action_uninstall($skin = "")
+    public function action_uninstall($skin = '')
     {
         if (!$this->validateToken()) {
             return;
@@ -154,27 +154,27 @@ class ETAppearanceAdminController extends ETAdminController
 
         // Attempt to remove the directory. If we couldn't, show a "not writable" message.
         if (!is_writable($file = PATH_SKINS) or !is_writable($file = PATH_SKINS . "/$skin") or !rrmdir($file)) {
-            $this->message(sprintf(T("message.notWritable"), $file), "warning");
+            $this->message(sprintf(T('message.notWritable'), $file), 'warning');
         }
 
         // Otherwise, show a success message.
         else {
-            $this->message(T("message.skinUninstalled"), "success");
+            $this->message(T('message.skinUninstalled'), 'success');
         }
 
         // If one of the skin config options is set to this skin, change it.
         $config = array();
-        if (C("esoTalk.skin") == $skin) {
-            $config["esoTalk.skin"] = reset(array_keys($skins));
+        if (C('esoTalk.skin') == $skin) {
+            $config['esoTalk.skin'] = reset(array_keys($skins));
         }
-        if (C("esoTalk.mobileSkin") == $skin) {
-            $config["esoTalk.mobileSkin"] = reset(array_keys($skins));
+        if (C('esoTalk.mobileSkin') == $skin) {
+            $config['esoTalk.mobileSkin'] = reset(array_keys($skins));
         }
         if (count($config)) {
             ET::writeConfig($config);
         }
 
-        $this->redirect(URL("admin/appearance"));
+        $this->redirect(URL('admin/appearance'));
     }
 
 

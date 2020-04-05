@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -68,7 +68,7 @@ class ETPluggable
 
         // If we have a class name to use, trigger an event with that as the prefix.
         if ($this->className) {
-            $return = ET::trigger($this->className . "_" . $event, $parameters);
+            $return = ET::trigger($this->className . '_' . $event, $parameters);
         }
 
         // Trigger the event globally.

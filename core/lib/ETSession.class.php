@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -53,24 +53,24 @@ class ETSession extends ETModel
     public function __construct()
     {
         // Start a session.
-        session_name(C("esoTalk.cookie.name") . "_session");
+        session_name(C('esoTalk.cookie.name') . '_session');
         session_start();
-        if (empty($_SESSION["token"])) {
+        if (empty($_SESSION['token'])) {
             $this->regenerateToken();
         }
 
         // Complicate session highjacking - check the current user agent against the one that initiated the session.
-        if (md5($_SERVER["HTTP_USER_AGENT"]) != $_SESSION["userAgent"]) {
+        if (md5($_SERVER['HTTP_USER_AGENT']) != $_SESSION['userAgent']) {
             session_destroy();
         }
 
         // Set the class properties to reference session variables.
-        $this->token = &$_SESSION["token"];
-        $this->ip = $_SERVER["REMOTE_ADDR"];
-        $this->userId = &$_SESSION["userId"];
+        $this->token = &$_SESSION['token'];
+        $this->ip = $_SERVER['REMOTE_ADDR'];
+        $this->userId = &$_SESSION['userId'];
 
         // If a persistent login cookie is set, attempt to log in.
-        if (C("esoTalk.enablePersistenceCookies") and !$this->userId and ($cookie = $this->getCookie("persistent"))) {
+        if (C('esoTalk.enablePersistenceCookies') and !$this->userId and ($cookie = $this->getCookie('persistent'))) {
 
         // Get the token and member ID from the cookie.
             $token = substr($cookie, -32);
@@ -78,8 +78,8 @@ class ETSession extends ETModel
 
             // Find a user with this memberId and token.
             $member = ET::memberModel()->get(array(
-            "m.memberId" => $memberId,
-            "rememberToken" => $token
+            'm.memberId' => $memberId,
+            'rememberToken' => $token
         ));
 
             // If we found them, log them in.
@@ -89,7 +89,7 @@ class ETSession extends ETModel
         }
 
         // If there's a user logged in, get their user data.
-        if ($this->userId and C("esoTalk.installed")) {
+        if ($this->userId and C('esoTalk.installed')) {
             $this->refreshUserData();
         }
     }
@@ -116,7 +116,7 @@ class ETSession extends ETModel
      */
     public function preference($key, $default = false)
     {
-        return isset($this->user["preferences"][$key]) ? $this->user["preferences"][$key] : $default;
+        return isset($this->user['preferences'][$key]) ? $this->user['preferences'][$key] : $default;
     }
 
 
@@ -131,7 +131,7 @@ class ETSession extends ETModel
         if (!$this->userId) {
             return;
         }
-        $this->user["preferences"] = ET::memberModel()->setPreferences($this->user, $values);
+        $this->user['preferences'] = ET::memberModel()->setPreferences($this->user, $values);
     }
 
 
@@ -144,17 +144,17 @@ class ETSession extends ETModel
     protected function processLogin($member)
     {
         // If registrations require confirmation but the user's account hasn't been confirmed, return a message.
-        if (!$member["confirmed"] and ($type = C("esoTalk.registration.requireConfirmation"))) {
-            if ($type == "email") {
-                $this->error("emailNotYetConfirmed");
-            } elseif ($type == "approval") {
-                $this->error("accountNotYetApproved");
+        if (!$member['confirmed'] and ($type = C('esoTalk.registration.requireConfirmation'))) {
+            if ($type == 'email') {
+                $this->error('emailNotYetConfirmed');
+            } elseif ($type == 'approval') {
+                $this->error('accountNotYetApproved');
             }
             return false;
         }
 
         // Assign the user ID to a SESSION variable.
-        $_SESSION["userId"] = $member["memberId"];
+        $_SESSION['userId'] = $member['memberId'];
         $this->user = $member;
 
         // Regenerate the session ID and token to prevent session fixation.
@@ -187,21 +187,21 @@ class ETSession extends ETModel
      */
     public function login($name, $password, $remember = false)
     {
-        $return = $this->trigger("login", array($name, $password, $remember));
+        $return = $this->trigger('login', array($name, $password, $remember));
         if (count($return)) {
             return reset($return);
         }
 
         // Get the member with this username or email.
         $sql = ET::SQL()
-        ->where("m.username=:username OR m.email=:email")
-        ->bind(":username", $name)
-        ->bind(":email", $name);
+        ->where('m.username=:username OR m.email=:email')
+        ->bind(':username', $name)
+        ->bind(':email', $name);
         $member = reset(ET::memberModel()->getWithSQL($sql));
 
         // Check that the password is correct.
-        if (!$member or !ET::memberModel()->checkPassword($password, $member["password"])) {
-            $this->error("password", "incorrectLogin");
+        if (!$member or !ET::memberModel()->checkPassword($password, $member['password'])) {
+            $this->error('password', 'incorrectLogin');
             return false;
         }
 
@@ -209,7 +209,7 @@ class ETSession extends ETModel
         $return = $this->processLogin($member);
 
         // Set a persistent login "remember me" cookie?
-        if (C("esoTalk.enablePersistenceCookies") and $return === true and $remember) {
+        if (C('esoTalk.enablePersistenceCookies') and $return === true and $remember) {
             $this->setRememberCookie($this->userId);
         }
 
@@ -227,11 +227,11 @@ class ETSession extends ETModel
     {
         $member = ET::memberModel()->getById($memberId);
 
-        if (!empty($member["rememberToken"])) {
-            $token = $member["rememberToken"];
+        if (!empty($member['rememberToken'])) {
+            $token = $member['rememberToken'];
         } else {
             $token = generateRandomString(32);
-            ET::memberModel()->updateById($memberId, array("rememberToken" => $token));
+            ET::memberModel()->updateById($memberId, array('rememberToken' => $token));
         }
 
         return $token;
@@ -246,11 +246,11 @@ class ETSession extends ETModel
      */
     protected function clearRememberToken($memberId)
     {
-        ET::memberModel()->updateById($memberId, array("rememberToken" => null));
+        ET::memberModel()->updateById($memberId, array('rememberToken' => null));
 
         // Eat the persistent login cookie. OM NOM NOM
-        if ($this->getCookie("persistent")) {
-            $this->setCookie("persistent", false, -1);
+        if ($this->getCookie('persistent')) {
+            $this->setCookie('persistent', false, -1);
         }
     }
 
@@ -264,7 +264,7 @@ class ETSession extends ETModel
      */
     public function setCookie($name, $value, $expire = 0)
     {
-        return setcookie(C("esoTalk.cookie.name") . "_" . $name, $value, $expire, C("esoTalk.cookie.path", getWebPath('')), C("esoTalk.cookie.domain"), C("esoTalk.https"), true);
+        return setcookie(C('esoTalk.cookie.name') . '_' . $name, $value, $expire, C('esoTalk.cookie.path', getWebPath('')), C('esoTalk.cookie.domain'), C('esoTalk.https'), true);
     }
 
 
@@ -277,7 +277,7 @@ class ETSession extends ETModel
     {
         $token = $this->getRememberToken($userId);
 
-        $this->setCookie("persistent", $userId . $token, time() + C("esoTalk.cookie.expire"));
+        $this->setCookie('persistent', $userId . $token, time() + C('esoTalk.cookie.expire'));
     }
 
 
@@ -290,7 +290,7 @@ class ETSession extends ETModel
      */
     public function getCookie($name, $default = null)
     {
-        $name = C("esoTalk.cookie.name") . "_" . $name;
+        $name = C('esoTalk.cookie.name') . '_' . $name;
         return isset($_COOKIE[$name]) ? $_COOKIE[$name] : $default;
     }
 
@@ -303,13 +303,13 @@ class ETSession extends ETModel
     public function logout()
     {
         // Clear the rememberToken for this user, effectively invalidating all persistence cookies.
-        $this->clearRememberToken($_SESSION["userId"]);
+        $this->clearRememberToken($_SESSION['userId']);
 
         // Destroy session data and regenerate the unique token to prevent session fixation.
-        unset($_SESSION["userId"]);
+        unset($_SESSION['userId']);
         $this->regenerateToken();
 
-        $this->trigger("logout");
+        $this->trigger('logout');
     }
 
 
@@ -346,8 +346,8 @@ class ETSession extends ETModel
     public function regenerateToken()
     {
         session_regenerate_id(true);
-        $_SESSION["token"] = substr(md5(uniqid(rand())), 0, 13);
-        $_SESSION["userAgent"] = md5($_SERVER["HTTP_USER_AGENT"]);
+        $_SESSION['token'] = substr(md5(uniqid(rand())), 0, 13);
+        $_SESSION['userAgent'] = md5($_SERVER['HTTP_USER_AGENT']);
     }
 
 
@@ -365,21 +365,21 @@ class ETSession extends ETModel
      */
     public function pushNavigation($id, $type, $url)
     {
-        $navigation = $this->get("navigation");
+        $navigation = $this->get('navigation');
         if (!is_array($navigation)) {
             $navigation = array();
         }
 
         // Look for an item with this $id that might already by in the navigation. If found, delete everything after it.
         foreach ($navigation as $k => $item) {
-            if ($item["id"] == $id) {
+            if ($item['id'] == $id) {
                 array_splice($navigation, $k);
                 break;
             }
         }
-        $navigation[] = array("id" => $id, "type" => $type, "url" => $url);
+        $navigation[] = array('id' => $id, 'type' => $type, 'url' => $url);
 
-        $this->store("navigation", $navigation);
+        $this->store('navigation', $navigation);
     }
 
 
@@ -392,10 +392,10 @@ class ETSession extends ETModel
      */
     public function getNavigation($currentId)
     {
-        $navigation = $this->get("navigation");
+        $navigation = $this->get('navigation');
         if (!empty($navigation)) {
             $return = end($navigation);
-            if ($return["id"] == $currentId) {
+            if ($return['id'] == $currentId) {
                 $return = prev($navigation);
             }
             return $return;
@@ -412,7 +412,7 @@ class ETSession extends ETModel
      */
     public function isAdmin()
     {
-        return $this->user["account"] == ACCOUNT_ADMINISTRATOR or $this->userId == C("esoTalk.rootAdmin");
+        return $this->user['account'] == ACCOUNT_ADMINISTRATOR or $this->userId == C('esoTalk.rootAdmin');
     }
 
 
@@ -423,7 +423,7 @@ class ETSession extends ETModel
      */
     public function isSuspended()
     {
-        return $this->user["account"] == ACCOUNT_SUSPENDED;
+        return $this->user['account'] == ACCOUNT_SUSPENDED;
     }
 
 
@@ -435,22 +435,22 @@ class ETSession extends ETModel
     public function isFlooding()
     {
         // If there's no wait time between posting configured, they're not flooding.
-        if (C("esoTalk.conversation.timeBetweenPosts") <= 0) {
+        if (C('esoTalk.conversation.timeBetweenPosts') <= 0) {
             return false;
         }
 
         // Otherwise, make sure the time of their most recent conversation/post is more than the time limit ago.
-        $time = time() - C("esoTalk.conversation.timeBetweenPosts");
+        $time = time() - C('esoTalk.conversation.timeBetweenPosts');
         $recentConversation = (bool)ET::SQL()
         ->select("MAX(startTime)>$time")
-        ->from("conversation")
-        ->where("startMemberId", $this->userId)
+        ->from('conversation')
+        ->where('startMemberId', $this->userId)
         ->exec()
         ->result();
         $recentPost = (bool)ET::SQL()
         ->select("MAX(time)>$time")
-        ->from("post p")
-        ->where("memberId", $this->userId)
+        ->from('post p')
+        ->where('memberId', $this->userId)
         ->exec()
         ->result();
 
@@ -466,7 +466,7 @@ class ETSession extends ETModel
     public function getGroupIds()
     {
         if ($this->user) {
-            return ET::groupModel()->getGroupIds($this->user["account"], array_keys($this->user["groups"]));
+            return ET::groupModel()->getGroupIds($this->user['account'], array_keys($this->user['groups']));
         } else {
             return ET::groupModel()->getGroupIds(false, false);
         }

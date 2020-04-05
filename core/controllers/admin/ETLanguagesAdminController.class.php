@@ -3,7 +3,7 @@
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
-if (!defined("IN_ESOTALK")) {
+if (!defined('IN_ESOTALK')) {
     exit;
 }
 
@@ -29,9 +29,9 @@ class ETLanguagesAdminController extends ETAdminController
             $languagesNew[$v] = ET::$languageInfo[$v];
         }
 
-        $this->title = T("Languages");
-        $this->data("languages", $languagesNew);
-        $this->render("admin/languages");
+        $this->title = T('Languages');
+        $this->data('languages', $languagesNew);
+        $this->render('admin/languages');
     }
 
 
@@ -41,7 +41,7 @@ class ETLanguagesAdminController extends ETAdminController
      * @param string $language The name of the language.
      * @return void
      */
-    public function action_uninstall($language = "")
+    public function action_uninstall($language = '')
     {
         if (!$this->validateToken()) {
             return;
@@ -55,14 +55,14 @@ class ETLanguagesAdminController extends ETAdminController
 
         // Attempt to remove the directory. If we couldn't, show a "not writable" message.
         if (!is_writable($file = PATH_LANGUAGES) or !is_writable($file = PATH_LANGUAGES . "/$language") or !rrmdir($file)) {
-            $this->message(sprintf(T("message.notWritable"), $file), "warning");
+            $this->message(sprintf(T('message.notWritable'), $file), 'warning');
         }
 
         // Otherwise, show a success message.
         else {
-            $this->message(T("message.languageUninstalled"), "success");
+            $this->message(T('message.languageUninstalled'), 'success');
         }
 
-        $this->redirect(URL("admin/languages"));
+        $this->redirect(URL('admin/languages'));
     }
 }
