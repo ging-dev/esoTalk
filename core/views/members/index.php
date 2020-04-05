@@ -61,7 +61,7 @@ if (!in_array($currentLetter, $letters)) {
 foreach ($letters as $letter) {
     $selected = ($currentLetter == $letter) ? " selected" : "";
     $id = $letter == "#" ? 0 : $letter;
-    echo "<li class='scrubber-$id$selected' data-index='$id'><a href='".URL("members/name/$id")."'>".strtoupper($letter)."</a></li>";
+    echo "<li class='scrubber-$id$selected' data-index='$id'><a href='" . URL("members/name/$id") . "'>" . strtoupper($letter) . "</a></li>";
 }
 
 ?>
@@ -79,7 +79,7 @@ foreach ($letters as $letter) {
 
 <ul id='memberListOrderBy' class='tabs'>
 <?php foreach ($data["orders"] as $k => $v): ?>
-<li<?php if ($data["orderBy"] == $k): ?> class='selected'<?php endif; ?>><a href='<?php echo URL("members/$k/".(sanitizeHTML($data["searchString"]) ? "?search=".sanitizeHTML($data["searchString"]) : "")); ?>'><?php echo T($v[0]); ?></a></li>
+<li<?php if ($data["orderBy"] == $k): ?> class='selected'<?php endif; ?>><a href='<?php echo URL("members/$k/" . (sanitizeHTML($data["searchString"]) ? "?search=" . sanitizeHTML($data["searchString"]) : "")); ?>'><?php echo T($v[0]); ?></a></li>
 <?php endforeach; ?>
 </ul>
 
@@ -116,13 +116,13 @@ if ($data["searchString"] and !count($data["members"])): ?>
 <ul id='memberList' class='list memberList'>
 
 <?php if ($data["startFrom"] > 0): ?>
-<li class='scrubberMore scrubberPrevious'><a href='<?php echo URL(makeURL("p".(ceil($data["startFrom"] / C("esoTalk.members.membersPerPage") + 1) - 1), $data["searchString"])); ?>'>&lsaquo; <?php echo T("Previous"); ?></a></li>
+<li class='scrubberMore scrubberPrevious'><a href='<?php echo URL(makeURL("p" . (ceil($data["startFrom"] / C("esoTalk.members.membersPerPage") + 1) - 1), $data["searchString"])); ?>'>&lsaquo; <?php echo T("Previous"); ?></a></li>
 <?php endif; ?>
 
 <?php $this->renderView("members/list", $data); ?>
 
 <?php if ($data["startFrom"] + C("esoTalk.members.membersPerPage") < $data["countMembers"]): ?>
-<li class='scrubberMore scrubberNext'><a href='<?php echo URL(makeURL("p".(floor($data["startFrom"] / C("esoTalk.members.membersPerPage") + 1) + 1), $data["searchString"])); ?>'><?php echo T("Next"); ?> &rsaquo;</a></li>
+<li class='scrubberMore scrubberNext'><a href='<?php echo URL(makeURL("p" . (floor($data["startFrom"] / C("esoTalk.members.membersPerPage") + 1) + 1), $data["searchString"])); ?>'><?php echo T("Next"); ?> &rsaquo;</a></li>
 <?php endif; ?>
 
 </ul>

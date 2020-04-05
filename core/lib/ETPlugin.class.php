@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -85,7 +86,7 @@ abstract class ETPlugin extends ETPluggable
 
     public function file($file, $absolute = false)
     {
-        return ($absolute ? PATH_ROOT."/" : "").$this->path."/".$file;
+        return ($absolute ? PATH_ROOT . "/" : "") . $this->path . "/" . $file;
     }
 
 
@@ -97,7 +98,7 @@ abstract class ETPlugin extends ETPluggable
      */
     public function resource($file)
     {
-        return $this->file("resources/".$file);
+        return $this->file("resources/" . $file);
     }
 
 
@@ -109,6 +110,6 @@ abstract class ETPlugin extends ETPluggable
      */
     public function view($file)
     {
-        return $this->file("views/".$file.".php", true);
+        return $this->file("views/" . $file . ".php", true);
     }
 }

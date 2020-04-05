@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -66,7 +67,7 @@ class ETConversationModel extends ETModel
             $expressions[] = $label[0];
         }
         if (count($expressions)) {
-            $sql->select("CONCAT_WS(',',".implode(",", $expressions).")", "labels");
+            $sql->select("CONCAT_WS(','," . implode(",", $expressions) . ")", "labels");
         } else {
             $sql->select("NULL", "labels");
         }
@@ -235,7 +236,7 @@ class ETConversationModel extends ETModel
             or ($conversation["countPosts"] == 2 and $conversation["lastPostMemberId"] == ET::$session->userId))) {
             $conversation["canDeleteConversation"] = true;
         }
-        
+
 
         return $conversation;
     }
@@ -395,7 +396,7 @@ class ETConversationModel extends ETModel
         // We will marry these later on.
         $qMembers = ET::SQL()
         ->select("'member'", "type")
-        ->select("CAST(".($conversation["conversationId"] ? "s.id" : "m.memberId")." AS SIGNED)")
+        ->select("CAST(" . ($conversation["conversationId"] ? "s.id" : "m.memberId") . " AS SIGNED)")
         ->select("m.username")
         ->select("m.email")
         ->select("m.avatarFormat")
@@ -467,7 +468,7 @@ class ETConversationModel extends ETModel
         $qMembers->from("member_group g", "m.memberId=g.memberId", "left");
 
         // You may now kiss the bride.
-        $result = ET::SQL("(".$qMembers->get().") UNION (".$qGroups->get().")");
+        $result = ET::SQL("(" . $qMembers->get() . ") UNION (" . $qGroups->get() . ")");
 
         // Go through the results and construct our final "members allowed" array.
         while ($entity = $result->nextRow()) {
@@ -873,14 +874,14 @@ class ETConversationModel extends ETModel
             ET::SQL()
             ->update("member")
             ->set("countConversations", "GREATEST(0, CAST(countConversations AS SIGNED) - 1)", false)
-            ->where("memberId = (".ET::SQL()->select("startMemberId")->from("conversation")->where("conversationId", $id)->get().")")
+            ->where("memberId = (" . ET::SQL()->select("startMemberId")->from("conversation")->where("conversationId", $id)->get() . ")")
             ->exec();
 
             ET::SQL()
             ->update("channel")
             ->set("countConversations", "GREATEST(0, CAST(countConversations AS SIGNED) - 1)", false)
-            ->set("countPosts", "GREATEST(0, CAST(countPosts AS SIGNED) - (".ET::SQL()->select("countPosts")->from("conversation")->where("conversationId", $id)->get()."))", false)
-            ->where("channelId = (".ET::SQL()->select("channelId")->from("conversation")->where("conversationId", $id)->get().")")
+            ->set("countPosts", "GREATEST(0, CAST(countPosts AS SIGNED) - (" . ET::SQL()->select("countPosts")->from("conversation")->where("conversationId", $id)->get() . "))", false)
+            ->where("channelId = (" . ET::SQL()->select("channelId")->from("conversation")->where("conversationId", $id)->get() . ")")
             ->exec();
 
             // Find all the members who posted in the conversation, and how many times they posted.
@@ -896,12 +897,12 @@ class ETConversationModel extends ETModel
             while ($row = $result->nextRow()) {
                 ET::SQL()
                 ->update("member")
-                ->set("countPosts", "GREATEST(0, CAST(countPosts AS SIGNED) - ".$row["count"].")", false)
+                ->set("countPosts", "GREATEST(0, CAST(countPosts AS SIGNED) - " . $row["count"] . ")", false)
                 ->where("memberId", $row["memberId"])
                 ->exec();
             }
         }
-    
+
         // Delete the conversation, posts, member_conversation, and activity rows.
         $sql = ET::SQL()
         ->delete("c, m, p")
@@ -959,7 +960,7 @@ class ETConversationModel extends ETModel
         if (empty($inserts)) {
             return;
         }
-    
+
         ET::SQL()
         ->insert("member_conversation")
         ->setMultiple($keys, $inserts)
@@ -1059,7 +1060,7 @@ class ETConversationModel extends ETModel
         if (empty($inserts)) {
             return;
         }
-    
+
         ET::SQL()
         ->insert("member_conversation")
         ->setMultiple($keys, $inserts)
@@ -1274,7 +1275,7 @@ class ETConversationModel extends ETModel
         ->from("member_group g", "m.memberId=g.memberId", "left")
         ->where("m.username=:name OR m.username LIKE :nameLike")
         ->bind(":name", $name)
-        ->bind(":nameLike", "%".$name."%")
+        ->bind(":nameLike", "%" . $name . "%")
         ->groupBy("m.memberId")
         ->orderBy("m.username=:nameOrder DESC")
         ->bind(":nameOrder", $name)

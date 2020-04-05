@@ -34,10 +34,10 @@ foreach ($data["languages"] as $k => $language): ?>
 <ul class='controls' id='languageControls-<?php echo $k; ?>'>
 <li><span><?php printf(T("By %s"), "<a href='{$language["authorURL"]}'>{$language["author"]}</a>"); ?></span></li>
 <li class='sep'></li>
-<li><a href='<?php echo URL("admin/languages/uninstall/$k?token=".ET::$session->token); ?>'><?php echo T("Uninstall"); ?></a></li>
+<li><a href='<?php echo URL("admin/languages/uninstall/$k?token=" . ET::$session->token); ?>'><?php echo T("Uninstall"); ?></a></li>
 </ul>
 
-<?php if (file_exists(PATH_LANGUAGES."/$k/icon.png")): ?><img src='<?php echo getWebPath(PATH_LANGUAGES."/$k/icon.png"); ?>' alt=''/><?php endif; ?>
+<?php if (file_exists(PATH_LANGUAGES . "/$k/icon.png")): ?><img src='<?php echo getWebPath(PATH_LANGUAGES . "/$k/icon.png"); ?>' alt=''/><?php endif; ?>
 <strong><?php echo $language["name"]; ?></strong>
 <small class='version'><?php echo $language["version"]; ?></small>
 <small class='description'><?php echo $language["description"]; ?></small>

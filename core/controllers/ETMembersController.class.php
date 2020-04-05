@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -84,9 +85,9 @@ class ETMembersController extends ETController
 
                 // Also perform a normal LIKE search.
                 $thisCondition[] = "username LIKE :search$k";
-                $sql->bind(":search$k", "%".$term."%");
+                $sql->bind(":search$k", "%" . $term . "%");
 
-                $conditions[] = "(".implode(" OR ", $thisCondition).")";
+                $conditions[] = "(" . implode(" OR ", $thisCondition) . ")";
             }
 
             $sql->where(implode(" AND ", $conditions));
@@ -217,11 +218,11 @@ class ETMembersController extends ETController
 
             // Construct the gambits menu based on the above arrays.
             $gambitsMenu = ETFactory::make("menu");
-            $linkPrefix = "members/".$orderBy."/?search=";
+            $linkPrefix = "members/" . $orderBy . "/?search=";
 
             foreach ($gambits as $section => $items) {
                 foreach ($items as $gambit => $classes) {
-                    $gambitsMenu->add($classes[0], "<a href='".URL($linkPrefix.urlencode($gambit))."' class='{$classes[0]}' data-gambit='$gambit'>".(!empty($classes[1]) ? "<i class='{$classes[1]}'></i> " : "")."$gambit</a>");
+                    $gambitsMenu->add($classes[0], "<a href='" . URL($linkPrefix . urlencode($gambit)) . "' class='{$classes[0]}' data-gambit='$gambit'>" . (!empty($classes[1]) ? "<i class='{$classes[1]}'></i> " : "") . "$gambit</a>");
                 }
                 end($gambits);
                 if ($section !== key($gambits)) {
@@ -328,7 +329,7 @@ class ETMembersController extends ETController
 
         // Construct a query to get only members who are online.
         $sql = ET::SQL()
-        ->where((time() - ET::config("esoTalk.userOnlineExpire"))."<lastActionTime")
+        ->where((time() - ET::config("esoTalk.userOnlineExpire")) . "<lastActionTime")
         ->orderBy("lastActionTime DESC");
 
         // Pass this query to the member model and get all of these members' data.
@@ -375,7 +376,7 @@ class ETMembersController extends ETController
         ->select("email")
         ->from("member")
         ->where("username LIKE :username")
-        ->bind(":username", $input."%")
+        ->bind(":username", $input . "%")
         ->orderBy("username")
         ->limit(50)
         ->exec()

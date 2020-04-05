@@ -36,7 +36,7 @@ foreach ($data["channels"] as $id => $ch) {
     if ($id == $channel["channelId"]) {
         continue;
     }
-    $moveOptions[$id] = str_repeat("&nbsp;", $ch["depth"] * 5).$ch["title"];
+    $moveOptions[$id] = str_repeat("&nbsp;", $ch["depth"] * 5) . $ch["title"];
 }
 echo $form->select("moveToChannelId", $moveOptions);
 ?>

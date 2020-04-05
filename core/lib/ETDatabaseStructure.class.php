@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -151,7 +152,7 @@ class ETDatabaseStructure
 
         // If it's not a primary key, we must work out a name for the key.
         if ($type != "primary") {
-            $name = $this->tableName."_".implode("_", $columns);
+            $name = $this->tableName . "_" . implode("_", $columns);
         } else {
             $name = "PRIMARY";
             foreach ($columns as $column) {
@@ -178,19 +179,19 @@ class ETDatabaseStructure
     {
         // Do we need to drop the table before we recreate it?
         if ($drop) {
-            ET::SQL("DROP TABLE IF EXISTS `".ET::$database->tablePrefix.$this->tableName."`");
+            ET::SQL("DROP TABLE IF EXISTS `" . ET::$database->tablePrefix . $this->tableName . "`");
             $this->exists = false;
         }
 
         // Firstly, work out whether or not the table exists. If it doesn't, we'll have to create the table from
         // scratch.
         if (!$this->exists()) {
-            $sql = "CREATE TABLE `".ET::$database->tablePrefix.$this->tableName."` (\n\t";
+            $sql = "CREATE TABLE `" . ET::$database->tablePrefix . $this->tableName . "` (\n\t";
             $lines = array();
 
             // Add the columns.
             foreach ($this->columns as $name => $column) {
-                $lines[] = "`$name` ".$this->columnDefinition($column);
+                $lines[] = "`$name` " . $this->columnDefinition($column);
             }
 
             // Add the keys.
@@ -199,24 +200,24 @@ class ETDatabaseStructure
             }
 
             // Put it all together.
-            $sql .= implode(",\n\t", $lines)."\n)";
+            $sql .= implode(",\n\t", $lines) . "\n)";
             if ($this->engine) {
                 $sql .= " ENGINE=$this->engine";
             }
-            $sql .= " DEFAULT CHARSET=".C("esoTalk.database.characterEncoding");
+            $sql .= " DEFAULT CHARSET=" . C("esoTalk.database.characterEncoding");
 
             ET::SQL($sql);
         }
 
         // Otherwise, based on what's already there, we need to modify the table to be up-to-date.
         else {
-            $alterPrefix = "ALTER TABLE `".ET::$database->tablePrefix.$this->tableName."`";
+            $alterPrefix = "ALTER TABLE `" . ET::$database->tablePrefix . $this->tableName . "`";
 
             // Set the table's engine and character set if necessary.
-            $engine = ET::SQL("SHOW TABLE STATUS LIKE '".ET::$database->tablePrefix.$this->tableName."'")->firstRow();
+            $engine = ET::SQL("SHOW TABLE STATUS LIKE '" . ET::$database->tablePrefix . $this->tableName . "'")->firstRow();
             $engine = $engine["Engine"];
             if ($engine != $this->engine) {
-                ET::SQL($alterPrefix." ENGINE=$this->engine");
+                ET::SQL($alterPrefix . " ENGINE=$this->engine");
             }
 
             // Go through the columns and add/modify them as necessary.
@@ -227,14 +228,14 @@ class ETDatabaseStructure
 
                 // If the column doesn't exist, we'll need to add it.
                 if (!array_key_exists($name, $existingColumns)) {
-                    ET::SQL($alterPrefix." ADD `$name` ".$definition.($previousColumn !== false ? " AFTER `$previousColumn`" : ""));
+                    ET::SQL($alterPrefix . " ADD `$name` " . $definition . ($previousColumn !== false ? " AFTER `$previousColumn`" : ""));
                 }
 
                 // If it does exist, work out if we need to modify it.
                 else {
                     $existingDefinition = $this->columnDefinition($existingColumns[$name]);
                     if ($definition != $existingDefinition) {
-                        ET::SQL($alterPrefix." MODIFY `$name` ".$definition);
+                        ET::SQL($alterPrefix . " MODIFY `$name` " . $definition);
                     }
                 }
 
@@ -250,14 +251,14 @@ class ETDatabaseStructure
                 if (array_key_exists($name, $existingKeys)) {
                     $existingDefinition = $this->keyDefinition($name, $existingKeys[$name]);
                     if ($definition != $existingDefinition) {
-                        ET::SQL($alterPrefix." DROP ".($name == "PRIMARY" ? "PRIMARY KEY" : "KEY `$name`"));
-                        ET::SQL($alterPrefix." ADD ".$definition);
+                        ET::SQL($alterPrefix . " DROP " . ($name == "PRIMARY" ? "PRIMARY KEY" : "KEY `$name`"));
+                        ET::SQL($alterPrefix . " ADD " . $definition);
                     }
                 }
 
                 // If the key doesn't exist, just add it.
                 else {
-                    ET::SQL($alterPrefix." ADD ".$definition);
+                    ET::SQL($alterPrefix . " ADD " . $definition);
                 }
             }
         }
@@ -279,7 +280,7 @@ class ETDatabaseStructure
             $definition .= " NOT NULL";
         }
         if ($column["default"] !== false) {
-            $definition .= " DEFAULT ".ET::$database->escapeValue(is_null($column["default"]) ? null : (string)$column["default"]);
+            $definition .= " DEFAULT " . ET::$database->escapeValue(is_null($column["default"]) ? null : (string)$column["default"]);
         }
         if (!empty($column["autoIncrement"])) {
             $definition .= " AUTO_INCREMENT";
@@ -301,9 +302,9 @@ class ETDatabaseStructure
             $column = "`$column`";
         }
         if ($name == "PRIMARY") {
-            return "PRIMARY KEY (".implode(",", $key["columns"]).")";
+            return "PRIMARY KEY (" . implode(",", $key["columns"]) . ")";
         } else {
-            return ($key["type"] ? strtoupper($key["type"])." " : "")."KEY `$name` (".implode(",", $key["columns"]).")";
+            return ($key["type"] ? strtoupper($key["type"]) . " " : "") . "KEY `$name` (" . implode(",", $key["columns"]) . ")";
         }
     }
 
@@ -316,7 +317,7 @@ class ETDatabaseStructure
     public function exists()
     {
         if ($this->exists === null) {
-            $this->exists = (bool)ET::SQL("SHOW TABLES LIKE '".ET::$database->tablePrefix.$this->tableName."'")->numRows();
+            $this->exists = (bool)ET::SQL("SHOW TABLES LIKE '" . ET::$database->tablePrefix . $this->tableName . "'")->numRows();
         }
         return $this->exists;
     }
@@ -354,7 +355,7 @@ class ETDatabaseStructure
     public function existingColumns()
     {
         if ($this->existingColumns === null) {
-            $result = ET::SQL("SHOW COLUMNS FROM `".ET::$database->tablePrefix.$this->tableName."`")->allRows();
+            $result = ET::SQL("SHOW COLUMNS FROM `" . ET::$database->tablePrefix . $this->tableName . "`")->allRows();
             $this->existingColumns = array();
             foreach ($result as $column) {
                 $this->existingColumns[$column["Field"]] = array(
@@ -377,7 +378,7 @@ class ETDatabaseStructure
     public function existingKeys()
     {
         if ($this->existingKeys === null) {
-            $result = ET::SQL("SHOW INDEXES FROM `".ET::$database->tablePrefix.$this->tableName."`")->allRows();
+            $result = ET::SQL("SHOW INDEXES FROM `" . ET::$database->tablePrefix . $this->tableName . "`")->allRows();
             $this->existingKeys = array();
             foreach ($result as $key) {
                 if (!isset($this->existingKeys[$key["Key_name"]])) {
@@ -403,7 +404,7 @@ class ETDatabaseStructure
      */
     public function drop()
     {
-        ET::SQL("DROP TABLE IF EXISTS `".ET::$database->tablePrefix.$this->tableName."`");
+        ET::SQL("DROP TABLE IF EXISTS `" . ET::$database->tablePrefix . $this->tableName . "`");
         return $this;
     }
 
@@ -417,7 +418,7 @@ class ETDatabaseStructure
     public function dropColumn($name)
     {
         if ($this->columnExists($name)) {
-            ET::SQL("ALTER TABLE `".ET::$database->tablePrefix.$this->tableName."` DROP COLUMN `$name`");
+            ET::SQL("ALTER TABLE `" . ET::$database->tablePrefix . $this->tableName . "` DROP COLUMN `$name`");
         }
         return $this;
     }
@@ -432,7 +433,7 @@ class ETDatabaseStructure
     public function dropKey($name)
     {
         if ($this->keyExists($name)) {
-            ET::SQL("ALTER TABLE `".ET::$database->tablePrefix.$this->tableName."` DROP ".($name == "primary" ? "PRIMARY KEY" : "KEY `$name`"));
+            ET::SQL("ALTER TABLE `" . ET::$database->tablePrefix . $this->tableName . "` DROP " . ($name == "primary" ? "PRIMARY KEY" : "KEY `$name`"));
         }
         return $this;
     }
@@ -447,7 +448,7 @@ class ETDatabaseStructure
     public function rename($newName)
     {
         if ($this->exists()) {
-            ET::SQL("ALTER TABLE `".ET::$database->tablePrefix.$this->tableName."` RENAME TO `$newName`");
+            ET::SQL("ALTER TABLE `" . ET::$database->tablePrefix . $this->tableName . "` RENAME TO `$newName`");
         }
         return $this;
     }
@@ -465,7 +466,7 @@ class ETDatabaseStructure
         if ($this->columnExists($name)) {
             $existing = $this->existingColumns();
             $definition = $this->columnDefinition($existing[$name]);
-            ET::SQL("ALTER TABLE `".ET::$database->tablePrefix.$this->tableName."` CHANGE COLUMN `$name` `$newName` $definition");
+            ET::SQL("ALTER TABLE `" . ET::$database->tablePrefix . $this->tableName . "` CHANGE COLUMN `$name` `$newName` $definition");
         }
         return $this;
     }

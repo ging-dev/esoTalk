@@ -28,7 +28,7 @@ $member = $data["member"];
 if (empty($member["preferences"]["hideOnline"])):
     $lastAction = ET::memberModel()->getLastActionInfo($member["lastActionTime"], $member["lastActionDetail"]);
     if ($lastAction) {
-        echo "<".(!empty($lastAction[1]) ? "a href='{$lastAction[1]}'" : "span")." class='online' title='".T("Online").($lastAction[0] ? " (".sanitizeHTML($lastAction[0]).")" : "")."'><i class='icon-circle'></i></".(!empty($lastAction[1]) ? "a" : "span").">";
+        echo "<" . (!empty($lastAction[1]) ? "a href='{$lastAction[1]}'" : "span") . " class='online' title='" . T("Online") . ($lastAction[0] ? " (" . sanitizeHTML($lastAction[0]) . ")" : "") . "'><i class='icon-circle'></i></" . (!empty($lastAction[1]) ? "a" : "span") . ">";
     }
 endif;
 ?>
@@ -39,8 +39,8 @@ if (ET::$session->isAdmin()): ?><p class='subText'><?php echo sanitizeHTML($memb
 
 <p id='memberGroup' class='subText'><?php echo memberGroup($member["account"], $member["groups"], true); ?></p>
 <p id='memberLastActive' class='subText'><?php printf(T("Last active %s"), empty($member["preferences"]["hideOnline"])
-    ? "<span title='"._strftime(T("date.full"), $member["lastActionTime"])."'>".relativeTime($member["lastActionTime"], true)."</span>"
-    : "[".T("hidden")."]"); ?></p>
+    ? "<span title='" . _strftime(T("date.full"), $member["lastActionTime"]) . "'>" . relativeTime($member["lastActionTime"], true) . "</span>"
+    : "[" . T("hidden") . "]"); ?></p>
 
 </div>
 

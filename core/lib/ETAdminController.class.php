@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -25,7 +26,7 @@ class ETAdminController extends ETController
     {
         // If the user isn't an administrator, kick them out.
         if (!ET::$session->isAdmin()) {
-            $this->redirect(URL("user/login?return=".urlencode($this->selfURL)));
+            $this->redirect(URL("user/login?return=" . urlencode($this->selfURL)));
         }
 
         parent::init();
@@ -34,13 +35,13 @@ class ETAdminController extends ETController
         $this->defaultMenu = ETFactory::make("menu");
         $this->menu = ETFactory::make("menu");
 
-        $this->defaultMenu->add("dashboard", "<a href='".URL("admin/dashboard")."'><i class='icon-dashboard'></i> ".T("Dashboard")."</a>");
-        $this->defaultMenu->add("settings", "<a href='".URL("admin/settings")."'><i class='icon-cog'></i> ".T("Forum Settings")."</a>");
-        $this->defaultMenu->add("appearance", "<a href='".URL("admin/appearance")."'><i class='icon-eye-open'></i> ".T("Appearance")."</a>");
-        $this->defaultMenu->add("channels", "<a href='".URL("admin/channels")."'><i class='icon-tags'></i> ".T("Channels")."</a>");
-        $this->defaultMenu->add("groups", "<a href='".URL("admin/groups")."'><i class='icon-group'></i> ".T("Groups")."</a>");
-        $this->defaultMenu->add("members", "<a href='".URL("members")."'><i class='icon-user'></i> ".T("Members")."</a>");
-        $this->defaultMenu->add("plugins", "<a href='".URL("admin/plugins")."'><i class='icon-puzzle-piece'></i> ".T("Plugins")."</a>");
+        $this->defaultMenu->add("dashboard", "<a href='" . URL("admin/dashboard") . "'><i class='icon-dashboard'></i> " . T("Dashboard") . "</a>");
+        $this->defaultMenu->add("settings", "<a href='" . URL("admin/settings") . "'><i class='icon-cog'></i> " . T("Forum Settings") . "</a>");
+        $this->defaultMenu->add("appearance", "<a href='" . URL("admin/appearance") . "'><i class='icon-eye-open'></i> " . T("Appearance") . "</a>");
+        $this->defaultMenu->add("channels", "<a href='" . URL("admin/channels") . "'><i class='icon-tags'></i> " . T("Channels") . "</a>");
+        $this->defaultMenu->add("groups", "<a href='" . URL("admin/groups") . "'><i class='icon-group'></i> " . T("Groups") . "</a>");
+        $this->defaultMenu->add("members", "<a href='" . URL("members") . "'><i class='icon-user'></i> " . T("Members") . "</a>");
+        $this->defaultMenu->add("plugins", "<a href='" . URL("admin/plugins") . "'><i class='icon-puzzle-piece'></i> " . T("Plugins") . "</a>");
 
         $this->defaultMenu->highlight(ET::$controllerName);
         $this->menu->highlight(ET::$controllerName);
@@ -48,7 +49,7 @@ class ETAdminController extends ETController
         // If new registrations require admin approval, add the 'unapproved' admin page with a count.
         if (C("esoTalk.registration.requireConfirmation") == "approval") {
             $count = ET::SQL()->select("COUNT(1)")->from("member")->where("confirmed", 0)->exec()->result();
-            $this->menu->add("unapproved", "<a href='".URL("admin/unapproved")."'><i class='icon-lock'></i> ".T("Unapproved")." <span class='badge'>".$count."</span></a>");
+            $this->menu->add("unapproved", "<a href='" . URL("admin/unapproved") . "'><i class='icon-lock'></i> " . T("Unapproved") . " <span class='badge'>" . $count . "</span></a>");
         }
 
         if ($this->responseType === RESPONSE_TYPE_DEFAULT) {

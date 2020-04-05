@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -47,7 +48,7 @@ class ETGroupsAdminController extends ETAdminController
 
         // Set up the form.
         $form = ETFactory::make("form");
-        $form->action = URL("admin/groups/edit/".$group["groupId"]);
+        $form->action = URL("admin/groups/edit/" . $group["groupId"]);
         $form->setValues($group);
 
         // Was the cancel button pressed?

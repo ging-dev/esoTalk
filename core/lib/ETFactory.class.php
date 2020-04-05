@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -64,7 +65,7 @@ class ETFactory
                 if (file_exists(self::$classes[$class][1])) {
                     require_once self::$classes[$class][1];
                 } else {
-                    throw new Exception("ETFactory: The file '".self::$classes[$class][1]."' for the class '$className' does not exist.");
+                    throw new Exception("ETFactory: The file '" . self::$classes[$class][1] . "' for the class '$className' does not exist.");
                 }
             }
         }
@@ -103,7 +104,7 @@ class ETFactory
      */
     public static function registerController($slug, $className, $file)
     {
-        $newSlug = $slug."Controller";
+        $newSlug = $slug . "Controller";
         self::$controllers[$slug] = $newSlug;
         self::register($newSlug, $className, $file);
     }
@@ -119,7 +120,7 @@ class ETFactory
      */
     public static function registerAdminController($slug, $className, $file)
     {
-        $newSlug = $slug."AdminController";
+        $newSlug = $slug . "AdminController";
         self::$adminControllers[$slug] = $newSlug;
         self::register($newSlug, $className, $file);
     }

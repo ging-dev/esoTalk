@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -46,7 +47,7 @@ class ETAppearanceAdminController extends ETAdminController
             while (false !== ($file = readdir($handle))) {
 
             // Make sure the skin is valid, and include its skin.php file.
-                if ($file[0] != "." and file_exists($skinFile = PATH_SKINS."/$file/skin.php") and (include_once $skinFile)) {
+                if ($file[0] != "." and file_exists($skinFile = PATH_SKINS . "/$file/skin.php") and (include_once $skinFile)) {
 
                 // Add the skin's information and status to the array.
                     $skins[$file] = array(
@@ -92,7 +93,7 @@ class ETAppearanceAdminController extends ETAdminController
         ET::writeConfig(array("esoTalk.skin" => $skin));
 
         // Clear skin cache.
-        $files = glob(PATH_CACHE.'/css/*.*');
+        $files = glob(PATH_CACHE . '/css/*.*');
         foreach ($files as $file) {
             unlink(realpath($file));
         }
@@ -123,7 +124,7 @@ class ETAppearanceAdminController extends ETAdminController
         ET::writeConfig(array("esoTalk.mobileSkin" => $skin));
 
         // Clear skin cache.
-        $files = glob(PATH_CACHE.'/css/*.*');
+        $files = glob(PATH_CACHE . '/css/*.*');
         foreach ($files as $file) {
             unlink(realpath($file));
         }
@@ -152,7 +153,7 @@ class ETAppearanceAdminController extends ETAdminController
         unset($skins[$skin]);
 
         // Attempt to remove the directory. If we couldn't, show a "not writable" message.
-        if (!is_writable($file = PATH_SKINS) or !is_writable($file = PATH_SKINS."/$skin") or !rrmdir($file)) {
+        if (!is_writable($file = PATH_SKINS) or !is_writable($file = PATH_SKINS . "/$skin") or !rrmdir($file)) {
             $this->message(sprintf(T("message.notWritable"), $file), "warning");
         }
 

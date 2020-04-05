@@ -58,8 +58,8 @@ elseif ($channel["depth"] < $curDepth) {
 <li id='channel_<?php echo $channel["channelId"]; ?>' data-id='<?php echo $channel["channelId"]; ?>'>
 <div>
 <div class='controls'>
-<a href='<?php echo URL("admin/channels/edit/".$channel["channelId"]); ?>' class='control-edit' title='<?php echo T("Edit"); ?>'><i class='icon-edit'></i></a>
-<a href='<?php echo URL("admin/channels/delete/".$channel["channelId"]); ?>' class='control-delete' title='<?php echo T("Delete"); ?>'><i class='icon-remove'></i></a>
+<a href='<?php echo URL("admin/channels/edit/" . $channel["channelId"]); ?>' class='control-edit' title='<?php echo T("Edit"); ?>'><i class='icon-edit'></i></a>
+<a href='<?php echo URL("admin/channels/delete/" . $channel["channelId"]); ?>' class='control-delete' title='<?php echo T("Delete"); ?>'><i class='icon-remove'></i></a>
 </div>
 <div class='info'>
 <span class='channel channel-<?php echo $channel["channelId"]; ?>'><?php echo $channel["title"]; ?></span>

@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -189,10 +190,10 @@ class ETForm extends ETPluggable
         $this->addHidden("token", ET::$session->token);
         $hidden = "";
         foreach ($this->hiddenInputs as $field) {
-            $hidden .= "<input type='hidden' name='$field' value='".htmlentities($this->getValue($field), ENT_QUOTES, "UTF-8")."'/>\n";
+            $hidden .= "<input type='hidden' name='$field' value='" . htmlentities($this->getValue($field), ENT_QUOTES, "UTF-8") . "'/>\n";
         }
 
-        return "<form action='".sanitizeHTML($this->action)."' method='post' enctype='multipart/form-data'>\n".$hidden;
+        return "<form action='" . sanitizeHTML($this->action) . "' method='post' enctype='multipart/form-data'>\n" . $hidden;
     }
 
 
@@ -240,7 +241,7 @@ class ETForm extends ETPluggable
     public function getError($field)
     {
         if (!empty($this->errors[$field])) {
-            return "<div class='error'>".$this->errors[$field]."</div>";
+            return "<div class='error'>" . $this->errors[$field] . "</div>";
         }
     }
 
@@ -380,17 +381,17 @@ class ETForm extends ETPluggable
         if ($type == "textarea") {
             $value = htmlentities($attributes["value"], ENT_NOQUOTES, "UTF-8");
             unset($attributes["value"]);
-            $input = "<textarea".$this->getAttributes($attributes).">$value</textarea>";
+            $input = "<textarea" . $this->getAttributes($attributes) . ">$value</textarea>";
         }
 
         // But any other type of input we can use the <input> tag.
         else {
-            $input = "<input type='$type'".$this->getAttributes($attributes)."/>";
+            $input = "<input type='$type'" . $this->getAttributes($attributes) . "/>";
         }
 
         // Append an error if there is one.
         if (!empty($this->errors[$name])) {
-            $input .= " ".$this->getError($name);
+            $input .= " " . $this->getError($name);
         }
 
         return $input;
@@ -407,7 +408,7 @@ class ETForm extends ETPluggable
     {
         $string = "";
         foreach ($attributes as $k => $v) {
-            $string .= " $k='".htmlentities($v, ENT_QUOTES, "UTF-8")."'";
+            $string .= " $k='" . htmlentities($v, ENT_QUOTES, "UTF-8") . "'";
         }
         return $string;
     }
@@ -442,21 +443,21 @@ class ETForm extends ETPluggable
     {
         // Construct the opening select tag.
         $attributes["name"] = $name;
-        $select = "<select".$this->getAttributes($attributes).">\n";
+        $select = "<select" . $this->getAttributes($attributes) . ">\n";
 
         // Get the currently-selected value of this field.
         $values = (array)$this->getValue($name);
 
         // Loop through the options and add a tag for each one, selecting the appropriate one.
         foreach ($options as $k => $v) {
-            $select .= "<option value='$k'".(in_array($k, $values) ? " selected='selected'" : "").">$v</option>\n";
+            $select .= "<option value='$k'" . (in_array($k, $values) ? " selected='selected'" : "") . ">$v</option>\n";
         }
 
         $select .= "</select>";
 
         // Append an error if there is one.
         if (!empty($this->errors[$name])) {
-            $select .= " ".$this->getError($name);
+            $select .= " " . $this->getError($name);
         }
 
         return $select;
@@ -517,9 +518,9 @@ class ETForm extends ETPluggable
     {
         $this->addClass($attributes, "button");
         if (isset($attributes["tag"]) and $attributes["tag"] == "button") {
-            return "<button type='submit' name='$name'".$this->getAttributes($attributes).">$label</button>";
+            return "<button type='submit' name='$name'" . $this->getAttributes($attributes) . ">$label</button>";
         } else {
-            return "<input type='submit' name='$name' value='$label'".$this->getAttributes($attributes)."/>";
+            return "<input type='submit' name='$name' value='$label'" . $this->getAttributes($attributes) . "/>";
         }
     }
 

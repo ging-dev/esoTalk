@@ -34,7 +34,7 @@ else:
 
 <?php if (ET::$session->user): ?>
 <ul class='controls' id='channelControls-<?php echo $channel["channelId"]; ?>'>
-<li><a href='<?php echo URL("channels/subscribe/".$channel["channelId"]."?token=".ET::$session->token); ?>' data-id='<?php echo $channel["channelId"]; ?>'><i class='icon-eye-close'></i><?php echo empty($channel["unsubscribed"]) ? T("Hide") : T("Unhide"); ?></a></li>
+<li><a href='<?php echo URL("channels/subscribe/" . $channel["channelId"] . "?token=" . ET::$session->token); ?>' data-id='<?php echo $channel["channelId"]; ?>'><i class='icon-eye-close'></i><?php echo empty($channel["unsubscribed"]) ? T("Hide") : T("Unhide"); ?></a></li>
 </ul>
 
 <div class='channelControls'>
@@ -43,7 +43,7 @@ else:
 <?php endif; ?>
 
 <div class='info'>
-<a href='<?php echo URL("conversations/".$channel["slug"]); ?>' class='channel channel-<?php echo $channel["channelId"]; ?>'><?php echo $channel["title"]; ?></a>
+<a href='<?php echo URL("conversations/" . $channel["slug"]); ?>' class='channel channel-<?php echo $channel["channelId"]; ?>'><?php echo $channel["title"]; ?></a>
 <span class='stats'><?php echo Ts("%s conversation", "%s conversations", $channel["countConversations"]); ?></span>
 <?php if (!empty($channel["description"])): ?><p class='description'><?php echo $channel["description"]; ?></p><?php endif; ?>
 </div>

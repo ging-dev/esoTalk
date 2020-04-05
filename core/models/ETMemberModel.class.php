@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -65,7 +66,7 @@ class ETMemberModel extends ETModel
         if (empty($values["preferences"])) {
             $preferences = array("email.privateAdd", "email.post", "email.mention", "starOnReply", "starPrivate", "hideOnline");
             foreach ($preferences as $p) {
-                $values["preferences"][$p] = C("esoTalk.preferences.".$p);
+                $values["preferences"][$p] = C("esoTalk.preferences." . $p);
             }
         }
         $values["preferences"] = serialize($values["preferences"]);
@@ -78,7 +79,7 @@ class ETMemberModel extends ETModel
         $values["memberId"] = $memberId;
 
         $this->trigger("createAfter", array($values));
-    
+
         // Create "join" activity for this member.
         ET::activityModel()->create("join", $values);
 
@@ -230,7 +231,7 @@ class ETMemberModel extends ETModel
      */
     public function hashPassword($password)
     {
-        require_once PATH_LIBRARY."/vendor/phpass/PasswordHash.php";
+        require_once PATH_LIBRARY . "/vendor/phpass/PasswordHash.php";
         $hasher = new PasswordHash(8, false);
         return $hasher->HashPassword($password);
     }
@@ -245,7 +246,7 @@ class ETMemberModel extends ETModel
      */
     public function checkPassword($password, $hash)
     {
-        require_once PATH_LIBRARY."/vendor/phpass/PasswordHash.php";
+        require_once PATH_LIBRARY . "/vendor/phpass/PasswordHash.php";
         $hasher = new PasswordHash(8, false);
         return $hasher->CheckPassword($password, $hash);
     }

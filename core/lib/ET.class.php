@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -242,7 +243,7 @@ class ET
     public static function writeConfig($values)
     {
         // Include the config file so we can re-write the values contained within it.
-        if (file_exists($file = PATH_CONFIG."/config.php")) {
+        if (file_exists($file = PATH_CONFIG . "/config.php")) {
             include $file;
         }
 
@@ -256,9 +257,9 @@ class ET
         // Finally, loop through and write the config array to the config file.
         $contents = "<?php\n";
         foreach ($config as $k => $v) {
-            $contents .= '$config["'.$k.'"] = '.var_export($v, true).";\n";
+            $contents .= '$config["' . $k . '"] = ' . var_export($v, true) . ";\n";
         }
-        $contents .= "\n// Last updated by: ".ET::$session->user["username"]." (".ET::$session->ip.") @ ".date("r")."\n?>";
+        $contents .= "\n// Last updated by: " . ET::$session->user["username"] . " (" . ET::$session->ip . ") @ " . date("r") . "\n?>";
         file_put_contents($file, $contents);
     }
 
@@ -308,10 +309,10 @@ class ET
         self::$definitions = array();
 
         // If the specified language doesn't exist, use the default language.
-        self::$language = file_exists(PATH_LANGUAGES."/".sanitizeFileName($language)."/definitions.php") ? $language : C("esoTalk.language");
+        self::$language = file_exists(PATH_LANGUAGES . "/" . sanitizeFileName($language) . "/definitions.php") ? $language : C("esoTalk.language");
 
         // Load the main definitions file.
-        $languagePath = PATH_LANGUAGES."/".sanitizeFileName(self::$language);
+        $languagePath = PATH_LANGUAGES . "/" . sanitizeFileName(self::$language);
         self::loadDefinitions("$languagePath/definitions.php");
 
         // Set the locale.
@@ -321,7 +322,7 @@ class ET
 
         // Loop through the loaded plugins and include their definition files, if they exist.
         foreach (C("esoTalk.enabledPlugins") as $plugin) {
-            if (file_exists($file = "$languagePath/definitions.".sanitizeFileName($plugin).".php")) {
+            if (file_exists($file = "$languagePath/definitions." . sanitizeFileName($plugin) . ".php")) {
                 self::loadDefinitions($file);
             }
         }
@@ -413,7 +414,7 @@ class ET
         $languages = array();
         if ($handle = opendir(PATH_LANGUAGES)) {
             while (false !== ($file = readdir($handle))) {
-                if ($file[0] != "." and file_exists($defs = PATH_LANGUAGES."/$file/definitions.php")) {
+                if ($file[0] != "." and file_exists($defs = PATH_LANGUAGES . "/$file/definitions.php")) {
 
                 // Include the file so we get the language information in ET::$languageInfo.
                     include_once $defs;
@@ -545,12 +546,12 @@ class ET
 
         // Render the view into $data["content"], so it will be outputted within the master view.
         ob_start();
-        include PATH_VIEWS."/error.php";
+        include PATH_VIEWS . "/error.php";
         $data["content"] = ob_get_contents();
         ob_end_clean();
 
         // Render the master view, or just output the content if we can't find one.
-        if ($responseType === RESPONSE_TYPE_DEFAULT and file_exists($view = PATH_VIEWS."/message.master.php")) {
+        if ($responseType === RESPONSE_TYPE_DEFAULT and file_exists($view = PATH_VIEWS . "/message.master.php")) {
             include $view;
         } else {
             echo $data["content"];
@@ -574,12 +575,12 @@ class ET
 
         // Render the view into $data["content"], so it will be outputted within the master view.
         ob_start();
-        include PATH_VIEWS."/404.php";
+        include PATH_VIEWS . "/404.php";
         $data["content"] = ob_get_contents();
         ob_end_clean();
 
         // Render the master view.
-        include PATH_VIEWS."/message.master.php";
+        include PATH_VIEWS . "/message.master.php";
         exit;
     }
 }

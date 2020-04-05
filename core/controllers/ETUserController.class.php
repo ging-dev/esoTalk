@@ -1,4 +1,5 @@
 <?php
+
 // Copyright 2011 Toby Zerner, Simon Zerner
 // This file is part of esoTalk. Please see the included license file for usage information.
 
@@ -63,11 +64,14 @@ class ETUserController extends ETController
 
         // Add the password field to the form structure. We also use a processing callback on this field to attempt
         // the login because the password is the specific mechanism of authentication in this instance.
-        $form->addSection("password", T("Password")." <small><a href='".URL("user/forgot")."' class='link-forgot' tabindex='-1'>".T("Forgot?")."</a></small>");
-        $form->addField("password", "password", function ($form) {
+        $form->addSection("password", T("Password") . " <small><a href='" . URL("user/forgot") . "' class='link-forgot' tabindex='-1'>" . T("Forgot?") . "</a></small>");
+        $form->addField(
+            "password",
+            "password",
+            function ($form) {
             return $form->input("password", "password");
         },
-    function ($form, $key, &$success) use ($controller) {
+            function ($form, $key, &$success) use ($controller) {
         // If the login was successful...
         if (ET::$session->login($form->getValue("username"), $form->getValue("password"), $form->getValue("remember"))) {
             $success = true;
@@ -77,13 +81,14 @@ class ETUserController extends ETController
         else {
             $form->errors(ET::$session->errors());
         }
-    });
+    }
+        );
 
         // Add the "remember me" field to the form structure.
         if (C("esoTalk.enablePersistenceCookies")) {
             $form->addSection("remember");
             $form->addField("remember", "remember", function ($form) {
-                return "<label class='checkbox'>".$form->checkbox("remember")." ".T("Keep me logged in")."</label>";
+                return "<label class='checkbox'>" . $form->checkbox("remember") . " " . T("Keep me logged in") . "</label>";
             });
         }
 
@@ -106,7 +111,7 @@ class ETUserController extends ETController
 
         // Instead of showing some specific errors on the form, render them as messages.
         if (isset($form->errors["emailNotYetConfirmed"])) {
-            $this->renderMessage("Error", sprintf(T("message.emailNotYetConfirmed"), URL("user/sendConfirmation/".$form->getValue("username"))));
+            $this->renderMessage("Error", sprintf(T("message.emailNotYetConfirmed"), URL("user/sendConfirmation/" . $form->getValue("username"))));
             return;
         }
         if (isset($form->errors["accountNotYetApproved"])) {
@@ -130,7 +135,7 @@ class ETUserController extends ETController
         if (!$this->validateToken()) {
             return;
         }
-    
+
         ET::$session->remove("messages");
         ET::$session->logout();
 
@@ -167,42 +172,58 @@ class ETUserController extends ETController
 
         // Add the username field to the form structure.
         $form->addSection("username", T("Username"));
-        $form->addField("username", "username", function ($form) {
+        $form->addField(
+            "username",
+            "username",
+            function ($form) {
             return $form->input("username");
         },
-    function ($form, $key, &$data) {
+            function ($form, $key, &$data) {
         $data["username"] = $form->getValue($key);
-    });
+    }
+        );
 
         // Add the email field to the form structure.
         $form->addSection("email", T("Email"));
-        $form->addField("email", "email", function ($form) {
-            return $form->input("email")."<br><small>".T("Used to verify your account and subscribe to conversations")."</small>";
+        $form->addField(
+            "email",
+            "email",
+            function ($form) {
+            return $form->input("email") . "<br><small>" . T("Used to verify your account and subscribe to conversations") . "</small>";
         },
-    function ($form, $key, &$data) {
+            function ($form, $key, &$data) {
         $data["email"] = $form->getValue($key);
-    });
+    }
+        );
 
         // Add the password field to the form structure.
         $form->addSection("password", T("Password"));
-        $form->addField("password", "password", function ($form) {
-            return $form->input("password", "password")."<br><small>".sprintf(T("Choose a secure password of at least %s characters"), C("esoTalk.minPasswordLength"))."</small>";
+        $form->addField(
+            "password",
+            "password",
+            function ($form) {
+            return $form->input("password", "password") . "<br><small>" . sprintf(T("Choose a secure password of at least %s characters"), C("esoTalk.minPasswordLength")) . "</small>";
         },
-    function ($form, $key, &$data) {
+            function ($form, $key, &$data) {
         $data["password"] = $form->getValue($key);
-    });
+    }
+        );
 
         // Add the confirm password field to the form structure.
         $form->addSection("confirm", T("Confirm password"));
-        $form->addField("confirm", "confirm", function ($form) {
+        $form->addField(
+            "confirm",
+            "confirm",
+            function ($form) {
             return $form->input("confirm", "password");
         },
-    function ($form, $key, &$data) {
+            function ($form, $key, &$data) {
         // Make sure the passwords match.
         if ($form->getValue("password") != $form->getValue($key)) {
             $form->error($key, T("message.passwordsDontMatch"));
         }
-    });
+    }
+        );
 
         $this->trigger("initJoin", array($form));
 
@@ -238,7 +259,7 @@ class ETUserController extends ETController
 
                 // If we require the user to confirm their email, send them an email and show a message.
                     if (C("esoTalk.registration.requireConfirmation") == "email") {
-                        $this->sendConfirmationEmail($data["email"], $data["username"], $memberId.$data["resetPassword"]);
+                        $this->sendConfirmationEmail($data["email"], $data["username"], $memberId . $data["resetPassword"]);
                         $this->renderMessage(T("Success!"), T("message.confirmEmail"));
                     }
 
@@ -272,10 +293,11 @@ class ETUserController extends ETController
      */
     public function sendConfirmationEmail($email, $username, $hash)
     {
-        sendEmail($email,
-        sprintf(T("email.confirmEmail.subject"), $username),
-        sprintf(T("email.header"), $username).sprintf(T("email.confirmEmail.body"), C("esoTalk.forumTitle"), URL("user/confirm/".$hash, true))
-    );
+        sendEmail(
+            $email,
+            sprintf(T("email.confirmEmail.subject"), $username),
+            sprintf(T("email.header"), $username) . sprintf(T("email.confirmEmail.body"), C("esoTalk.forumTitle"), URL("user/confirm/" . $hash, true))
+        );
     }
 
 
@@ -338,7 +360,7 @@ class ETUserController extends ETController
         // Get the requested member.
         $member = reset(ET::memberModel()->get(array("m.username" => $username, "m.confirmed" => false)));
         if ($member) {
-            $this->sendConfirmationEmail($member["email"], $member["username"], $member["memberId"].$member["resetPassword"]);
+            $this->sendConfirmationEmail($member["email"], $member["username"], $member["memberId"] . $member["resetPassword"]);
             $this->renderMessage(T("Success!"), T("message.confirmEmail"));
         } else {
             $this->redirect(URL(""));
@@ -386,10 +408,11 @@ class ETUserController extends ETController
                 ET::memberModel()->updateById($member["memberId"], array("resetPassword" => $hash));
 
                 // Send them email containing the link, and redirect to the home page.
-                sendEmail($member["email"],
-                sprintf(T("email.forgotPassword.subject"), $member["username"]),
-                sprintf(T("email.header"), $member["username"]).sprintf(T("email.forgotPassword.body"), C("esoTalk.forumTitle"), URL("user/reset/".$member["memberId"].$hash, true))
-            );
+                sendEmail(
+                    $member["email"],
+                    sprintf(T("email.forgotPassword.subject"), $member["username"]),
+                    sprintf(T("email.header"), $member["username"]) . sprintf(T("email.forgotPassword.body"), C("esoTalk.forumTitle"), URL("user/reset/" . $member["memberId"] . $hash, true))
+                );
                 $this->renderMessage(T("Success!"), T("message.passwordEmailSent"));
                 return;
             }
