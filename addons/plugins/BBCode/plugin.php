@@ -7,7 +7,7 @@ if (!defined('IN_ESOTALK')) {
     exit;
 }
 
-ET::$pluginInfo['BBCode'] = array(
+ET::$pluginInfo['BBCode'] = [
     'name' => 'BBCode',
     'description' => 'Formats BBCode within posts, allowing users to style their text.',
     'version' => ESOTALK_VERSION,
@@ -15,7 +15,7 @@ ET::$pluginInfo['BBCode'] = array(
     'authorEmail' => 'support@esotalk.org',
     'authorURL' => 'http://esotalk.org',
     'license' => 'GPLv2'
-);
+];
 
 
 /**
@@ -66,8 +66,8 @@ class ETPlugin_BBCode extends ETPlugin
      */
     public function handler_format_beforeFormat($sender)
     {
-        $this->blockFixedContents = array();
-        $this->inlineFixedContents = array();
+        $this->blockFixedContents = [];
+        $this->inlineFixedContents = [];
         $self = $this;
 
         $regexp = "/(.*)^\s*\[code\]\n?(.*?)\n?\[\/code]$/ims";
@@ -111,7 +111,7 @@ class ETPlugin_BBCode extends ETPlugin
         $sender->content = preg_replace("/\[img\](https?.*?)\[\/img\]/i", $replacement, $sender->content);
 
         // Links with display text: [url=http://url]text[/url]
-        $sender->content = preg_replace_callback("/\[url=(?!\s+)(\w{2,6}:\/\/)?([^\]]*?)\](.*?)\[\/url\]/i", array($this, 'linksCallback'), $sender->content);
+        $sender->content = preg_replace_callback("/\[url=(?!\s+)(\w{2,6}:\/\/)?([^\]]*?)\](.*?)\[\/url\]/i", [$this, 'linksCallback'], $sender->content);
 
         // Bold: [b]bold text[/b]
         $sender->content = preg_replace("/\[b\](.*?)\[\/b\]/si", '<b>$1</b>', $sender->content);

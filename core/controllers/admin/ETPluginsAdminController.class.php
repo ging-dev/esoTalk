@@ -46,11 +46,11 @@ class ETPluginsAdminController extends ETAdminController
                 if ($file[0] != '.' and file_exists($pluginFile = PATH_PLUGINS . "/$file/plugin.php") and (include_once $pluginFile)) {
 
                 // Add the plugin's information and status to the array.
-                    $plugins[$file] = array(
+                    $plugins[$file] = [
                     'loaded'   => in_array($file, C('esoTalk.enabledPlugins')),
                     'info'     => ET::$pluginInfo[$file],
                     'settings' => false
-                );
+                ];
 
                     // If this skin's settings function returns a view path, then store it.
                     if ($plugins[$file]['loaded']) {
@@ -140,12 +140,12 @@ class ETPluginsAdminController extends ETAdminController
                     return;
                 }
 
-                ET::writeConfig(array("$plugin.version" => ET::$pluginInfo[$plugin]['version']));
+                ET::writeConfig(["$plugin.version" => ET::$pluginInfo[$plugin]['version']]);
             }
         }
 
         // Write to the config file.
-        ET::writeConfig(array('esoTalk.enabledPlugins' => $enabledPlugins));
+        ET::writeConfig(['esoTalk.enabledPlugins' => $enabledPlugins]);
 
         $this->redirect(URL('admin/plugins'));
     }
@@ -209,7 +209,7 @@ class ETPluginsAdminController extends ETAdminController
             // Call the plugin's disable function.
             ET::$plugins[$plugin]->disable();
 
-            ET::writeConfig(array('esoTalk.enabledPlugins' => $enabledPlugins));
+            ET::writeConfig(['esoTalk.enabledPlugins' => $enabledPlugins]);
         }
 
         // Set up an instance of the plugin so we can call its uninstall function.

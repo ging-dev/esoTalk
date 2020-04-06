@@ -69,7 +69,7 @@ class ETDatabase extends ETPluggable
      * An array of connection options to use when creating a PDO connection.
      * @var array
      */
-    protected $connectionOptions = array();
+    protected $connectionOptions = [];
 
 
     /**
@@ -90,7 +90,7 @@ class ETDatabase extends ETPluggable
      * An array of queries that have been run.
      * @var array
      */
-    public $queries = array();
+    public $queries = [];
 
 
     /**
@@ -156,7 +156,7 @@ class ETDatabase extends ETPluggable
      * @param array $connectionOptions An array of connection options to use when making the PDO connection.
      * @return void
      */
-    public function init($host, $user, $password, $dbName, $tablePrefix = '', $connectionOptions = array(), $port = null)
+    public function init($host, $user, $password, $dbName, $tablePrefix = '', $connectionOptions = [], $port = null)
     {
         $this->pdoConnection = null;
 
@@ -288,7 +288,7 @@ class ETDatabase extends ETPluggable
             return $value ? (string)$value : '0';
 
         default:
-            $value = str_replace(array('\\', "\0", "\n", "\r", "'", '"', "\x1a"), array('\\\\', '\\0', '\\n', '\\r', "\\'", '\\"', '\\Z'), $value);
+            $value = str_replace(['\\', "\0", "\n", "\r", "'", '"', "\x1a"], ['\\\\', '\\0', '\\n', '\\r', "\\'", '\\"', '\\Z'], $value);
             return "'" . $value . "'";
     }
     }
@@ -310,7 +310,7 @@ class ETDatabase extends ETPluggable
         // Get the database connection.
         $connection = $this->connection();
 
-        $this->trigger('beforeQuery', array(&$query));
+        $this->trigger('beforeQuery', [&$query]);
         $this->queries[] = $query;
 
         // Execute the query.
@@ -325,7 +325,7 @@ class ETDatabase extends ETPluggable
         // Set up a new ETSQLResult object with the result statement.
         $result = ETFactory::make('sqlResult', $statement);
 
-        $this->trigger('afterQuery', array($result));
+        $this->trigger('afterQuery', [$result]);
 
         return $result;
     }

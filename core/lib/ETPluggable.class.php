@@ -59,12 +59,12 @@ class ETPluggable
      * @param string $event The name of the event.
      * @param array $parameters An array of extra parameters to pass to the event handlers.
      */
-    public function trigger($event, $parameters = array())
+    public function trigger($event, $parameters = [])
     {
         // Add the instance of this class to the parameters.
         array_unshift($parameters, $this);
 
-        $return = array();
+        $return = [];
 
         // If we have a class name to use, trigger an event with that as the prefix.
         if ($this->className) {

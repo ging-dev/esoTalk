@@ -85,13 +85,13 @@ class ETChannelsController extends ETController
         ->where('rgt <= :rgt')->bind(':rgt', $channel['rgt'])
         ->exec()
         ->allRows();
-        $channelIds = array();
+        $channelIds = [];
         foreach ($rows as $row) {
             $channelIds[] = $row['channelId'];
         }
 
         // Write to the database.
-        ET::channelModel()->setStatus($channelIds, ET::$session->userId, array('unsubscribed' => !$channel['unsubscribed']));
+        ET::channelModel()->setStatus($channelIds, ET::$session->userId, ['unsubscribed' => !$channel['unsubscribed']]);
 
         // Normally, redirect back to the channel list.
         if ($this->responseType === RESPONSE_TYPE_DEFAULT) {

@@ -31,15 +31,15 @@
  *
  ************************************************************************************/
 
-$language_data = array(
+$language_data = [
   'LANG_NAME' => 'MySQL',
-  'COMMENT_SINGLE' => array(1 =>'--', 2 => '#'),
-  'COMMENT_MULTI' => array('/*' => '*/'),
+  'COMMENT_SINGLE' => [1 =>'--', 2 => '#'],
+  'COMMENT_MULTI' => ['/*' => '*/'],
   'CASE_KEYWORDS' => 1,
-  'QUOTEMARKS' => array("'", '"', ''),
+  'QUOTEMARKS' => ["'", '"', ''],
   'ESCAPE_CHAR' => '\\',
-  'KEYWORDS' => array(
-  1 => array(
+  'KEYWORDS' => [
+  1 => [
   /* Mix */
   'ALTER DATABASE', 'ALTER TABLE', 'CREATE DATABASE', 'CREATE INDEX', 'CREATE TABLE', 'DROP DATABASE',
   'DROP INDEX', 'DROP TABLE', 'RENAME TABLE', 'DELETE', 'DO', 'HANDLER', 'INSERT', 'LOAD DATA INFILE',
@@ -83,30 +83,30 @@ $language_data = array(
   'UNIX_TIMESTAMP', 'UTC_DATE', 'UTC_TIME', 'UTC_TIMESTAMP', 'WEEKDAY', 'WEEKOFYEAR',
   'YEARWEEK',
 
-   ),
-   2 => array(
+   ],
+   2 => [
    'INTEGER', 'SMALLINT', 'DECIMAL', 'NUMERIC', 'FLOAT', 'REAL', 'DOUBLE PRECISION',
    'DOUBLE', 'INT', 'DEC', 'BIT' ,'TINYINT', 'SMALLINT', 'MEDIUMINT', 'BIGINT',
    'DATETIME', 'DATE', 'TIMESTAMP', 'TIME', 'YEAR',
    'CHAR', 'VARCHAR', 'BINARY', 'CHARACTER VARYING', 'VARBINARY', 'TINYBLOB', 'TINYTEXT',
    'BLOB', 'TEXT','MEDIUMBLOB', 'MEDIUMTEXT', 'LONGBLOB', 'LONGTEXT', 'ENUM', 'SET',
    'SERIAL DEFAULT VALUE', 'SERIAL', 'FIXED'
-   ),
-   3 => array(
+   ],
+   3 => [
    'ZEROFILL', 'NOT NULL', 'UNSIGNED', 'AUTO_INCREMENT', 'UNIQUE', 'NOT', 'NULL', 'CHARACTER SET', 'CHARSET',
    'ASCII', 'UNICODE', 'NATIONAL', 'BOTH', 'LEADING', 'TRAILING','DEFAULT'
-   ),
-   4 => array(
+   ],
+   4 => [
    'MICROSECOND', 'SECOND', 'MINUTE', 'HOUR', 'DAY', 'WEEK', 'MONTH', 'QUARTER', 'YEAR', 'SECOND_MICROSECOND',
    'MINUTE_MICROSECOND', 'MINUTE_SECOND', 'HOUR_MICROSECOND', 'HOUR_SECOND', 'HOUR_MINUTE', 'DAY_MICROSECOND',
    'DAY_SECOND', 'DAY_MINUTE', 'DAY_HOUR', 'YEAR_MONTH'
-   ),
-   5 => array(
+   ],
+   5 => [
    'OR', 'XOR', 'AND', 'NOT', 'BETWEEN', 'IS', 'LIKE', 'REGEXP', 'IN', 'DIV',
     'MOD', 'BINARY', 'COLLATE', 'LIMIT', 'OFFSET'
-   ),
-   ),
-   'SYMBOLS' => array(
+   ],
+   ],
+   'SYMBOLS' => [
    ':=',
    '||', 'OR', 'XOR',
    '&&', 'AND',
@@ -123,58 +123,58 @@ $language_data = array(
    '!',
    'BINARY', 'COLLATE',
    '(', ')',
-   ),
-   'CASE_SENSITIVE' => array(
+   ],
+   'CASE_SENSITIVE' => [
    GESHI_COMMENTS => false,
    1 => false,
    2 => false,
    3 => false,
    4 => false,
    5 => false
-   ),
-   'STYLES' => array(
-   'KEYWORDS' => array(
+   ],
+   'STYLES' => [
+   'KEYWORDS' => [
    1 => 'color: #993333; font-weight: bold;',
    2 => 'color: #aa9933; font-weight: bold;',
    3 => 'color: #aa3399; font-weight: bold;',
    4 => 'color: #33aa99; font-weight: bold;',
    5 => 'color: #993333; font-weight: bold;'
-   ),
-   'COMMENTS' => array(
+   ],
+   'COMMENTS' => [
    'MULTI' => 'color: #808080; font-style: italic;',
    1 => 'color: #808080; font-style: italic;',
    2 => 'color: #808080; font-style: italic;'
-   ),
-   'ESCAPE_CHAR' => array(
+   ],
+   'ESCAPE_CHAR' => [
    0 => 'color: #000099; font-weight: bold;'
-   ),
-   'BRACKETS' => array(
+   ],
+   'BRACKETS' => [
    0 => 'color: #66cc66;'
-   ),
-   'STRINGS' => array(
+   ],
+   'STRINGS' => [
    0 => 'color: #ff0000;'
-   ),
-   'NUMBERS' => array(
+   ],
+   'NUMBERS' => [
    0 => 'color: #cc66cc;'
-   ),
-   'METHODS' => array(
-   ),
-   'SYMBOLS' => array(
+   ],
+   'METHODS' => [
+   ],
+   'SYMBOLS' => [
    0 => 'color: #66cc66;'
-   ),
-   'SCRIPT' => array(
-   ),
-   'REGEXPS' => array(
-   )
-   ),
+   ],
+   'SCRIPT' => [
+   ],
+   'REGEXPS' => [
+   ]
+   ],
    'OOLANG' => false,
-   'OBJECT_SPLITTERS' => array(
-   ),
-   'REGEXPS' => array(
-   ),
+   'OBJECT_SPLITTERS' => [
+   ],
+   'REGEXPS' => [
+   ],
    'STRICT_MODE_APPLIES' => GESHI_NEVER,
-   'SCRIPT_DELIMITERS' => array(
-   ),
-   'HIGHLIGHT_STRICT_BLOCK' => array(
-   )
-);
+   'SCRIPT_DELIMITERS' => [
+   ],
+   'HIGHLIGHT_STRICT_BLOCK' => [
+   ]
+];

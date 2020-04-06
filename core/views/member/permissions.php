@@ -29,7 +29,7 @@ $form = $data['form'];
 <ul class='form'>
 
 <li><label><?php echo T('Account type'); ?></label> <?php
-$options = array();
+$options = [];
 foreach ($data['accounts'] as $account) {
     $options[$account] = groupName($account);
 }
@@ -40,7 +40,7 @@ echo $form->select('account', $options);
 <div class='checkboxGroup'>
 <?php foreach ($data['groups'] as $group): ?>
 <label class='checkbox'>
-<?php echo $form->checkbox('groups[]', array('value' => $group['groupId']) + (isset($member['groups'][$group['groupId']]) ? array('checked' => 'checked') : array())); ?>
+<?php echo $form->checkbox('groups[]', ['value' => $group['groupId']] + (isset($member['groups'][$group['groupId']]) ? ['checked' => 'checked'] : [])); ?>
 <?php echo groupName($group['name']); ?>
 </label>
 <?php endforeach; ?>

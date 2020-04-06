@@ -19,7 +19,7 @@ $orderBy = $data['orderBy'];
 function makeURL($startFrom = 0, $searchString = '')
 {
     global $orderBy;
-    $urlParts = array('members', $orderBy);
+    $urlParts = ['members', $orderBy];
 
     if ($startFrom > 0 or $startFrom[0] == 'p' or $searchString) {
         $urlParts[] = $startFrom;

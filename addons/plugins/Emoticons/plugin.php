@@ -7,7 +7,7 @@ if (!defined('IN_ESOTALK')) {
     exit;
 }
 
-ET::$pluginInfo['Emoticons'] = array(
+ET::$pluginInfo['Emoticons'] = [
     'name' => 'Emoticons',
     'description' => 'Converts text emoticons to their graphical equivalent.',
     'version' => ESOTALK_VERSION,
@@ -15,7 +15,7 @@ ET::$pluginInfo['Emoticons'] = array(
     'authorEmail' => 'support@esotalk.org',
     'authorURL' => 'http://esotalk.org',
     'license' => 'GPLv2'
-);
+];
 
 class ETPlugin_Emoticons extends ETPlugin
 {
@@ -30,7 +30,7 @@ class ETPlugin_Emoticons extends ETPlugin
             return;
         }
 
-        $styles = array();
+        $styles = [];
         $styles[':)'] = 'background-position:0 0';
         $styles['=)'] = 'background-position:0 0';
         $styles[':D'] = 'background-position:0 -20px';
@@ -97,7 +97,7 @@ class ETPlugin_Emoticons extends ETPlugin
         $styles['>:)'] = 'background-position:0 -640px';
         $styles['>:D'] = 'background-position:0 -640px';
 
-        $from = $to = array();
+        $from = $to = [];
         foreach ($styles as $k => $v) {
             $quoted = preg_quote(sanitizeHTML($k), '/');
             $from[] = "/(?<=^|[\s.,!<>]){$quoted}(?=[\s.,!<>)]|$)/i";

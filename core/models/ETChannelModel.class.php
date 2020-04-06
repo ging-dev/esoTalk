@@ -61,7 +61,7 @@ class ETChannelModel extends ETModel
                 ->orderBy('c.lft ASC');
 
                 // Define the permission columns that we need to get.
-                $permissionColumns = array('view', 'reply', 'start', 'moderate');
+                $permissionColumns = ['view', 'reply', 'start', 'moderate'];
                 foreach ($permissionColumns as $column) {
                     $sql->select("GROUP_CONCAT(g.$column)", $column);
                 }
@@ -81,10 +81,10 @@ class ETChannelModel extends ETModel
                     unset($channel['groupId']);
 
                     // For each permission type, expand the comma-separated bool values.
-                    $permissions = array();
-                    $channel['permissions'] = array();
+                    $permissions = [];
+                    $channel['permissions'] = [];
                     foreach ($permissionColumns as $column) {
-                        $channel['permissions'][$column] = array();
+                        $channel['permissions'][$column] = [];
                         $permissions[$column] = explode(',', $channel[$column]);
                         unset($channel[$column]);
                     }
@@ -255,13 +255,13 @@ class ETChannelModel extends ETModel
         if (!isset($values['title'])) {
             $values['title'] = '';
         }
-        $this->validate('title', $values['title'], array($this, 'validateTitle'));
+        $this->validate('title', $values['title'], [$this, 'validateTitle']);
 
         // Check that a channel slug has been entered and isn't already in use.
         if (!isset($values['slug'])) {
             $values['slug'] = '';
         }
-        $this->validate('slug', $values['slug'], array($this, 'validateSlug'));
+        $this->validate('slug', $values['slug'], [$this, 'validateSlug']);
         $values['slug'] = slug($values['slug']);
 
         // Add the channel at the end at the root level.
@@ -294,14 +294,14 @@ class ETChannelModel extends ETModel
      * @param array $wheres An array of WHERE conditions.
      * @return bool|ETSQLResult
      */
-    public function update($values, $wheres = array())
+    public function update($values, $wheres = [])
     {
         if (isset($values['title'])) {
-            $this->validate('title', $values['title'], array($this, 'validateTitle'));
+            $this->validate('title', $values['title'], [$this, 'validateTitle']);
         }
 
         if (isset($values['slug'])) {
-            $this->validate('slug', $values['slug'], array($this, 'validateSlug'));
+            $this->validate('slug', $values['slug'], [$this, 'validateSlug']);
             $values['slug'] = slug($values['slug']);
         }
 
@@ -339,7 +339,7 @@ class ETChannelModel extends ETModel
 
         // Go through each group ID and set its permission types.
         foreach ($permissions as $groupId => $types) {
-            $set = array();
+            $set = [];
             foreach ($types as $type => $v) {
                 if ($v) {
                     $set[$type] = 1;
@@ -371,11 +371,11 @@ class ETChannelModel extends ETModel
         $channelIds = (array)$channelIds;
         $memberIds = (array)$memberIds;
 
-        $keys = array_merge(array('memberId', 'channelId'), array_keys($data));
-        $inserts = array();
+        $keys = array_merge(['memberId', 'channelId'], array_keys($data));
+        $inserts = [];
         foreach ($memberIds as $memberId) {
             foreach ($channelIds as $channelId) {
-                $inserts[] = array_merge(array($memberId, $channelId), array_values($data));
+                $inserts[] = array_merge([$memberId, $channelId], array_values($data));
             }
         }
 
@@ -423,7 +423,7 @@ class ETChannelModel extends ETModel
 
         // Or do we want to simply delete the conversations?
         else {
-            ET::conversationModel()->delete(array('channelId' => $channelId));
+            ET::conversationModel()->delete(['channelId' => $channelId]);
         }
 
         if ($this->errorCount()) {

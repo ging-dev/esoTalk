@@ -25,21 +25,21 @@ class ETFactory
  * An array of registered classes and their class names.
  * @var array
  */
-    public static $classes = array();
+    public static $classes = [];
 
 
     /**
      * An array of registered controller classes and their class names.
      * @var array
      */
-    public static $controllers = array();
+    public static $controllers = [];
 
 
     /**
      * An array of registered administrator controller classes and their class names.
      * @var array
      */
-    public static $adminControllers = array();
+    public static $adminControllers = [];
 
 
     /**
@@ -90,7 +90,7 @@ class ETFactory
      */
     public static function register($class, $className, $file = '')
     {
-        self::$classes[$class] = array($className, $file);
+        self::$classes[$class] = [$className, $file];
     }
 
 

@@ -25,17 +25,17 @@ class ETUpgradeModel extends ETModel
     public function checkForUpdates()
     {
         // Save the last update check time so we won't do it again for a while.
-        ET::writeConfig(array('esoTalk.admin.lastUpdateCheckTime' => time()));
+        ET::writeConfig(['esoTalk.admin.lastUpdateCheckTime' => time()]);
 
         // If the latest version is different to what it was last time we checked...
-        $info = C('esoTalk.admin.lastUpdateCheckInfo', array('version' => ESOTALK_VERSION));
+        $info = C('esoTalk.admin.lastUpdateCheckInfo', ['version' => ESOTALK_VERSION]);
         if (($package = ET::checkForUpdates()) and $package['version'] != $info['version']) {
 
         // Create a notification.
             ET::activityModel()->create('updateAvailable', ET::$session->userId, null, $package);
 
             // Write the latest checked version to the config file.
-            ET::writeConfig(array('esoTalk.admin.lastUpdateCheckInfo' => $package));
+            ET::writeConfig(['esoTalk.admin.lastUpdateCheckInfo' => $package]);
         }
     }
 
@@ -99,7 +99,7 @@ class ETUpgradeModel extends ETModel
         ->column('reply', 'tinyint(1)', 0)
         ->column('start', 'tinyint(1)', 0)
         ->column('moderate', 'tinyint(1)', 0)
-        ->key(array('channelId', 'groupId'), 'primary')
+        ->key(['channelId', 'groupId'], 'primary')
         ->exec($drop);
 
         // Conversation table.
@@ -118,7 +118,7 @@ class ETUpgradeModel extends ETModel
         ->column('lastPostTime', 'int(11) unsigned')
         ->column('attributes', 'mediumblob')
         ->key('conversationId', 'primary')
-        ->key(array('sticky', 'lastPostTime')) // for the ordering of results
+        ->key(['sticky', 'lastPostTime']) // for the ordering of results
         ->key('lastPostTime') // also for the ordering of results, and the last post gambit
         ->key('countPosts') // for the posts gambit
         ->key('startTime') // for the "order by newest" gambit
@@ -173,7 +173,7 @@ class ETUpgradeModel extends ETModel
         ->column('memberId', 'int(11) unsigned', false)
         ->column('channelId', 'int(11) unsigned', false)
         ->column('unsubscribed', 'tinyint(1)', 0)
-        ->key(array('memberId', 'channelId'), 'primary')
+        ->key(['memberId', 'channelId'], 'primary')
         ->exec($drop);
 
         // Member-conversation table.
@@ -187,8 +187,8 @@ class ETUpgradeModel extends ETModel
         ->column('lastRead', 'smallint(5)', 0)
         ->column('draft', 'text')
         ->column('ignored', 'tinyint(1)', 0)
-        ->key(array('conversationId', 'type', 'id'), 'primary')
-        ->key(array('type', 'id'))
+        ->key(['conversationId', 'type', 'id'], 'primary')
+        ->key(['type', 'id'])
         ->exec($drop);
 
         // Member-group table.
@@ -196,7 +196,7 @@ class ETUpgradeModel extends ETModel
         ->table('member_group')
         ->column('memberId', 'int(11) unsigned', false)
         ->column('groupId', 'int(11) unsigned', false)
-        ->key(array('memberId', 'groupId'), 'primary')
+        ->key(['memberId', 'groupId'], 'primary')
         ->exec($drop);
 
         // Member-user table.
@@ -204,7 +204,7 @@ class ETUpgradeModel extends ETModel
         ->table('member_member')
         ->column('memberId1', 'int(11) unsigned', false)
         ->column('memberId2', 'int(11) unsigned', false)
-        ->key(array('memberId1', 'memberId2'), 'primary')
+        ->key(['memberId1', 'memberId2'], 'primary')
         ->exec($drop);
 
         // Post table.
@@ -223,8 +223,8 @@ class ETUpgradeModel extends ETModel
         ->column('attributes', 'mediumblob')
         ->key('postId', 'primary')
         ->key('memberId')
-        ->key(array('conversationId', 'time'))
-        ->key(array('title', 'content'), 'fulltext')
+        ->key(['conversationId', 'time'])
+        ->key(['title', 'content'], 'fulltext')
         ->exec($drop);
 
         // Search table.
@@ -233,7 +233,7 @@ class ETUpgradeModel extends ETModel
         ->column('type', "enum('conversations')", 'conversations')
         ->column('ip', 'int(11) unsigned', false)
         ->column('time', 'int(11) unsigned', false)
-        ->key(array('type', 'ip'))
+        ->key(['type', 'ip'])
         ->exec($drop);
     }
 
@@ -250,13 +250,13 @@ class ETUpgradeModel extends ETModel
         $this->structure(true);
 
         // Create the administrator member.
-        $member = array(
+        $member = [
         'username' => $info['adminUser'],
         'email' => $info['adminEmail'],
         'password' => $info['adminPass'],
         'account' => 'Administrator',
         'confirmed' => true
-    );
+    ];
         ET::memberModel()->create($member);
 
         // Set the session's userId and user information variables to the administrator, so that all entities
@@ -265,47 +265,47 @@ class ETUpgradeModel extends ETModel
         ET::$session->user = ET::memberModel()->getById(1);
 
         // Create the moderator group.
-        ET::groupModel()->create(array(
+        ET::groupModel()->create([
         'name' => 'Moderator',
         'canSuspend' => true
-    ));
+    ]);
 
         // Create the General Discussion channel.
-        $id = ET::channelModel()->create(array(
+        $id = ET::channelModel()->create([
         'title' => 'General Discussion',
         'slug' => slug('General Discussion')
-    ));
-        ET::channelModel()->setPermissions($id, array(
-        GROUP_ID_GUEST => array('view' => true),
-        GROUP_ID_MEMBER => array('view' => true, 'reply' => true, 'start' => true),
-        1 => array('view' => true, 'reply' => true, 'start' => true, 'moderate' => true)
-    ));
+    ]);
+        ET::channelModel()->setPermissions($id, [
+        GROUP_ID_GUEST => ['view' => true],
+        GROUP_ID_MEMBER => ['view' => true, 'reply' => true, 'start' => true],
+        1 => ['view' => true, 'reply' => true, 'start' => true, 'moderate' => true]
+    ]);
 
         // Create the Staff Only channel.
-        $id = ET::channelModel()->create(array(
+        $id = ET::channelModel()->create([
         'title' => 'Staff Only',
         'slug' => slug('Staff Only')
-    ));
-        ET::channelModel()->setPermissions($id, array(
-        1 => array('view' => true, 'reply' => true, 'start' => true, 'moderate' => true)
-    ));
+    ]);
+        ET::channelModel()->setPermissions($id, [
+        1 => ['view' => true, 'reply' => true, 'start' => true, 'moderate' => true]
+    ]);
 
         // Set the flood control config setting to zero so that we can create two conversations in a row.
         ET::$config['esoTalk.conversation.timeBetweenPosts'] = 0;
 
         // Create a welcome conversation.
-        ET::conversationModel()->create(array(
+        ET::conversationModel()->create([
         'title' => 'Welcome to ' . $info['forumTitle'] . '!',
         'content' => '[b]Welcome to ' . $info['forumTitle'] . "![/b]\n\n" . $info['forumTitle'] . " is powered by [url=http://esotalk.org]esoTalk[/url], the simple, fast, free web-forum.\n\nFeel free to edit or delete this conversation. Otherwise, it's time to get posting!\n\nAnyway, good luck, and we hope you enjoy using esoTalk.",
         'channelId' => 1
-    ));
+    ]);
 
         // Create a helpful private conversation with the administrator.
-        ET::conversationModel()->create(array(
+        ET::conversationModel()->create([
         'title' => 'Pssst! Want a few tips?',
         'content' => "Hey {$info['adminUser']}, congrats on getting esoTalk installed!\n\nCool! Your forum is now good-to-go, but you might want to customize it with your own logo, design, and settings—so here's how.\n\n[h]Changing the Logo[/h]\n\n1. Go to the [url=" . C('esoTalk.baseURL') . "admin/settings]Forum Settings[/url] section of your administration panel.\n2. Select 'Show an image in the header' for the 'Forum header' setting.\n3. Find and select the image file you wish to use.\n4. Click 'Save Changes'. The logo will automatically be resized so it fits nicely in the header.\n\n[h]Changing the Appearance[/h]\n\n1. Go to the [url=" . C('esoTalk.baseURL') . "admin/appearance]Appearance[/url] section of your administration panel.\n2. Choose colors for the header, page background, or select a background image. (More skins will be available soon.)\n3. Click 'Save Changes', and your forum's appearance will be updated!\n\n[h]Managing Channels[/h]\n\n'Channels' are a way to categorize conversations in your forum. You can create as many or as few channels as you like, nest them, and give them custom permissions.\n\n1. Go to the [url=" . C('esoTalk.baseURL') . "admin/channels]Channels[/url] section of your administration panel.\n2. Click 'Create Channel' and fill out a title, description, and select permissions to add a new channel.\n3. Drag and drop channels to rearrange and nest them.\n\n[h]Getting Help[/h]\n\nIf you need help, come and give us a yell at the [url=http://esotalk.org/forum]esoTalk Support Forum[/url]. Don't worry—we don't bite!",
         'channelId' => 1
-    ), array(array('type' => 'member', 'id' => 1)));
+    ], [['type' => 'member', 'id' => 1]]);
 
         // All done!
     }
@@ -327,7 +327,7 @@ class ETUpgradeModel extends ETModel
         //   the upgrade script.
         if (version_compare($currentVersion, '1.0.0g5', '<')) {
             ET::$database->structure()->table('cookie')->drop();
-            ET::writeConfig(array('esoTalk.enablePersistenceCookies' => true));
+            ET::writeConfig(['esoTalk.enablePersistenceCookies' => true]);
         }
 
         // 1.0.0g4:

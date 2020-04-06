@@ -36,7 +36,7 @@ class ETUpload extends ETPluggable
      * @param array $allowedTypes An array of allowed mime-types. If empty, any mime-type is allowed.
      * @return string The temporary filepath of the uploaded file.
      */
-    public function getUploadedFile($key, $allowedTypes = array())
+    public function getUploadedFile($key, $allowedTypes = [])
     {
         $error = false;
 
@@ -135,7 +135,7 @@ class ETUpload extends ETPluggable
 
         // Work out the image type which we will output the image as.
         $outputType = pathinfo($destination, PATHINFO_EXTENSION);
-        $types = array(1 => 'gif', 2 => 'jpg', 3 => 'png');
+        $types = [1 => 'gif', 2 => 'jpg', 3 => 'png'];
 
         // If an extension was specified in the destination, we'll use that and strip the it off of the
         // destination; otherwise, use the type from getimagesize().

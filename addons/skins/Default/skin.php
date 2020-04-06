@@ -13,7 +13,7 @@ if (!defined('IN_ESOTALK')) {
  * @package esoTalk
  */
 
-ET::$skinInfo['Default'] = array(
+ET::$skinInfo['Default'] = [
     'name' => 'Default',
     'description' => 'The default esoTalk skin.',
     'version' => ESOTALK_VERSION,
@@ -21,7 +21,7 @@ ET::$skinInfo['Default'] = array(
     'authorEmail' => 'support@esotalk.org',
     'authorURL' => 'http://esotalk.org',
     'license' => 'GPLv2'
-);
+];
 
 class ETSkin_Default extends ETSkin
 {
@@ -63,7 +63,7 @@ class ETSkin_Default extends ETSkin
      */
     protected function writeColors($primary)
     {
-        ET::writeConfig(array('skin.Default.primaryColor' => $primary));
+        ET::writeConfig(['skin.Default.primaryColor' => $primary]);
 
         $rgb = colorUnpack($primary, true);
         $hsl = rgb2hsl($rgb);
@@ -71,11 +71,11 @@ class ETSkin_Default extends ETSkin
         $primary = colorPack(hsl2rgb($hsl), true);
 
         $hsl[1] = max(0, $hsl[1] - 0.3);
-        $secondary = colorPack(hsl2rgb(array(2 => 0.6) + $hsl), true);
-        $tertiary = colorPack(hsl2rgb(array(2 => 0.92) + $hsl), true);
+        $secondary = colorPack(hsl2rgb([2 => 0.6] + $hsl), true);
+        $tertiary = colorPack(hsl2rgb([2 => 0.92] + $hsl), true);
 
         $css = file_get_contents($this->resource('colors.css'));
-        $css = str_replace(array('{primary}', '{secondary}', '{tertiary}'), array($primary, $secondary, $tertiary), $css);
+        $css = str_replace(['{primary}', '{secondary}', '{tertiary}'], [$primary, $secondary, $tertiary], $css);
         file_put_contents(PATH_CONFIG . '/colors.css', $css);
     }
 

@@ -30,21 +30,21 @@ class ETForm extends ETPluggable
  * An array of "sections" in the form. Sections merely categorize/segment fields.
  * @var array
  */
-    public $sections = array();
+    public $sections = [];
 
 
     /**
      * An array of "fields" in the form. Essentially defines the structure of the form.
      * @var array
      */
-    public $fields = array();
+    public $fields = [];
 
 
     /**
      * An array of errors to show when the form is rendered.
      * @var array
      */
-    public $errors = array();
+    public $errors = [];
 
 
     /**
@@ -58,14 +58,14 @@ class ETForm extends ETPluggable
      * An array of default values for the form fields.
      * @var array
      */
-    public $values = array();
+    public $values = [];
 
 
     /**
      * An array of hidden inputs to render when the form is opened.
      * @var array
      */
-    public $hiddenInputs = array();
+    public $hiddenInputs = [];
 
 
     /**
@@ -110,12 +110,12 @@ class ETForm extends ETPluggable
     public function addField($section, $id, $renderCallback, $processCallback = null, $position = false)
     {
         if (!isset($this->fields[$section])) {
-            $this->fields[$section] = array();
+            $this->fields[$section] = [];
         }
-        addToArrayString($this->fields[$section], $id, array(
+        addToArrayString($this->fields[$section], $id, [
         'renderCallback' => $renderCallback,
         'processCallback' => $processCallback
-    ), $position);
+    ], $position);
     }
 
 
@@ -151,10 +151,10 @@ class ETForm extends ETPluggable
      */
     public function getFieldsInSection($section)
     {
-        $fields = array();
+        $fields = [];
         if (isset($this->fields[$section])) {
             foreach ($this->fields[$section] as $name => $callbacks) {
-                $fields[$name] = call_user_func_array($callbacks['renderCallback'], array($this));
+                $fields[$name] = call_user_func_array($callbacks['renderCallback'], [$this]);
             }
         }
         return $fields;
@@ -172,7 +172,7 @@ class ETForm extends ETPluggable
         foreach ($this->fields as $fields) {
             foreach ($fields as $k => $callbacks) {
                 if ($callbacks['processCallback'] !== null) {
-                    call_user_func_array($callbacks['processCallback'], array($this, $k, &$collector));
+                    call_user_func_array($callbacks['processCallback'], [$this, $k, &$collector]);
                 }
             }
         }
@@ -253,7 +253,7 @@ class ETForm extends ETPluggable
      */
     public function getErrors()
     {
-        $errors = array();
+        $errors = [];
         foreach ($this->errors as $k => $v) {
             $errors[$k] = $this->getError($k);
         }
@@ -363,7 +363,7 @@ class ETForm extends ETPluggable
      * @param array $attributes An array of attributes to add to the input tag.
      * @return string
      */
-    public function input($name, $type = 'text', $attributes = array())
+    public function input($name, $type = 'text', $attributes = [])
     {
         $attributes['name'] = $name;
 
@@ -439,7 +439,7 @@ class ETForm extends ETPluggable
      * @param array $attributes An array of attributes to add to the select tag.
      * @return string
      */
-    public function select($name, $options, $attributes = array())
+    public function select($name, $options, $attributes = [])
     {
         // Construct the opening select tag.
         $attributes['name'] = $name;
@@ -471,7 +471,7 @@ class ETForm extends ETPluggable
      * @param array $attributes An array of attributes to add to the input tag.
      * @return string
      */
-    public function checkbox($name, $attributes = array())
+    public function checkbox($name, $attributes = [])
     {
         if (!isset($attributes['value'])) {
             $attributes['value'] = 1;
@@ -494,7 +494,7 @@ class ETForm extends ETPluggable
      * @param array $attributes An array of attributes to add to the input tag.
      * @return string
      */
-    public function radio($name, $value, $attributes = array())
+    public function radio($name, $value, $attributes = [])
     {
         // Check if this radio button should be checked.
         $attributes['value'] = $value;
@@ -514,7 +514,7 @@ class ETForm extends ETPluggable
      * @param array $attributes An array of attributes to add to the input tag.
      * @return string
      */
-    public function button($name, $label = '', $attributes = array())
+    public function button($name, $label = '', $attributes = [])
     {
         $this->addClass($attributes, 'button');
         if (isset($attributes['tag']) and $attributes['tag'] == 'button') {
@@ -532,7 +532,7 @@ class ETForm extends ETPluggable
      */
     public function saveButton($name = 'save')
     {
-        return $this->button($name, T('Save Changes'), array('class' => 'big submit'));
+        return $this->button($name, T('Save Changes'), ['class' => 'big submit']);
     }
 
 
@@ -543,7 +543,7 @@ class ETForm extends ETPluggable
      */
     public function cancelButton($name = 'cancel')
     {
-        return $this->button($name, T('Cancel'), array('class' => 'big cancel'));
+        return $this->button($name, T('Cancel'), ['class' => 'big cancel']);
     }
 
 

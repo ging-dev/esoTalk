@@ -15,7 +15,7 @@ if (!defined('IN_ESOTALK')) {
 <?php
 // Loop through the conversations and output a table row for each one.
 foreach ($data['members'] as $member):
-$this->renderView('members/member', $data + array('member' => $member));
+$this->renderView('members/member', $data + ['member' => $member]);
 endforeach;
 
 ?>

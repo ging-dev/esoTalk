@@ -78,7 +78,7 @@ class ETGroupModel extends ETModel
      * @param array $wheres An array of WHERE predicates.
      * @return bool true on success, false on error.
      */
-    public function delete($wheres = array())
+    public function delete($wheres = [])
     {
         ET::SQL()
         ->delete('g')
@@ -102,7 +102,7 @@ class ETGroupModel extends ETModel
      */
     public function deleteById($id)
     {
-        return $this->delete(array('g.groupId' => $id));
+        return $this->delete(['g.groupId' => $id]);
     }
 
 
@@ -148,7 +148,7 @@ class ETGroupModel extends ETModel
     {
         // If the user is a guest, or is suspended, they're just in the guest group.
         if (!$account or $account == ACCOUNT_SUSPENDED) {
-            return array(GROUP_ID_GUEST);
+            return [GROUP_ID_GUEST];
         }
 
         $groupIds = array_filter($groupIds);

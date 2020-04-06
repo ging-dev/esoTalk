@@ -15,7 +15,7 @@ if (!defined('IN_ESOTALK')) {
 
 $conversation = $data['conversation'];
 
-$names = array();
+$names = [];
 $count = count($conversation['membersAllowed']);
 
 // Go through the list of members/groups allowed and construct an array of formatted names.
@@ -30,7 +30,7 @@ foreach ($conversation['membersAllowed'] as $member) {
     }
 
     // Add the avatar.
-    $name = "<span class='name'>" . avatar($member + array('memberId' => $member['id']), 'thumb');
+    $name = "<span class='name'>" . avatar($member + ['memberId' => $member['id']], 'thumb');
 
     // If we're able to remove entities from the list, wrap the name in links that will remove them.
     if (!empty($data['editable'])) {

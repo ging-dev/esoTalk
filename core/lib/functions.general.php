@@ -234,7 +234,7 @@ function sendEmail($to, $subject, $body)
         require_once($phpmailer);
         $mail = new PHPMailer(true);
 
-        if ($return = ET::first('sendEmailBefore', array($mail, &$to, &$subject, &$body))) {
+        if ($return = ET::first('sendEmailBefore', [$mail, &$to, &$subject, &$body])) {
             return $return;
         }
 
@@ -292,7 +292,7 @@ function parseRequest($parts, $controllers)
         // If there's a period in the method string, use the first half as the method and the second half as the response type.
         if (strpos($method, '.') !== false) {
             list($method, $suffix) = explode('.', $method, 2);
-            if (in_array($suffix, array(RESPONSE_TYPE_VIEW, RESPONSE_TYPE_JSON, RESPONSE_TYPE_AJAX, RESPONSE_TYPE_ATOM))) {
+            if (in_array($suffix, [RESPONSE_TYPE_VIEW, RESPONSE_TYPE_JSON, RESPONSE_TYPE_AJAX, RESPONSE_TYPE_ATOM])) {
                 $type = $suffix;
             }
         }
@@ -327,7 +327,7 @@ function parseRequest($parts, $controllers)
         }
     }
 
-    return array($c, $controller, $method, $arguments, $type);
+    return [$c, $controller, $method, $arguments, $type];
 }
 
 
@@ -355,7 +355,7 @@ function sanitizeHTML($value)
  */
 function sanitizeForHTTP($value)
 {
-    return str_replace(array("\r", "\n", '%0a', '%0d', '%0A', '%0D'), '', $value);
+    return str_replace(["\r", "\n", '%0a', '%0d', '%0A', '%0D'], '', $value);
 }
 
 
@@ -388,7 +388,7 @@ function sanitizeFileName($value)
 function sort2d($array, $index, $order = 'asc', $natSort = false, $caseSensitive = false)
 {
     if (is_array($array) and count($array) > 0) {
-        $temp = array();
+        $temp = [];
         foreach (array_keys($array) as $key) {
             $temp[$key] = $array[$key][$index];
             if (!$natSort) {
@@ -451,8 +451,8 @@ function slug($string)
             // we have to deal with them manually. Note: even though “scharfes s” is commonly
             // transliterated as “sz”, in this context “ss” is preferred, as it's the most popular
             // method among German speakers.
-            $src = array('œ', 'æ', 'đ', 'ø', 'ł', 'ß', 'Œ', 'Æ', 'Đ', 'Ø', 'Ł');
-            $dst = array('oe','ae','d', 'o', 'l', 'ss', 'OE', 'AE', 'D', 'O', 'L');
+            $src = ['œ', 'æ', 'đ', 'ø', 'ł', 'ß', 'Œ', 'Æ', 'Đ', 'Ø', 'Ł'];
+            $dst = ['oe','ae','d', 'o', 'l', 'ss', 'OE', 'AE', 'D', 'O', 'L'];
             $string = str_replace($src, $dst, $string);
 
             // Using transliterator to get rid of accents and convert non-Latin to Latin
@@ -464,12 +464,12 @@ function slug($string)
             $string = htmlentities($string, ENT_NOQUOTES, 'UTF-8');
 
             // With those HTML entities, either convert them back to a normal letter, or remove them.
-            $string = preg_replace(array('/&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml|caron);/i', '/&[^;]{2,6};/'), array('$1', ' '), $string);
+            $string = preg_replace(['/&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml|caron);/i', '/&[^;]{2,6};/'], ['$1', ' '], $string);
         }
     }
 
     // Allow plugins to alter the slug.
-    ET::trigger('slug', array(&$string));
+    ET::trigger('slug', [&$string]);
 
     // Now replace non-alphanumeric characters with a hyphen, and remove multiple hyphens.
     $slug = str_replace(' ', '-', trim(preg_replace('~[^\\pL\d]+~u', ' ', mb_strtolower($string, 'UTF-8'))));
@@ -526,7 +526,7 @@ function undoMagicQuotes($value)
 function undoRegisterGlobals()
 {
     if (ini_get('register_globals')) {
-        $array = array('_REQUEST', '_SESSION', '_SERVER', '_ENV', '_FILES');
+        $array = ['_REQUEST', '_SESSION', '_SERVER', '_ENV', '_FILES'];
         foreach ($array as $value) {
             foreach ((array)$GLOBALS[$value] as $key => $var) {
                 if (isset($GLOBALS[$key]) and $var === $GLOBALS[$key]) {
@@ -572,7 +572,7 @@ function rgb2hsl($rgb)
         }
         $h /= 6;
     }
-    return array($h, $s, $l);
+    return [$h, $s, $l];
 }
 
 
@@ -591,9 +591,9 @@ function hsl2rgb($hsl)
     $l = $hsl[2];
     $m2 = ($l <= 0.5) ? $l * ($s + 1) : $l + $s - $l*$s;
     $m1 = $l * 2 - $m2;
-    return array(hue2rgb($m1, $m2, $h + 0.33333),
+    return [hue2rgb($m1, $m2, $h + 0.33333),
            hue2rgb($m1, $m2, $h),
-           hue2rgb($m1, $m2, $h - 0.33333));
+           hue2rgb($m1, $m2, $h - 0.33333)];
 }
 
 
@@ -677,7 +677,7 @@ if (!function_exists('json_encode')) {
                 return floatval(str_replace(',', '.', strval($a)));
             }
             if (is_string($a)) {
-                static $jsonReplaces = array(array('\\', '/', "\n", "\t", "\r", "\b", "\f", '"'), array('\\\\', '\\/', '\\n', '\\t', '\\r', '\\b', '\\f', '\"'));
+                static $jsonReplaces = [['\\', '/', "\n", "\t", "\r", "\b", "\f", '"'], ['\\\\', '\\/', '\\n', '\\t', '\\r', '\\b', '\\f', '\"']];
                 return '"' . str_replace($jsonReplaces[0], $jsonReplaces[1], $a) . '"';
             } else {
                 return $a;
@@ -691,7 +691,7 @@ if (!function_exists('json_encode')) {
                 break;
             }
         }
-        $result = array();
+        $result = [];
         if ($isList) {
             foreach ($a as $v) {
                 $result[] = json_encode($v);
@@ -711,7 +711,7 @@ if (!function_exists('json_encode')) {
 if (!function_exists('json_decode')) {
     function json_decode($json)
     {
-        $json = str_replace(array('\\\\', '\\"'), array('&#92;', '&#34;'), $json);
+        $json = str_replace(['\\\\', '\\"'], ['&#92;', '&#34;'], $json);
         $parts = preg_split("@(\"[^\"]*\")|([\[\]\{\},:])|\s@is", $json, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
         foreach ($parts as $index => $part) {
             if (strlen($part) == 1) {
@@ -738,7 +738,7 @@ if (!function_exists('json_decode')) {
                 }
             }
         }
-        $json = str_replace(array('&#92;', '&#34;', '$'), array('\\\\', '\\"', '\$'), implode('', $parts));
+        $json = str_replace(['&#92;', '&#34;', '$'], ['\\\\', '\\"', '\$'], implode('', $parts));
         return eval("return $json;");
     }
 }
@@ -1000,7 +1000,7 @@ function smartTime($then, $precise = false)
  */
 function unzip($filename)
 {
-    $files = array();
+    $files = [];
     $handle = fopen($filename, 'rb');
 
     // Seek to the end of central directory record.
@@ -1062,12 +1062,12 @@ function unzip($filename)
         }
 
         // Add to the files array.
-        $files[] = array(
+        $files[] = [
             'name' => $header['filename'],
             'size' => $header['size'],
             'directory' => $directory,
             'content' => !$directory ? $content : false
-        );
+        ];
     }
 
     fclose($handle);
@@ -1097,7 +1097,7 @@ function addToArray(&$array, $add, $position = false)
         return key($array);
     }
     // Else, add the element at the specified position.
-    array_splice($array, $position, 0, array($add));
+    array_splice($array, $position, 0, [$add]);
     return $position;
 }
 
@@ -1146,7 +1146,7 @@ function addToArrayString(&$array, $key, $value, $position = false)
 
     // Add the key/value to their respective arrays at the appropriate index.
     array_splice($keys, $index, 0, $key);
-    array_splice($values, $index, 0, array($value));
+    array_splice($values, $index, 0, [$value]);
 
     // Combine the new keys/values!
     $array = array_combine($keys, $values);
