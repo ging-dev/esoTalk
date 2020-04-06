@@ -23,7 +23,7 @@ $form = $data['skinSettingsForm'];
 
 <li id='primaryColor'>
 <label><?php echo T('Primary color'); ?></label>
-<?php echo $form->input('primaryColor', 'text', array('class' => 'color')); ?> <a href='#' class='reset'><?php echo T('Reset'); ?></a>
+<?php echo $form->input('primaryColor', 'text', ['class' => 'color']); ?> <a href='#' class='reset'><?php echo T('Reset'); ?></a>
 </li>
 
 <li class='sep'></li>

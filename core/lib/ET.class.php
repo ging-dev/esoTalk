@@ -34,7 +34,7 @@ class ET
      * is included.
      * @var array
      */
-    public static $skinInfo = array();
+    public static $skinInfo = [];
 
 
     /**
@@ -42,7 +42,7 @@ class ET
      * plugin.php file is included.
      * @var array
      */
-    public static $pluginInfo = array();
+    public static $pluginInfo = [];
 
 
     /**
@@ -50,7 +50,7 @@ class ET
      * definitions.php file is included.
      * @var array
      */
-    public static $languageInfo = array();
+    public static $languageInfo = [];
 
 
     /**
@@ -71,7 +71,7 @@ class ET
      * An array containing instances of loaded plugin objects.
      * @var array
      */
-    public static $plugins = array();
+    public static $plugins = [];
 
 
     /**
@@ -144,12 +144,12 @@ class ET
      * @param array $parameters An array of parameters to pass to the event handlers as arguments.
      * @return array An array of values returned by the event handlers.
      */
-    public static function trigger($event, $parameters = array())
+    public static function trigger($event, $parameters = [])
     {
-        $returns = array();
+        $returns = [];
         foreach (self::$plugins as $plugin) {
             if (method_exists($plugin, "handler_$event")) {
-                $return = call_user_func_array(array($plugin, "handler_$event"), $parameters);
+                $return = call_user_func_array([$plugin, "handler_$event"], $parameters);
                 if ($return !== null) {
                     $returns[] = $return;
                 }
@@ -167,11 +167,11 @@ class ET
      * @param array $parameters An array of parameters to pass to the event handlers as arguments.
      * @return array The value returned by the first event handler to return a non-null value.
      */
-    public static function first($event, $parameters = array())
+    public static function first($event, $parameters = [])
     {
         foreach (self::$plugins as $plugin) {
             if (method_exists($plugin, "handler_$event")) {
-                $return = call_user_func_array(array($plugin, "handler_$event"), $parameters);
+                $return = call_user_func_array([$plugin, "handler_$event"], $parameters);
                 if ($return !== null) {
                     return $return;
                 }
@@ -205,7 +205,7 @@ class ET
      * An array of configuration settings.
      * @var array
      */
-    public static $config = array();
+    public static $config = [];
 
 
     /**
@@ -249,7 +249,7 @@ class ET
 
         // Now add the $values to the $config array.
         if (!isset($config) or !is_array($config)) {
-            $config = array();
+            $config = [];
         }
         $config = array_merge($config, $values);
         self::$config = array_merge(self::$config, $values);
@@ -278,7 +278,7 @@ class ET
      * An array of language definitions.
      * @var array
      */
-    public static $definitions = array();
+    public static $definitions = [];
 
 
     /**
@@ -286,7 +286,7 @@ class ET
      * We need to store these so we can re-define them if we switch languages using saveLanguageState() and loadLanguage().
      * @var array
      */
-    public static $runtimeDefinitions = array();
+    public static $runtimeDefinitions = [];
 
 
     /**
@@ -294,7 +294,7 @@ class ET
      * reverLanguageState(). These variables store the old language information so it can be restored upon revert.
      */
     private static $_language = '';
-    private static $_definitions = array();
+    private static $_definitions = [];
 
 
     /**
@@ -306,7 +306,7 @@ class ET
     public static function loadLanguage($language = '')
     {
         // Clear the currently loaded definitions.
-        self::$definitions = array();
+        self::$definitions = [];
 
         // If the specified language doesn't exist, use the default language.
         self::$language = file_exists(PATH_LANGUAGES . '/' . sanitizeFileName($language) . '/definitions.php') ? $language : C('esoTalk.language');
@@ -411,7 +411,7 @@ class ET
      */
     public static function getLanguages()
     {
-        $languages = array();
+        $languages = [];
         if ($handle = opendir(PATH_LANGUAGES)) {
             while (false !== ($file = readdir($handle))) {
                 if ($file[0] != '.' and file_exists($defs = PATH_LANGUAGES . "/$file/definitions.php")) {
@@ -434,7 +434,7 @@ class ET
      * An array of class instances, with the class factory names as the keys.
      * @var array
      */
-    private static $instances = array();
+    private static $instances = [];
 
 
     /**
@@ -541,7 +541,7 @@ class ET
             $errorLines = false;
         }
 
-        $data = array();
+        $data = [];
         $data['pageTitle'] = T('Fatal Error');
 
         // Render the view into $data["content"], so it will be outputted within the master view.
@@ -570,7 +570,7 @@ class ET
     {
         header('HTTP/1.1 404 Not Found');
 
-        $data = array();
+        $data = [];
         $data['pageTitle'] = T('Page Not Found');
 
         // Render the view into $data["content"], so it will be outputted within the master view.

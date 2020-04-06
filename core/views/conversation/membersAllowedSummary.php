@@ -16,8 +16,8 @@ if (!defined('IN_ESOTALK')) {
 
 $conversation = $data['conversation'];
 
-$names = array();
-$avatars = array();
+$names = [];
+$avatars = [];
 $model = ET::memberModel();
 
 // Go through the list of members/groups allowed and construct an array of formatted names.
@@ -28,7 +28,7 @@ foreach ($conversation['membersAllowedSummary'] as $member) {
     if ($member['type'] == 'member') {
         $names[] = "<span class='name'>" . memberLink($member['id'], $member['name']) . '</span>';
         if (count($avatars) < 3) {
-            $avatars[] = avatar($member + array('memberId' => $member['id']), 'thumb');
+            $avatars[] = avatar($member + ['memberId' => $member['id']], 'thumb');
         }
     }
 

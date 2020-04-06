@@ -59,7 +59,7 @@ class ETAdminController extends ETController
         $this->addJSFile('core/js/admin.js');
         $this->addCSSFile('core/skin/admin.css');
 
-        $this->trigger('initAdmin', array($this->menu, $this->defaultMenu));
+        $this->trigger('initAdmin', [$this->menu, $this->defaultMenu]);
     }
 
 
@@ -75,7 +75,7 @@ class ETAdminController extends ETController
         $this->data('menu', $this->menu);
         $this->data('defaultMenu', $this->defaultMenu);
 
-        if (!in_array($this->responseType, array(RESPONSE_TYPE_VIEW, RESPONSE_TYPE_AJAX))) {
+        if (!in_array($this->responseType, [RESPONSE_TYPE_VIEW, RESPONSE_TYPE_AJAX])) {
             $this->data('view', $view);
             parent::render('admin/index');
         } else {

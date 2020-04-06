@@ -38,7 +38,7 @@ else:
 </ul>
 
 <div class='channelControls'>
-<?php $this->trigger('renderChannelControls', array($channel)); ?>
+<?php $this->trigger('renderChannelControls', [$channel]); ?>
 </div>
 <?php endif; ?>
 

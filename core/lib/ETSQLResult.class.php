@@ -88,7 +88,7 @@ class ETSQLResult
         $rows = $this->rows();
 
         if ($keyColumn) {
-            $newRows = array();
+            $newRows = [];
             foreach ($rows as $row) {
                 $newRows[$row[$keyColumn]] = $row;
             }

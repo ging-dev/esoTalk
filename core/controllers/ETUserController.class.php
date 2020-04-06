@@ -92,7 +92,7 @@ class ETUserController extends ETController
             });
         }
 
-        $this->trigger('initLogin', array($form));
+        $this->trigger('initLogin', [$form]);
 
         // If the cancel button was pressed, return to where the user was before.
         if ($form->isPostBack('cancel')) {
@@ -225,7 +225,7 @@ class ETUserController extends ETController
             }
         );
 
-        $this->trigger('initJoin', array($form));
+        $this->trigger('initJoin', [$form]);
 
         // If the cancel button was pressed, return to where the user was before.
         if ($form->isPostBack('cancel')) {
@@ -234,7 +234,7 @@ class ETUserController extends ETController
 
         // If the form has been submitted, validate it and add the member into the database.
         if ($form->validPostBack('submit')) {
-            $data = array();
+            $data = [];
             if ($form->validPostBack()) {
                 $form->runFieldCallbacks($data);
             }
@@ -266,7 +266,7 @@ class ETUserController extends ETController
                     // If we require the user account to be approved by an administrator, show a message.
                     elseif (C('esoTalk.registration.requireConfirmation') == 'approval') {
                         $admin = ET::memberModel()->getById(C('esoTalk.rootAdmin'));
-                        ET::activityModel()->create('unapproved', $admin, null, array('username' => $data['username']));
+                        ET::activityModel()->create('unapproved', $admin, null, ['username' => $data['username']]);
                         $this->renderMessage(T('Success!'), T('message.waitForApproval'));
                     } else {
                         ET::$session->login($data['username'], $form->getValue('password'));
@@ -329,10 +329,10 @@ class ETUserController extends ETController
         if ($result->numRows()) {
 
         // Mark the member as confirmed.
-            ET::memberModel()->updateById($memberId, array(
+            ET::memberModel()->updateById($memberId, [
             'resetPassword' => null,
             'confirmed' => true
-        ));
+        ]);
 
             // Log them in and show a message.
             ET::$session->loginWithMemberId($memberId);
@@ -358,7 +358,7 @@ class ETUserController extends ETController
         }
 
         // Get the requested member.
-        $member = reset(ET::memberModel()->get(array('m.username' => $username, 'm.confirmed' => false)));
+        $member = reset(ET::memberModel()->get(['m.username' => $username, 'm.confirmed' => false]));
         if ($member) {
             $this->sendConfirmationEmail($member['email'], $member['username'], $member['memberId'] . $member['resetPassword']);
             $this->renderMessage(T('Success!'), T('message.confirmEmail'));
@@ -398,14 +398,14 @@ class ETUserController extends ETController
         if ($form->validPostBack('submit')) {
 
         // Find the member with this email.
-            $member = reset(ET::memberModel()->get(array('email' => $form->getValue('email'))));
+            $member = reset(ET::memberModel()->get(['email' => $form->getValue('email')]));
             if (!$member) {
                 $form->error('email', T('message.emailDoesntExist'));
             } else {
 
             // Update their record in the database with a special password reset hash.
                 $hash = md5(uniqid(rand()));
-                ET::memberModel()->updateById($member['memberId'], array('resetPassword' => $hash));
+                ET::memberModel()->updateById($member['memberId'], ['resetPassword' => $hash]);
 
                 // Send them email containing the link, and redirect to the home page.
                 sendEmail(
@@ -441,7 +441,7 @@ class ETUserController extends ETController
         $hash = substr($hashString, -32);
 
         // Find the member with this password reset token. If it's an invalid token, take them back to the email form.
-        $member = reset(ET::memberModel()->get(array('m.memberId' => $memberId, 'resetPassword' => $hash)));
+        $member = reset(ET::memberModel()->get(['m.memberId' => $memberId, 'resetPassword' => $hash]));
         if (!$member) {
             return;
         }
@@ -460,10 +460,10 @@ class ETUserController extends ETController
 
             if (!$form->errorCount()) {
                 $model = ET::memberModel();
-                $model->updateById($memberId, array(
+                $model->updateById($memberId, [
                 'password' => $form->getValue('password'),
                 'resetPassword' => null
-            ));
+            ]);
 
                 // If there were validation errors, pass them to the form.
                 if ($model->errorCount()) {

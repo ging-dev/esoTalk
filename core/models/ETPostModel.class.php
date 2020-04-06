@@ -62,18 +62,18 @@ class ETPostModel extends ETModel
         ->groupBy('p.postId')
         ->orderBy('p.time ASC');
 
-        $this->trigger('getPostsBefore', array($sql));
+        $this->trigger('getPostsBefore', [$sql]);
 
         $result = $sql->exec();
 
         // Loop through the results and compile them into an array of posts.
-        $posts = array();
+        $posts = [];
         while ($post = $result->nextRow()) {
             ET::memberModel()->expand($post);
             $posts[] = $post;
         }
 
-        $this->trigger('getPostsAfter', array(&$posts));
+        $this->trigger('getPostsAfter', [&$posts]);
 
         return $posts;
     }
@@ -85,7 +85,7 @@ class ETPostModel extends ETModel
      * @param array $wheres An array of where conditions.
      * @return array An array of posts and their details.
      */
-    public function get($wheres = array())
+    public function get($wheres = [])
     {
         $sql = ET::SQL();
         $sql->where($wheres);
@@ -102,7 +102,7 @@ class ETPostModel extends ETModel
      */
     public function getById($postId)
     {
-        return reset($this->get(array('p.postId' => $postId)));
+        return reset($this->get(['p.postId' => $postId]));
     }
 
 
@@ -117,7 +117,7 @@ class ETPostModel extends ETModel
      * 		search: only get posts matching this fulltext string
      * @return array An array of resulting posts and their details.
      */
-    public function getByConversation($conversationId, $criteria = array())
+    public function getByConversation($conversationId, $criteria = [])
     {
         $sql = ET::SQL()
         ->where('p.conversationId=:conversationId')
@@ -181,7 +181,7 @@ class ETPostModel extends ETModel
         ->where('deleteMemberId IS NULL')
         ->bind(':search', $search);
 
-        $this->trigger('whereSearch', array($sql, $search));
+        $this->trigger('whereSearch', [$sql, $search]);
     }
 
 
@@ -199,20 +199,20 @@ class ETPostModel extends ETModel
     public function create($conversationId, $memberId, $content, $title = '')
     {
         // Validate the post content.
-        $this->validate('content', $content, array($this, 'validateContent'));
+        $this->validate('content', $content, [$this, 'validateContent']);
 
         if ($this->errorCount()) {
             return false;
         }
 
         // Prepare the post details for the query.
-        $data = array(
+        $data = [
         'conversationId' => $conversationId,
         'memberId' => $memberId,
         'time' => time(),
         'content' => $content,
         'title' => $title
-    );
+    ];
 
         $id = parent::create($data);
 
@@ -244,12 +244,12 @@ class ETPostModel extends ETModel
                 ->bind(':userId', $memberId);
                 $members = ET::memberModel()->getWithSQL($sql);
 
-                $data = array(
+                $data = [
                 'conversationId' => $conversationId,
                 'postId' => (int)$id,
                 'title' => $title
-            );
-                $emailData = array('content' => $content);
+            ];
+                $emailData = ['content' => $content];
 
                 $i = 0;
                 foreach ($members as $member) {
@@ -289,7 +289,7 @@ class ETPostModel extends ETModel
     public function editPost(&$post, $content)
     {
         // Validate the post content.
-        $this->validate('content', $content, array($this, 'validateContent'));
+        $this->validate('content', $content, [$this, 'validateContent']);
 
         if ($this->errorCount()) {
             return false;
@@ -297,18 +297,18 @@ class ETPostModel extends ETModel
 
         // Update the post.
         $time = time();
-        $this->updateById($post['postId'], array(
+        $this->updateById($post['postId'], [
         'content' => $content,
         'editMemberId' => ET::$session->userId,
         'editTime' => $time
-    ));
+    ]);
 
         $post['content'] = $content;
         $post['editMemberId'] = ET::$session->userId;
         $post['editMemberName'] = ET::$session->user['username'];
         $post['editTime'] = $time;
 
-        $this->trigger('editPostAfter', array($post));
+        $this->trigger('editPostAfter', [$post]);
 
         return true;
     }
@@ -325,10 +325,10 @@ class ETPostModel extends ETModel
     {
         // Update the post.
         $time = time();
-        $this->updateById($post['postId'], array(
+        $this->updateById($post['postId'], [
         'deleteMemberId' => ET::$session->userId,
         'deleteTime' => $time
-    ));
+    ]);
 
         $post['deleteMemberId'] = ET::$session->userId;
         $post['deleteMemberName'] = ET::$session->user['username'];
@@ -348,10 +348,10 @@ class ETPostModel extends ETModel
     {
         // Update the post.
         $time = time();
-        $this->updateById($post['postId'], array(
+        $this->updateById($post['postId'], [
         'deleteMemberId' => null,
         'deleteTime' => null
-    ));
+    ]);
 
         $post['deleteMemberId'] = null;
         $post['deleteMemberName'] = null;

@@ -77,10 +77,10 @@ class ETSession extends ETModel
             $memberId = (int)substr($cookie, 0, -32);
 
             // Find a user with this memberId and token.
-            $member = ET::memberModel()->get(array(
+            $member = ET::memberModel()->get([
             'm.memberId' => $memberId,
             'rememberToken' => $token
-        ));
+        ]);
 
             // If we found them, log them in.
             if ($member) {
@@ -187,7 +187,7 @@ class ETSession extends ETModel
      */
     public function login($name, $password, $remember = false)
     {
-        $return = $this->trigger('login', array($name, $password, $remember));
+        $return = $this->trigger('login', [$name, $password, $remember]);
         if (count($return)) {
             return reset($return);
         }
@@ -231,7 +231,7 @@ class ETSession extends ETModel
             $token = $member['rememberToken'];
         } else {
             $token = generateRandomString(32);
-            ET::memberModel()->updateById($memberId, array('rememberToken' => $token));
+            ET::memberModel()->updateById($memberId, ['rememberToken' => $token]);
         }
 
         return $token;
@@ -246,7 +246,7 @@ class ETSession extends ETModel
      */
     protected function clearRememberToken($memberId)
     {
-        ET::memberModel()->updateById($memberId, array('rememberToken' => null));
+        ET::memberModel()->updateById($memberId, ['rememberToken' => null]);
 
         // Eat the persistent login cookie. OM NOM NOM
         if ($this->getCookie('persistent')) {
@@ -367,7 +367,7 @@ class ETSession extends ETModel
     {
         $navigation = $this->get('navigation');
         if (!is_array($navigation)) {
-            $navigation = array();
+            $navigation = [];
         }
 
         // Look for an item with this $id that might already by in the navigation. If found, delete everything after it.
@@ -377,7 +377,7 @@ class ETSession extends ETModel
                 break;
             }
         }
-        $navigation[] = array('id' => $id, 'type' => $type, 'url' => $url);
+        $navigation[] = ['id' => $id, 'type' => $type, 'url' => $url];
 
         $this->store('navigation', $navigation);
     }

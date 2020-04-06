@@ -29,7 +29,7 @@ class ETDashboardAdminController extends ETAdminController
         $oneWeekAgo = time() - 60 * 60 * 24 * 7;
 
         // Create an array of statistics to show on the dashboard.
-        $statistics = array(
+        $statistics = [
 
         // Number of members.
         "<a href='" . URL('members') . "'>" . T('Members') . '</a>' => number_format(ET::SQL()->select('COUNT(*)')->from('member')->exec()->result()),
@@ -49,12 +49,12 @@ class ETDashboardAdminController extends ETAdminController
         // Posts which've been made in the past week.
         T('New posts in the past week') => number_format(ET::SQL()->select('COUNT(*)')->from('post')->where(':time<time')->bind(':time', $oneWeekAgo)->exec()->result()),
 
-    );
+    ];
 
         // Determine if we should show the welcome sheet.
         if (!C('esoTalk.admin.welcomeShown')) {
             $this->data('showWelcomeSheet', true);
-            ET::writeConfig(array('esoTalk.admin.welcomeShown' => true));
+            ET::writeConfig(['esoTalk.admin.welcomeShown' => true]);
         }
 
         $this->data('statistics', $statistics);
@@ -79,17 +79,17 @@ class ETDashboardAdminController extends ETAdminController
         // (http://stackoverflow.com/questions/250679/best-way-to-parse-rss-atom-feeds-with-php/251102#251102)
         $xmlSource = file_get_contents('http://esotalk.org/blog/feed/');
         $x = simplexml_load_string($xmlSource);
-        $posts = array();
+        $posts = [];
 
         // Go through each item in the RSS channel...
         foreach ($x->channel->item as $item) {
-            $post = array(
+            $post = [
             'date' => (string)$item->pubDate,
             'ts' => strtotime($item->pubDate),
             'link' => (string)$item->link,
             'title' => (string)$item->title,
             'text' => (string)$item->description
-        );
+        ];
 
             // Create summary as a shortened body and remove all tags.
             $summary = strip_tags($post['text']);

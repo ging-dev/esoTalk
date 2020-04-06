@@ -58,11 +58,11 @@ class ETGroupsAdminController extends ETAdminController
 
         // Was the save button pressed?
         if ($form->validPostBack('save')) {
-            $data = array(
+            $data = [
             'name' => $form->getValue('name'),
             'canSuspend' => (bool)$form->getValue('canSuspend'),
             'private' => (bool)$form->getValue('private')
-        );
+        ];
 
             $model = ET::groupModel();
             $model->updateById($group['groupId'], $data);
@@ -102,11 +102,11 @@ class ETGroupsAdminController extends ETAdminController
 
         // Was the save button pressed?
         if ($form->validPostBack('save')) {
-            $data = array(
+            $data = [
             'name' => $form->getValue('name'),
             'canSuspend' => (bool)$form->getValue('canSuspend'),
             'private' => (bool)$form->getValue('private')
-        );
+        ];
 
             $model = ET::groupModel();
             $groupId = $model->create($data);
@@ -124,15 +124,15 @@ class ETGroupsAdminController extends ETAdminController
 
                 // Go through all the channels and construct an array of rows to insert into the channel_group table.
                     $channels = ET::channelModel()->getAll();
-                    $inserts = array();
+                    $inserts = [];
                     foreach ($channels as $id => $channel) {
-                        $inserts[] = array($id, $groupId, 1, 1, 1, 1);
+                        $inserts[] = [$id, $groupId, 1, 1, 1, 1];
                     }
 
                     // Insert them!
                     ET::SQL()
                     ->insert('channel_group')
-                    ->setMultiple(array('channelId', 'groupId', 'view', 'reply', 'start', 'moderate'), $inserts)
+                    ->setMultiple(['channelId', 'groupId', 'view', 'reply', 'start', 'moderate'], $inserts)
                     ->setOnDuplicateKey('moderate', 1)
                     ->exec();
                 }

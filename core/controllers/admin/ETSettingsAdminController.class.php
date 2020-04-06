@@ -25,7 +25,7 @@ class ETSettingsAdminController extends ETAdminController
     public function action_index()
     {
         // Make an array of languages for the default forum language select.
-        $languages = array();
+        $languages = [];
         foreach (ET::getLanguages() as $v) {
             $languages[$v] = ET::$languageInfo[$v]['name'];
         }
@@ -67,7 +67,7 @@ class ETSettingsAdminController extends ETAdminController
             }
 
             // Construct an array of config options to write.
-            $config = array(
+            $config = [
             'esoTalk.forumTitle' => $form->getValue('forumTitle'),
             'esoTalk.language' => $form->getValue('language'),
             'esoTalk.forumLogo' => $forumLogo,
@@ -75,8 +75,8 @@ class ETSettingsAdminController extends ETAdminController
             'esoTalk.visibleToGuests' => $form->getValue('forumVisibleToGuests'),
             'esoTalk.members.visibleToGuests' => $form->getValue('forumVisibleToGuests') and $form->getValue('memberListVisibleToGuests'),
             'esoTalk.registration.open' => $form->getValue('registrationOpen'),
-            'esoTalk.registration.requireConfirmation' => in_array($v = $form->getValue('requireConfirmation'), array(false, 'email', 'approval')) ? $v : false,
-        );
+            'esoTalk.registration.requireConfirmation' => in_array($v = $form->getValue('requireConfirmation'), [false, 'email', 'approval']) ? $v : false,
+        ];
 
             switch ($form->getValue('editPostMode')) {
             case 'forever': $config['esoTalk.conversation.editPostTimeLimit'] = -1; break;

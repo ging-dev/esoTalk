@@ -25,11 +25,11 @@ echo $form->open(); ?>
 <?php
 
 // Title?>
-<h1 id='conversationTitle'><?php echo $form->input('title', 'text', array('placeholder' => T('Enter a conversation title'), 'tabindex' => 100, 'maxlength' => 100)); ?></h1>
+<h1 id='conversationTitle'><?php echo $form->input('title', 'text', ['placeholder' => T('Enter a conversation title'), 'tabindex' => 100, 'maxlength' => 100]); ?></h1>
 <?php
 
 // Channel
-$this->renderView('conversation/channelPath', array('conversation' => $conversation));
+$this->renderView('conversation/channelPath', ['conversation' => $conversation]);
 ?>
 
 <a href='<?php echo URL('conversation/changeChannel/' . $conversation['conversationId']); ?>' id='control-changeChannel'><i class='icon-tag'></i> <?php echo T('Change channel'); ?></a>
@@ -54,11 +54,11 @@ if (!$conversation['conversationId']): ?>
 
 <div id='conversationReply'>
 <?php
-$this->renderView('conversation/reply', array(
+$this->renderView('conversation/reply', [
     'form' => $form,
     'conversation' => $conversation,
     'controls' => $data['replyControls']
-));
+]);
 ?>
 </div>
 
@@ -72,6 +72,6 @@ $this->renderView('conversation/reply', array(
 // Members allowed list (only if conversation is private or editable)
 if ($conversation['canEditMembersAllowed']): ?>
 <?php echo $data['membersAllowedForm']->open(); ?>
-<?php $this->renderView('conversation/editMembersAllowed', array('form' => $data['membersAllowedForm'], 'conversation' => $conversation)); ?>
+<?php $this->renderView('conversation/editMembersAllowed', ['form' => $data['membersAllowedForm'], 'conversation' => $conversation]); ?>
 <?php echo $data['membersAllowedForm']->close(); ?>
 <?php endif; ?>

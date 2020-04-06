@@ -29,7 +29,7 @@ if (count($data['members']) or $data['hidden']): ?>
 
 <ul class='list'>
 <?php foreach ($data['members'] as $member): ?>
-<?php $this->renderView('members/onlineMember', $data + array('member' => $member)); ?>
+<?php $this->renderView('members/onlineMember', $data + ['member' => $member]); ?>
 <?php endforeach; ?>
 <?php if ($data['hidden'] > 0): ?><li class='help'><?php printf(T('%d hidden'), $data['hidden']); ?></li><?php endif; ?>
 </ul>

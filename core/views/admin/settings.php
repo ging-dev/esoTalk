@@ -22,7 +22,7 @@ $(function() {
 
 <div class='area' id='adminSettings'>
 
-<?php echo $form->open(); echo $form->input('forumHeaderOld', 'hidden', array('value' => $form->values['forumHeader'])); ?>
+<?php echo $form->open(); echo $form->input('forumHeaderOld', 'hidden', ['value' => $form->values['forumHeader']]); ?>
 
 <ul class='form'>
 
@@ -45,7 +45,7 @@ $(function() {
 <label><?php echo T('Forum header'); ?></label>
 <div class='checkboxGroup'>
 <label class='radio'><?php echo $form->radio('forumHeader', 'title'); ?> <?php echo T('Show the forum title in the header'); ?></label>
-<label class='radio'><?php echo $form->radio('forumHeader', 'image'); ?> <?php echo T('Show an image in the header'); ?><br/><?php echo $form->input('forumHeaderImage', 'file', array('class' => 'text')); ?></label>
+<label class='radio'><?php echo $form->radio('forumHeader', 'image'); ?> <?php echo T('Show an image in the header'); ?><br/><?php echo $form->input('forumHeaderImage', 'file', ['class' => 'text']); ?></label>
 </div>
 </li>
 
@@ -93,7 +93,7 @@ $(function() {
 <div class='checkboxGroup'>
 <label class='radio'><?php echo $form->radio('editPostMode', 'forever'); ?> <?php echo T('Forever'); ?></label>
 <label class='radio'><?php echo $form->radio('editPostMode', 'reply'); ?> <?php echo T('Until someone replies'); ?></label>
-<label class='radio'><?php echo $form->radio('editPostMode', 'custom'); ?> <?php printf(T('For %s seconds'), $form->input('editPostTimeLimit', 'text', array('style' => 'width:3em'))); ?></label>
+<label class='radio'><?php echo $form->radio('editPostMode', 'custom'); ?> <?php printf(T('For %s seconds'), $form->input('editPostTimeLimit', 'text', ['style' => 'width:3em'])); ?></label>
 </div>
 </li>
 

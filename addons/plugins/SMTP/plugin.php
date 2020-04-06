@@ -7,7 +7,7 @@ if (!defined('IN_ESOTALK')) {
     exit;
 }
 
-ET::$pluginInfo['SMTP'] = array(
+ET::$pluginInfo['SMTP'] = [
     'name' => 'SMTP',
     'description' => 'Allows mail to be send via an SMTP server. Based on work by Raphael Michel <webmaster@raphaelmichel.de>',
     'version' => ESOTALK_VERSION,
@@ -15,7 +15,7 @@ ET::$pluginInfo['SMTP'] = array(
     'authorEmail' => 'support@esotalk.org',
     'authorURL' => 'http://esotalk.org',
     'license' => 'GPLv2'
-);
+];
 
 class ETPlugin_SMTP extends ETPlugin
 {
@@ -58,7 +58,7 @@ class ETPlugin_SMTP extends ETPlugin
         if ($form->validPostBack('smtpSave')) {
 
             // Construct an array of config options to write.
-            $config = array();
+            $config = [];
             $config['plugin.SMTP.server'] = $form->getValue('server');
             $config['plugin.SMTP.username'] = $form->getValue('username');
             $config['plugin.SMTP.password'] = $form->getValue('password');

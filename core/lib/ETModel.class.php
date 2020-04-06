@@ -22,7 +22,7 @@ class ETModel extends ETPluggable
  * An array of errors that occurred in the last action performed by the model.
  * @var array
  */
-    protected $errors = array();
+    protected $errors = [];
 
 
     /**
@@ -78,7 +78,7 @@ class ETModel extends ETPluggable
      * @param array $wheres An array of where conditions to match.
      * @return ETSQLResult
      */
-    public function update($values, $wheres = array())
+    public function update($values, $wheres = [])
     {
         return ET::SQL()->update($this->table)
         ->set($values)
@@ -96,7 +96,7 @@ class ETModel extends ETPluggable
      */
     public function updateById($id, $values)
     {
-        return $this->update($values, array($this->primaryKey => $id));
+        return $this->update($values, [$this->primaryKey => $id]);
     }
 
 
@@ -106,7 +106,7 @@ class ETModel extends ETPluggable
      * @param array $wheres An array of where conditions to match.
      * @return ETSQLResult
      */
-    public function delete($wheres = array())
+    public function delete($wheres = [])
     {
         return ET::SQL()
         ->delete()
@@ -124,7 +124,7 @@ class ETModel extends ETPluggable
      */
     public function deleteById($id)
     {
-        return $this->delete(array($this->primaryKey => $id));
+        return $this->delete([$this->primaryKey => $id]);
     }
 
 
@@ -134,7 +134,7 @@ class ETModel extends ETPluggable
      * @param array $wheres An array of where conditions to match.
      * @return int
      */
-    public function count($wheres = array())
+    public function count($wheres = [])
     {
         return ET::SQL()
         ->select('COUNT(*)', 'count')
@@ -167,7 +167,7 @@ class ETModel extends ETPluggable
      * @param array $wheres An array of where conditions to match.
      * @return array A multi-dimensional array of matching rows.
      */
-    public function get($wheres = array())
+    public function get($wheres = [])
     {
         $sql = ET::SQL();
         $sql->where($wheres);
@@ -184,7 +184,7 @@ class ETModel extends ETPluggable
      */
     public function getById($id)
     {
-        return reset($this->get(array($this->primaryKey => $id)));
+        return reset($this->get([$this->primaryKey => $id]));
     }
 
 
@@ -196,7 +196,7 @@ class ETModel extends ETPluggable
     public function errors()
     {
         $errors = $this->errors;
-        $this->errors = array();
+        $this->errors = [];
         return $errors;
     }
 
@@ -221,7 +221,7 @@ class ETModel extends ETPluggable
      */
     public function error($field, $code = null)
     {
-        $this->errors = array_merge($this->errors, array($field => $code ?: $field));
+        $this->errors = array_merge($this->errors, [$field => $code ?: $field]);
     }
 
 

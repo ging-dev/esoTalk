@@ -24,7 +24,7 @@ class ETLanguagesAdminController extends ETAdminController
     public function action_index()
     {
         $languages = ET::getLanguages();
-        $languagesNew = array();
+        $languagesNew = [];
         foreach ($languages as $k => $v) {
             $languagesNew[$v] = ET::$languageInfo[$v];
         }

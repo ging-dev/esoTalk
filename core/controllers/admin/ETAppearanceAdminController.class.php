@@ -28,7 +28,7 @@ class ETAppearanceAdminController extends ETAdminController
 
         $this->title = T('Appearance');
         $this->data('skins', $skins);
-        $this->data('skin', C('esoTalk.skin') ? $skins[C('esoTalk.skin')] : array());
+        $this->data('skin', C('esoTalk.skin') ? $skins[C('esoTalk.skin')] : []);
         $this->render('admin/appearance');
     }
 
@@ -40,7 +40,7 @@ class ETAppearanceAdminController extends ETAdminController
      */
     protected function getSkins()
     {
-        $skins = array();
+        $skins = [];
 
         // Get the installed skins and their details by reading the skins/ directory.
         if ($handle = opendir(PATH_SKINS)) {
@@ -50,12 +50,12 @@ class ETAppearanceAdminController extends ETAdminController
                 if ($file[0] != '.' and file_exists($skinFile = PATH_SKINS . "/$file/skin.php") and (include_once $skinFile)) {
 
                 // Add the skin's information and status to the array.
-                    $skins[$file] = array(
+                    $skins[$file] = [
                     'info' => ET::$skinInfo[$file],
                     'selected' => $file == C('esoTalk.skin'),
                     'selectedMobile' => $file == C('esoTalk.mobileSkin'),
                     'settingsView' => false
-                );
+                ];
 
                     // If this skin's settings function returns a view path, then store it.
                     if ($skins[$file]['selected']) {
@@ -90,7 +90,7 @@ class ETAppearanceAdminController extends ETAdminController
         }
 
         // Write the new setting to the config file.
-        ET::writeConfig(array('esoTalk.skin' => $skin));
+        ET::writeConfig(['esoTalk.skin' => $skin]);
 
         // Clear skin cache.
         $files = glob(PATH_CACHE . '/css/*.*');
@@ -121,7 +121,7 @@ class ETAppearanceAdminController extends ETAdminController
         }
 
         // Write the new setting to the config file.
-        ET::writeConfig(array('esoTalk.mobileSkin' => $skin));
+        ET::writeConfig(['esoTalk.mobileSkin' => $skin]);
 
         // Clear skin cache.
         $files = glob(PATH_CACHE . '/css/*.*');
@@ -163,7 +163,7 @@ class ETAppearanceAdminController extends ETAdminController
         }
 
         // If one of the skin config options is set to this skin, change it.
-        $config = array();
+        $config = [];
         if (C('esoTalk.skin') == $skin) {
             $config['esoTalk.skin'] = reset(array_keys($skins));
         }

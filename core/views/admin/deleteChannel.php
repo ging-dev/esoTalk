@@ -31,7 +31,7 @@ $form = $data['form'];
 <p class='radio'>
 <label><?php echo $form->radio('method', 'move'); ?> <?php echo T('<strong>Move</strong> conversations to the following channel:'); ?></label>
 <?php
-$moveOptions = array();
+$moveOptions = [];
 foreach ($data['channels'] as $id => $ch) {
     if ($id == $channel['channelId']) {
         continue;
@@ -51,7 +51,7 @@ echo $form->select('moveToChannelId', $moveOptions);
 </div>
 
 <div class='buttons'>
-<?php echo $form->button('delete', T('Delete Channel'), array('class' => 'big')); ?>
+<?php echo $form->button('delete', T('Delete Channel'), ['class' => 'big']); ?>
 <?php echo $form->cancelButton(); ?>
 </div>
 

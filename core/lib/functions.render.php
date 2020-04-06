@@ -173,7 +173,7 @@ if (!function_exists('avatar')) {
  *
  * @package esoTalk
  */
-    function avatar($member = array(), $className = '')
+    function avatar($member = [], $className = '')
     {
         // Construct the avatar path from the provided information.
         if (!empty($member['memberId']) and !empty($member['avatarFormat'])) {
@@ -201,7 +201,7 @@ if (!function_exists('memberGroup')) {
  *
  * @package esoTalk
  */
-    function memberGroup($account, $groups = array(), $showMember = false)
+    function memberGroup($account, $groups = [], $showMember = false)
     {
         // If the member isn't a Member, groups don't matter - just display their account type.
         if ($account and $account != ACCOUNT_MEMBER) {

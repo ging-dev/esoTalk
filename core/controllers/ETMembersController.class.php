@@ -43,13 +43,13 @@ class ETMembersController extends ETController
 
             // Get an array of all groups which we can possibly filter by.
             $groups = ET::groupModel()->getAll();
-            $groups[GROUP_ID_ADMINISTRATOR] = array('name' => ACCOUNT_ADMINISTRATOR);
-            $groups[GROUP_ID_MEMBER] = array('name' => ACCOUNT_MEMBER);
-            $groups[GROUP_ID_GUEST] = array('name' => ACCOUNT_SUSPENDED);
+            $groups[GROUP_ID_ADMINISTRATOR] = ['name' => ACCOUNT_ADMINISTRATOR];
+            $groups[GROUP_ID_MEMBER] = ['name' => ACCOUNT_MEMBER];
+            $groups[GROUP_ID_GUEST] = ['name' => ACCOUNT_SUSPENDED];
 
-            $conditions = array();
+            $conditions = [];
 
-            $this->trigger('parseTerms', array(&$terms, $sql, &$conditions));
+            $this->trigger('parseTerms', [&$terms, $sql, &$conditions]);
 
             foreach ($terms as $k => $term) {
                 $term = mb_strtolower(trim($term), 'UTF-8');
@@ -58,7 +58,7 @@ class ETMembersController extends ETController
                     continue;
                 }
 
-                $thisCondition = array();
+                $thisCondition = [];
 
                 // If the search string matches the start of any group names, then we'll filter members by their account/group.
                 $group = false;
@@ -101,11 +101,11 @@ class ETMembersController extends ETController
         ->result();
 
         // Make an array of possible orders for the list.
-        $orders = array(
-        'name' => array(T('Name'), 'username ASC'),
-        'posts' => array(T('Posts'), 'countPosts DESC'),
-        'activity' => array(T('Last active'), 'lastActionTime DESC')
-    );
+        $orders = [
+        'name' => [T('Name'), 'username ASC'],
+        'posts' => [T('Posts'), 'countPosts DESC'],
+        'activity' => [T('Last active'), 'lastActionTime DESC']
+    ];
 
         // If an invalid orderBy key was provided, just use the first one.
         if (!isset($orders[$orderBy])) {
@@ -162,7 +162,7 @@ class ETMembersController extends ETController
         if ($ids) {
             $members = ET::memberModel()->getByIds($ids);
         } else {
-            $members = array();
+            $members = [];
         }
 
         // If we're ordering by last active, filter out members who have opted out of being displayed on the online list.
@@ -197,13 +197,13 @@ class ETMembersController extends ETController
             $this->addJSLanguage('Sort By');
 
             // Add the default gambits to the gambit cloud: gambit text => css class to apply.
-            $gambits = array(
-            'groups' => array(
-                T('group.administrator.plural') => array('gambit-group-administrator', 'icon-wrench'),
-                T('group.member.plural') => array('gambit-group-member', 'icon-user'),
-                T('group.suspended') => array('gambit-group-suspended', 'icon-shield')
-            )
-        );
+            $gambits = [
+            'groups' => [
+                T('group.administrator.plural') => ['gambit-group-administrator', 'icon-wrench'],
+                T('group.member.plural') => ['gambit-group-member', 'icon-user'],
+                T('group.suspended') => ['gambit-group-suspended', 'icon-shield']
+            ]
+        ];
 
             $groups = ET::groupModel()->getAll();
             foreach ($groups as $group) {
@@ -211,10 +211,10 @@ class ETMembersController extends ETController
                     continue;
                 }
                 $name = $group['name'];
-                addToArrayString($gambits['groups'], T("group.$name.plural", ucfirst($name)), array("gambit-group-$name", 'icon-tag'), 1);
+                addToArrayString($gambits['groups'], T("group.$name.plural", ucfirst($name)), ["gambit-group-$name", 'icon-tag'], 1);
             }
 
-            $this->trigger('constructGambitsMenu', array(&$gambits));
+            $this->trigger('constructGambitsMenu', [&$gambits]);
 
             // Construct the gambits menu based on the above arrays.
             $gambitsMenu = ETFactory::make('menu');
@@ -282,13 +282,13 @@ class ETMembersController extends ETController
 
             // If there were no preliminary errors, proceed to attempt to create the member with the model.
             if (!$form->errorCount()) {
-                $data = array(
+                $data = [
                 'username'  => $form->getValue('username'),
                 'email'     => $form->getValue('email'),
                 'password'  => $form->getValue('password'),
                 'account'   => ACCOUNT_MEMBER,
                 'confirmed' => true
-            );
+            ];
 
                 $model = ET::memberModel();
                 $id = $model->create($data);

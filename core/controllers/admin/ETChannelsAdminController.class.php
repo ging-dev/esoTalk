@@ -61,7 +61,7 @@ class ETChannelsAdminController extends ETAdminController
         $groups = ET::groupModel()->getAll();
 
         // Make a list of the types of permissions!
-        $permissions = array('view' => 'View', 'reply' => 'Reply', 'start' => 'Start', 'moderate' => 'Moderate');
+        $permissions = ['view' => 'View', 'reply' => 'Reply', 'start' => 'Start', 'moderate' => 'Moderate'];
 
         // Set which permission checkboxes should be checked on the form!
         foreach ($channel['permissions'] as $type => $groupIds) {
@@ -75,11 +75,11 @@ class ETChannelsAdminController extends ETAdminController
 
         // Save the channel's information.
             $model = ET::channelModel();
-            $data = array(
+            $data = [
             'title' => $form->getValue('title'),
             'description' => $form->getValue('description'),
-            'attributes' => array_merge((array)$channel['attributes'], array('defaultUnsubscribed' => $form->getValue('defaultUnsubscribed')))
-        );
+            'attributes' => array_merge((array)$channel['attributes'], ['defaultUnsubscribed' => $form->getValue('defaultUnsubscribed')])
+        ];
             if ($form->getValue('slug') != $channel['slug']) {
                 $data['slug'] = $form->getValue('slug');
             }
@@ -134,12 +134,12 @@ class ETChannelsAdminController extends ETAdminController
                 $v['parent_id'] = 0;
             }
 
-            ET::channelModel()->updateById($v['item_id'], array(
+            ET::channelModel()->updateById($v['item_id'], [
             'parentId' => $v['parent_id'],
             'depth' => $v['depth'],
             'lft' => $v['left'] - 1,
             'rgt' => $v['right'] - 1
-        ));
+        ]);
         }
     }
 
@@ -181,7 +181,7 @@ class ETChannelsAdminController extends ETAdminController
         $groups = ET::groupModel()->getAll();
 
         // Make a list of the types of permissions!
-        $permissions = array('view' => 'View', 'reply' => 'Reply', 'start' => 'Start', 'moderate' => 'Moderate');
+        $permissions = ['view' => 'View', 'reply' => 'Reply', 'start' => 'Start', 'moderate' => 'Moderate'];
 
         // Set which permission checkboxes should be checked on the form!
         $form->setValue('permissions[' . GROUP_ID_GUEST . '][view]', 1);
@@ -194,12 +194,12 @@ class ETChannelsAdminController extends ETAdminController
 
         // Save the channel's information.
             $model = ET::channelModel();
-            $channelId = $model->create(array(
+            $channelId = $model->create([
             'title' => $form->getValue('title'),
             'slug' => $form->getValue('slug'),
             'description' => $form->getValue('description'),
-            'attributes' => array('defaultUnsubscribed' => $form->getValue('defaultUnsubscribed'))
-        ));
+            'attributes' => ['defaultUnsubscribed' => $form->getValue('defaultUnsubscribed')]
+        ]);
 
             // If there were errors, pass them on to the form.
             if ($model->errorCount()) {

@@ -31,7 +31,7 @@ class ETSearchModel extends ETModel
  * @var array
  * @see addGambit
  */
-    protected static $gambits = array();
+    protected static $gambits = [];
 
 
     /**
@@ -40,7 +40,7 @@ class ETSearchModel extends ETModel
      * @var array
      * @see addAlias
      */
-    protected static $aliases = array();
+    protected static $aliases = [];
 
 
     /**
@@ -63,14 +63,14 @@ class ETSearchModel extends ETModel
      * @var array
      * @see addIDFilter
      */
-    protected $idFilters = array();
+    protected $idFilters = [];
 
 
     /**
      * An array of fields to order the conversation IDs by.
      * @var array
      */
-    protected $orderBy = array();
+    protected $orderBy = [];
 
 
     /**
@@ -98,7 +98,7 @@ class ETSearchModel extends ETModel
      * An array of fulltext keywords to filter the results by.
      * @var array
      */
-    public $fulltext = array();
+    public $fulltext = [];
 
 
     /**
@@ -128,7 +128,7 @@ class ETSearchModel extends ETModel
      */
     public static function addGambit($condition, $function)
     {
-        self::$gambits[] = array($condition, $function);
+        self::$gambits[] = [$condition, $function];
     }
 
 
@@ -159,7 +159,7 @@ class ETSearchModel extends ETModel
      */
     public function addIDFilter($sql, $negate = false)
     {
-        $this->idFilters[] = array($sql, $negate);
+        $this->idFilters[] = [$sql, $negate];
     }
 
 
@@ -214,12 +214,12 @@ class ETSearchModel extends ETModel
         $this->resultCount = 0;
         $this->areMoreResults = false;
         $this->sql = null;
-        $this->idFilters = array();
-        $this->orderBy = array();
+        $this->idFilters = [];
+        $this->orderBy = [];
         $this->orderReverse = false;
         $this->limit = false;
         $this->includeIgnored = false;
-        $this->fulltext = array();
+        $this->fulltext = [];
     }
 
 
@@ -296,11 +296,11 @@ class ETSearchModel extends ETModel
      * @param bool $orderBySticky Whether or not to put stickied conversations at the top.
      * @return array|bool An array of matching conversation IDs, or false if there are none.
      */
-    public function getConversationIDs($channelIDs = array(), $searchString = '', $orderBySticky = false)
+    public function getConversationIDs($channelIDs = [], $searchString = '', $orderBySticky = false)
     {
         $this->reset();
 
-        $this->trigger('getConversationIDsBefore', array(&$channelIDs, &$searchString, &$orderBySticky));
+        $this->trigger('getConversationIDsBefore', [&$channelIDs, &$searchString, &$orderBySticky]);
 
         if ($searchString and ($seconds = $this->isFlooding())) {
             $this->error('search', sprintf(T('message.waitToSearch'), $seconds));
@@ -318,7 +318,7 @@ class ETSearchModel extends ETModel
         // Process the search string into individial terms. Replace all "-" signs with "+!", and then
         // split the string by "+". Negated terms will then be prefixed with "!". Only keep the first
         // 5 terms, just to keep the load on the database down!
-        $terms = !empty($searchString) ? explode('+', strtolower(str_replace('-', '+!', trim($searchString, ' +-')))) : array();
+        $terms = !empty($searchString) ? explode('+', strtolower(str_replace('-', '+!', trim($searchString, ' +-')))) : [];
         $terms = array_slice(array_filter($terms), 0, 5);
 
         // Take each term, match it with a gambit, and execute the gambit's function.
@@ -342,7 +342,7 @@ class ETSearchModel extends ETModel
                 foreach (self::$gambits as $gambit) {
                     list($condition, $function) = $gambit;
                     if (eval($condition)) {
-                        call_user_func_array($function, array(&$this, $term, $negate));
+                        call_user_func_array($function, [&$this, $term, $negate]);
                         continue 2;
                     }
                 }
@@ -373,8 +373,8 @@ class ETSearchModel extends ETModel
         // Now we need to loop through the ID filters and run them one-by-one. When a query returns a selection
         // of conversation IDs, subsequent queries are restricted to filtering those conversation IDs,
         // and so on, until we have a list of IDs to pass to the final query.
-        $goodConversationIDs = array();
-        $badConversationIDs = array();
+        $goodConversationIDs = [];
+        $badConversationIDs = [];
         $idCondition = '';
         foreach ($this->idFilters as $v) {
             list($sql, $negate) = $v;
@@ -384,7 +384,7 @@ class ETSearchModel extends ETModel
 
             // Get the list of conversation IDs so that the next condition can use it in its query.
             $result = $sql->exec();
-            $ids = array();
+            $ids = [];
             while ($row = $result->nextRow()) {
                 $ids[] = (int)reset($row);
             }
@@ -418,7 +418,7 @@ class ETSearchModel extends ETModel
         // Reverse the order if necessary - swap DESC and ASC.
         if ($this->orderReverse) {
             foreach ($this->orderBy as $k => $v) {
-                $this->orderBy[$k] = strtr($this->orderBy[$k], array('DESC' => 'ASC', 'ASC' => 'DESC'));
+                $this->orderBy[$k] = strtr($this->orderBy[$k], ['DESC' => 'ASC', 'ASC' => 'DESC']);
             }
         }
 
@@ -436,10 +436,10 @@ class ETSearchModel extends ETModel
             ->bind(':fulltext', $fulltextString)
             ->bind(':fulltextOrder', $fulltextString);
 
-            $this->trigger('fulltext', array($fulltextQuery, $this->fulltext));
+            $this->trigger('fulltext', [$fulltextQuery, $this->fulltext]);
 
             $result = $fulltextQuery->exec();
-            $ids = array();
+            $ids = [];
             while ($row = $result->nextRow()) {
                 $ids[] = reset($row);
             }
@@ -450,7 +450,7 @@ class ETSearchModel extends ETModel
             } else {
                 return false;
             }
-            $this->orderBy = array('FIELD(c.conversationId,' . implode(',', $ids) . ')');
+            $this->orderBy = ['FIELD(c.conversationId,' . implode(',', $ids) . ')'];
         }
 
         // Set a default limit if none has previously been set.
@@ -470,7 +470,7 @@ class ETSearchModel extends ETModel
 
         // Execute the query, and collect the final set of conversation IDs.
         $result = $this->sql->exec();
-        $conversationIDs = array();
+        $conversationIDs = [];
         while ($row = $result->nextRow()) {
             $conversationIDs[] = reset($row);
         }
@@ -531,11 +531,11 @@ class ETSearchModel extends ETModel
         $sql->bind(':conversationIds', $conversationIDs, PDO::PARAM_INT);
         $sql->bind(':conversationIdsOrder', $conversationIDs, PDO::PARAM_INT);
 
-        $this->trigger('beforeGetResults', array(&$sql));
+        $this->trigger('beforeGetResults', [&$sql]);
 
         // Execute the query and put the details of the conversations into an array.
         $result = $sql->exec();
-        $results = array();
+        $results = [];
         $model = ET::conversationModel();
 
         while ($row = $result->nextRow()) {
@@ -547,7 +547,7 @@ class ETSearchModel extends ETModel
             $results[] = $row;
         }
 
-        $this->trigger('afterGetResults', array(&$results));
+        $this->trigger('afterGetResults', [&$results]);
 
         return $results;
     }
@@ -579,7 +579,7 @@ class ETSearchModel extends ETModel
     {
         // Process the search string into individial terms. Replace all "-" signs with "+!", and then
         // split the string by "+". Negated terms will then be prefixed with "!".
-        $terms = !empty($searchString) ? explode('+', strtolower(str_replace('-', '+!', trim($searchString, ' +-')))) : array();
+        $terms = !empty($searchString) ? explode('+', strtolower(str_replace('-', '+!', trim($searchString, ' +-')))) : [];
 
         // Take each term, match it with a gambit, and execute the gambit's function.
         foreach ($terms as $k => $term) {
@@ -954,25 +954,25 @@ class ETSearchModel extends ETModel
 }
 
 // Add default gambits.
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.starred"));', array('ETSearchModel', 'gambitStarred'));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.ignored"));', array('ETSearchModel', 'gambitIgnored'));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.draft"));', array('ETSearchModel', 'gambitDraft'));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.private"));', array('ETSearchModel', 'gambitPrivate'));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.sticky"));', array('ETSearchModel', 'gambitSticky'));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.locked"));', array('ETSearchModel', 'gambitLocked'));
-ETSearchModel::addGambit('return strpos($term, strtolower(T("gambit.author:"))) === 0;', array('ETSearchModel', 'gambitAuthor'));
-ETSearchModel::addGambit('return strpos($term, strtolower(T("gambit.contributor:"))) === 0;', array('ETSearchModel', 'gambitContributor'));
-ETSearchModel::addGambit('return preg_match(T("gambit.gambitActive"), $term, $this->matches);', array('ETSearchModel', 'gambitActive'));
-ETSearchModel::addGambit('return preg_match(T("gambit.gambitHasNReplies"), $term, $this->matches);', array('ETSearchModel', 'gambitHasNReplies'));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.order by replies"));', array('ETSearchModel', 'gambitOrderByReplies'));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.order by newest"));', array('ETSearchModel', 'gambitOrderByNewest'));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.unread"));', array('ETSearchModel', 'gambitUnread'));
-ETSearchModel::addGambit('return $term == strtolower(T("gambit.reverse"));', array('ETSearchModel', 'gambitReverse'));
-ETSearchModel::addGambit('return strpos($term, strtolower(T("gambit.limit:"))) === 0;', array('ETSearchModel', 'gambitLimit'));
-ETSearchModel::addGambit('return strpos($term, strtolower(T("gambit.title:"))) === 0;', array('ETSearchModel', 'gambitTitle'));
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.starred"));', ['ETSearchModel', 'gambitStarred']);
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.ignored"));', ['ETSearchModel', 'gambitIgnored']);
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.draft"));', ['ETSearchModel', 'gambitDraft']);
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.private"));', ['ETSearchModel', 'gambitPrivate']);
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.sticky"));', ['ETSearchModel', 'gambitSticky']);
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.locked"));', ['ETSearchModel', 'gambitLocked']);
+ETSearchModel::addGambit('return strpos($term, strtolower(T("gambit.author:"))) === 0;', ['ETSearchModel', 'gambitAuthor']);
+ETSearchModel::addGambit('return strpos($term, strtolower(T("gambit.contributor:"))) === 0;', ['ETSearchModel', 'gambitContributor']);
+ETSearchModel::addGambit('return preg_match(T("gambit.gambitActive"), $term, $this->matches);', ['ETSearchModel', 'gambitActive']);
+ETSearchModel::addGambit('return preg_match(T("gambit.gambitHasNReplies"), $term, $this->matches);', ['ETSearchModel', 'gambitHasNReplies']);
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.order by replies"));', ['ETSearchModel', 'gambitOrderByReplies']);
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.order by newest"));', ['ETSearchModel', 'gambitOrderByNewest']);
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.unread"));', ['ETSearchModel', 'gambitUnread']);
+ETSearchModel::addGambit('return $term == strtolower(T("gambit.reverse"));', ['ETSearchModel', 'gambitReverse']);
+ETSearchModel::addGambit('return strpos($term, strtolower(T("gambit.limit:"))) === 0;', ['ETSearchModel', 'gambitLimit']);
+ETSearchModel::addGambit('return strpos($term, strtolower(T("gambit.title:"))) === 0;', ['ETSearchModel', 'gambitTitle']);
 
 if (!C('esoTalk.search.disableRandomGambit')) {
-    ETSearchModel::addGambit('return $term == strtolower(T("gambit.random"));', array('ETSearchModel', 'gambitRandom'));
+    ETSearchModel::addGambit('return $term == strtolower(T("gambit.random"));', ['ETSearchModel', 'gambitRandom']);
 }
 
 

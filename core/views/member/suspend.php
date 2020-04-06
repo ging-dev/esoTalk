@@ -34,7 +34,7 @@ $isSuspended = $member['account'] == ACCOUNT_SUSPENDED;
 </div>
 
 <div class='buttons'>
-<?php echo $form->button($isSuspended ? 'unsuspend' : 'suspend', T($isSuspended ? 'Unsuspend' : 'Suspend'), array('class' => 'big submit')); ?>
+<?php echo $form->button($isSuspended ? 'unsuspend' : 'suspend', T($isSuspended ? 'Unsuspend' : 'Suspend'), ['class' => 'big submit']); ?>
 <?php echo $form->cancelButton(); ?>
 </div>
 

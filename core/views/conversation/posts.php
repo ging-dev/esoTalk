@@ -33,7 +33,7 @@ $thisPostTime = relativeTime($post['time']);
 if (!isset($prevPost['time']) or relativeTime($prevPost['time']) != $thisPostTime): ?>
 <div class='timeMarker'<?php if ($thisPostTime == T('just now')): ?> data-now='1'<?php endif; ?>><?php echo $thisPostTime; ?></div>
 <?php endif; ?>
-<?php $this->renderView('conversation/post', array('post' => $formattedPost)); ?>
+<?php $this->renderView('conversation/post', ['post' => $formattedPost]); ?>
 </li>
 
 <?php $prevPost = $post; ?>
