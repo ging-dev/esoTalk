@@ -21,26 +21,26 @@ $post = $data['post'];
 <?php
 
 // Using the provided form object, construct a textarea and buttons.
-$body = $form->input('content', 'textarea', array('cols' => '200', 'rows' => '20')) . "
+$body = $form->input('content', 'textarea', ['cols' => '200', 'rows' => '20']) . "
 	<div id='p" . $post['postId'] . "-preview' class='preview'></div>";
 $footer = "<div class='editButtons'>" .
     $form->saveButton() . ' ' .
     $form->cancelButton() . '</div>';
 
 // Construct an array for use in the conversation/post view.
-$formatted = array(
+$formatted = [
     'id' => 'p' . $post['postId'],
     'title' => name($post['username']),
     'controls' => $data['controls'],
     'class' => 'edit',
     'body' => $body,
     'avatar' => avatar($post),
-    'footer' => array($footer)
-);
+    'footer' => [$footer]
+];
 
-$this->trigger('renderEditBox', array(&$formatted, $post));
+$this->trigger('renderEditBox', [&$formatted, $post]);
 
-$this->renderView('conversation/post', array('post' => $formatted));
+$this->renderView('conversation/post', ['post' => $formatted]);
 
 ?>
 

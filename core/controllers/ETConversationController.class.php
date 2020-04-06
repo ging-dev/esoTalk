@@ -49,7 +49,7 @@ class ETConversationController extends ETController
             $conversation['searching'] = true;
 
             // Add the keywords in $this->searchString to be highlighted. Make sure we keep ones "in quotes" together.
-            $words = array();
+            $words = [];
             $term = $searchString;
             if (preg_match_all('/"(.+?)"/', $term, $matches)) {
                 $words[] = $matches[1];
@@ -163,27 +163,27 @@ class ETConversationController extends ETController
             }
 
             // Update the user's last action.
-            ET::memberModel()->updateLastAction('viewingConversation', $conversation['private'] ? null : array(
+            ET::memberModel()->updateLastAction('viewingConversation', $conversation['private'] ? null : [
             'conversationId' => $conversation['conversationId'],
             'title' => $conversation['title']
-        ));
+        ]);
         }
 
         // Get the posts in the conversation.
-        $options = array(
+        $options = [
         'startFrom' => $startFrom,
         'limit' => C('esoTalk.conversation.postsPerPage')
-    );
+    ];
         if ($searchString) {
             $options['search'] = $searchString;
         }
         if ($startFrom < $conversation['countPosts']) {
             $posts = ET::postModel()->getByConversation($conversation['conversationId'], $options);
         } else {
-            $posts = array();
+            $posts = [];
         }
 
-        $this->trigger('conversationIndex', array(&$conversation, &$posts, &$startFrom, &$searchString));
+        $this->trigger('conversationIndex', [&$conversation, &$posts, &$startFrom, &$searchString]);
 
         // Transport some data to the view.
         $this->data('conversation', $conversation);
@@ -299,12 +299,12 @@ class ETConversationController extends ETController
                 if (strlen($description) > 155) {
                     $description = substr($description, 0, strrpos($description, ' ')) . ' ...';
                 }
-                $description = str_replace(array("\n\n", "\n"), ' ', $description);
+                $description = str_replace(["\n\n", "\n"], ' ', $description);
                 $this->addToHead("<meta name='description' content='" . sanitizeHTML($description) . "'>");
             }
 
             // Add JavaScript variables which contain conversation information.
-            $this->addJSVar('conversation', array(
+            $this->addJSVar('conversation', [
             'conversationId' => (int)$conversation['conversationId'],
             'slug' => conversationURL($conversation['conversationId'], $conversation['title']),
             'countPosts' => (int)$conversation['countPosts'],
@@ -316,7 +316,7 @@ class ETConversationController extends ETController
             // Start the auto-reload interval at the square root of the number of seconds since the last action.
             'updateInterval' => max(C('esoTalk.conversation.updateIntervalStart'), min(round(sqrt(time() - $conversation['lastPostTime'])), C('esoTalk.conversation.updateIntervalLimit'))),
             'channelId' => (int)$conversation['channelId'],
-        ));
+        ]);
 
             // Quote a post: get the post details (id, name, content) and then set the value of the reply textarea appropriately.
             if ($postId = (int)R('quote')) {
@@ -331,7 +331,7 @@ class ETConversationController extends ETController
             $replyForm->action = URL('conversation/reply/' . $conversation['conversationId']);
             $replyForm->setValue('content', $conversation['draft']);
 
-            $this->trigger('conversationIndexDefault', array(&$conversation, &$controls, &$replyForm, &$replyControls));
+            $this->trigger('conversationIndexDefault', [&$conversation, &$controls, &$replyForm, &$replyControls]);
 
             $this->data('replyForm', $replyForm);
             $this->data('replyControls', $this->getEditControls('reply'));
@@ -424,11 +424,11 @@ class ETConversationController extends ETController
         if ($form->validPostBack('content')) {
             $model = ET::conversationModel();
 
-            $result = $model->create(array(
+            $result = $model->create([
             'title' => $_POST['title'],
             'channelId' => ET::$session->get('channelId'),
             'content' => $_POST['content'],
-        ), ET::$session->get('membersAllowed'), $form->isPostBack('saveDraft'));
+        ], ET::$session->get('membersAllowed'), $form->isPostBack('saveDraft'));
 
             if ($model->errorCount()) {
                 $this->messages($model->errors(), 'warning');
@@ -590,7 +590,7 @@ class ETConversationController extends ETController
 
         // For an AJAX request, add the conversation labels to the output.
         if ($this->responseType === RESPONSE_TYPE_AJAX) {
-            $this->json('labels', $this->getViewContents('conversation/labels', array('labels' => $conversation['labels'])));
+            $this->json('labels', $this->getViewContents('conversation/labels', ['labels' => $conversation['labels']]));
             $this->render();
             return;
         }
@@ -655,7 +655,7 @@ class ETConversationController extends ETController
         else {
             $this->json($type, !$conversation[$type]);
             if ($this->responseType === RESPONSE_TYPE_AJAX) {
-                $this->json('labels', $this->getViewContents('conversation/labels', array('labels' => $conversation['labels'])));
+                $this->json('labels', $this->getViewContents('conversation/labels', ['labels' => $conversation['labels']]));
             }
             $this->render();
         }
@@ -832,16 +832,16 @@ class ETConversationController extends ETController
         $conversation['membersAllowed'] = $model->getMembersAllowed($conversation);
         $conversation['membersAllowedSummary'] = $model->getMembersAllowedSummary($conversation, $conversation['membersAllowed']);
         $conversation['channelPath'] = $model->getChannelPath($conversation);
-        $this->json('allowedSummary', $this->getViewContents('conversation/membersAllowedSummary', array('conversation' => $conversation)));
-        $this->json('channelPath', $this->getViewContents('conversation/channelPath', array('conversation' => $conversation)));
+        $this->json('allowedSummary', $this->getViewContents('conversation/membersAllowedSummary', ['conversation' => $conversation]));
+        $this->json('channelPath', $this->getViewContents('conversation/channelPath', ['conversation' => $conversation]));
 
         // Also return the details of the new channel.
-        $this->json('channel', array(
+        $this->json('channel', [
         'channelId' => $conversation['channelId'],
         'link' => URL('conversations/' . $conversation['channelSlug']),
         'title' => $conversation['channelTitle'],
         'description' => $conversation['channelDescription']
-    ));
+    ]);
 
         $this->render();
     }
@@ -937,7 +937,7 @@ class ETConversationController extends ETController
 
         // Get an entity's details by parsing the member name.
             if (!($member = $model->getMemberFromName($name))) {
-                $this->message(T('message.memberNotFound'), array('className' => 'warning autoDismiss', 'id' => 'memberNotFound'));
+                $this->message(T('message.memberNotFound'), ['className' => 'warning autoDismiss', 'id' => 'memberNotFound']);
             }
 
             // Make sure the entity is allowed to view the channel that the conversation is in.
@@ -957,9 +957,9 @@ class ETConversationController extends ETController
 
         // If it's an AJAX request, return the contents of a few views.
         if ($this->responseType === RESPONSE_TYPE_AJAX) {
-            $this->json('allowedSummary', $this->getViewContents('conversation/membersAllowedSummary', array('conversation' => $conversation)));
-            $this->json('allowedList', $this->getViewContents('conversation/membersAllowedList', array('conversation' => $conversation, 'editable' => true)));
-            $this->json('labels', $this->getViewContents('conversation/labels', array('labels' => $conversation['labels'])));
+            $this->json('allowedSummary', $this->getViewContents('conversation/membersAllowedSummary', ['conversation' => $conversation]));
+            $this->json('allowedList', $this->getViewContents('conversation/membersAllowedList', ['conversation' => $conversation, 'editable' => true]));
+            $this->json('labels', $this->getViewContents('conversation/labels', ['labels' => $conversation['labels']]));
             $this->render();
         }
 
@@ -1005,11 +1005,11 @@ class ETConversationController extends ETController
 
         // We could be removing a member...
         if ($id = R('member')) {
-            $member = array('type' => 'member', 'id' => $id);
+            $member = ['type' => 'member', 'id' => $id];
         }
         // Or we could be removing a group.
         elseif ($id = R('group')) {
-            $member = array('type' => 'group', 'id' => $id);
+            $member = ['type' => 'group', 'id' => $id];
         }
 
         // If we have a member/group to remove, remove it!
@@ -1022,9 +1022,9 @@ class ETConversationController extends ETController
 
         // If it's an AJAX request, return the contents of a few views.
         if ($this->responseType === RESPONSE_TYPE_AJAX) {
-            $this->json('allowedSummary', $this->getViewContents('conversation/membersAllowedSummary', array('conversation' => $conversation)));
-            $this->json('allowedList', $this->getViewContents('conversation/membersAllowedList', array('conversation' => $conversation, 'editable' => true)));
-            $this->json('labels', $this->getViewContents('conversation/labels', array('labels' => $conversation['labels'])));
+            $this->json('allowedSummary', $this->getViewContents('conversation/membersAllowedSummary', ['conversation' => $conversation]));
+            $this->json('allowedList', $this->getViewContents('conversation/membersAllowedList', ['conversation' => $conversation, 'editable' => true]));
+            $this->json('labels', $this->getViewContents('conversation/labels', ['labels' => $conversation['labels']]));
             $this->render();
         }
 
@@ -1056,7 +1056,7 @@ class ETConversationController extends ETController
 
         // Star/unstar the conversation.
         $starred = !$conversation['starred'];
-        ET::conversationModel()->setStatus($conversation['conversationId'], ET::$session->userId, array('starred' => $starred));
+        ET::conversationModel()->setStatus($conversation['conversationId'], ET::$session->userId, ['starred' => $starred]);
 
         $this->json('starred', $starred);
 
@@ -1099,7 +1099,7 @@ class ETConversationController extends ETController
 
         // If it's an AJAX request, return the contents of the labels view.
         elseif ($this->responseType === RESPONSE_TYPE_AJAX) {
-            $this->json('labels', $this->getViewContents('conversation/labels', array('labels' => $conversation['labels'])));
+            $this->json('labels', $this->getViewContents('conversation/labels', ['labels' => $conversation['labels']]));
         }
 
         $this->render();
@@ -1175,7 +1175,7 @@ class ETConversationController extends ETController
 
             // For an AJAX request, add the conversation labels to the output.
             if ($this->responseType === RESPONSE_TYPE_AJAX) {
-                $this->json('labels', $this->getViewContents('conversation/labels', array('labels' => $conversation['labels'])));
+                $this->json('labels', $this->getViewContents('conversation/labels', ['labels' => $conversation['labels']]));
                 $this->render();
                 return;
             }
@@ -1205,7 +1205,7 @@ class ETConversationController extends ETController
                 // For an AJAX request, render the new post view.
                 if ($this->responseType === RESPONSE_TYPE_AJAX) {
                     $this->data('conversation', $conversation);
-                    $this->data('posts', ET::postModel()->getByConversation($conversation['conversationId'], array('startFrom' => $conversation['countPosts'] - 1, 'limit' => 1)));
+                    $this->data('posts', ET::postModel()->getByConversation($conversation['conversationId'], ['startFrom' => $conversation['countPosts'] - 1, 'limit' => 1]));
                     $this->render('conversation/posts');
                     return;
                 }
@@ -1268,7 +1268,7 @@ class ETConversationController extends ETController
             if ($model->errorCount()) {
                 $this->messages($model->errors(), 'warning');
             } else {
-                $this->trigger('editPostAfter', array(&$post));
+                $this->trigger('editPostAfter', [&$post]);
 
                 // Normally, redirect back to the conversation.
                 if ($this->responseType === RESPONSE_TYPE_DEFAULT) {
@@ -1362,21 +1362,21 @@ class ETConversationController extends ETController
         $avatar = avatar($post);
 
         // Construct the post array for use in the post view (conversation/post).
-        $formatted = array(
+        $formatted = [
         'id' => 'p' . $post['postId'],
         'title' => memberLink($post['memberId'], $post['username']),
         'avatar' => (!$post['deleteTime'] and $avatar) ? "<a href='" . URL(memberURL($post['memberId'], $post['username'])) . "'>$avatar</a>" : false,
-        'class' => $post['deleteTime'] ? array('deleted') : array(),
-        'info' => array(),
-        'controls' => array(),
+        'class' => $post['deleteTime'] ? ['deleted'] : [],
+        'info' => [],
+        'controls' => [],
         'body' => !$post['deleteTime'] ? $this->displayPost($post['content']) : false,
-        'footer' => array(),
+        'footer' => [],
 
-        'data' => array(
+        'data' => [
             'id' => $post['postId'],
             'memberid' => $post['memberId']
-        )
-    );
+        ]
+    ];
 
         $date = smartTime($post['time'], true);
 
@@ -1446,7 +1446,7 @@ class ETConversationController extends ETController
             }
         }
 
-        $this->trigger('formatPostForTemplate', array(&$formatted, $post, $conversation));
+        $this->trigger('formatPostForTemplate', [&$formatted, $post, $conversation]);
 
         return $formatted;
     }
@@ -1473,11 +1473,11 @@ class ETConversationController extends ETController
      */
     protected function getEditControls($id)
     {
-        $controls = array(
+        $controls = [
         'quote' => "<a href='javascript:ETConversation.quote(\"$id\");void(0)' class='control-quote' title='" . T('Quote') . "' accesskey='q'><i class='icon-quote-left'></i></a>",
-    );
+    ];
 
-        $this->trigger('getEditControls', array(&$controls, $id));
+        $this->trigger('getEditControls', [&$controls, $id]);
 
         if (!empty($controls)) {
             array_unshift($controls, "<span class='formattingButtons'>");

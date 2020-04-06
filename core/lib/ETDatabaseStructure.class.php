@@ -60,14 +60,14 @@ class ETDatabaseStructure
      * An array of columns in the table currently being constructed.
      * @var array
      */
-    protected $columns = array();
+    protected $columns = [];
 
 
     /**
      * An array of keys in the table currently being constructed.
      * @var array
      */
-    protected $keys = array();
+    protected $keys = [];
 
 
     /**
@@ -90,8 +90,8 @@ class ETDatabaseStructure
     {
         $this->tableName = '';
         $this->engine = 'InnoDB';
-        $this->columns = array();
-        $this->keys = array();
+        $this->columns = [];
+        $this->keys = [];
         $this->exists = null;
         $this->existingColumns = null;
         $this->existingKeys = null;
@@ -127,7 +127,7 @@ class ETDatabaseStructure
      */
     public function column($name, $type, $default = null)
     {
-        $this->columns[$name] = array('type' => $type, 'null' => $default !== false, 'default' => $default);
+        $this->columns[$name] = ['type' => $type, 'null' => $default !== false, 'default' => $default];
 
         return $this;
     }
@@ -161,7 +161,7 @@ class ETDatabaseStructure
         }
 
         // Add the key to the keys array.
-        $this->keys[$name] = array('type' => $type, 'columns' => $columns);
+        $this->keys[$name] = ['type' => $type, 'columns' => $columns];
 
         return $this;
     }
@@ -187,7 +187,7 @@ class ETDatabaseStructure
         // scratch.
         if (!$this->exists()) {
             $sql = 'CREATE TABLE `' . ET::$database->tablePrefix . $this->tableName . "` (\n\t";
-            $lines = array();
+            $lines = [];
 
             // Add the columns.
             foreach ($this->columns as $name => $column) {
@@ -356,14 +356,14 @@ class ETDatabaseStructure
     {
         if ($this->existingColumns === null) {
             $result = ET::SQL('SHOW COLUMNS FROM `' . ET::$database->tablePrefix . $this->tableName . '`')->allRows();
-            $this->existingColumns = array();
+            $this->existingColumns = [];
             foreach ($result as $column) {
-                $this->existingColumns[$column['Field']] = array(
+                $this->existingColumns[$column['Field']] = [
                 'type' => $column['Type'],
                 'null' => $column['Null'] == 'YES',
                 'default' => ($column['Default'] !== null or $column['Null'] == 'YES') ? $column['Default'] : false,
                 'autoIncrement' => $column['Extra'] == 'auto_increment'
-            );
+            ];
             }
         }
         return $this->existingColumns;
@@ -379,13 +379,13 @@ class ETDatabaseStructure
     {
         if ($this->existingKeys === null) {
             $result = ET::SQL('SHOW INDEXES FROM `' . ET::$database->tablePrefix . $this->tableName . '`')->allRows();
-            $this->existingKeys = array();
+            $this->existingKeys = [];
             foreach ($result as $key) {
                 if (!isset($this->existingKeys[$key['Key_name']])) {
-                    $this->existingKeys[$key['Key_name']] = array(
+                    $this->existingKeys[$key['Key_name']] = [
                     'type' => $key['Non_unique'] ? '' : 'unique',
-                    'columns' => array()
-                );
+                    'columns' => []
+                ];
                     if ($key['Index_type'] == 'FULLTEXT') {
                         $this->existingKeys[$key['Key_name']]['type'] = 'fulltext';
                     }

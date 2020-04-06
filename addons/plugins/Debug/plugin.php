@@ -7,7 +7,7 @@ if (!defined('IN_ESOTALK')) {
     exit;
 }
 
-ET::$pluginInfo['Debug'] = array(
+ET::$pluginInfo['Debug'] = [
     'name' => 'Debug',
     'description' => 'Shows useful debugging information, such as SQL queries, to administrators.',
     'version' => ESOTALK_VERSION,
@@ -15,7 +15,7 @@ ET::$pluginInfo['Debug'] = array(
     'authorEmail' => 'support@esotalk.org',
     'authorURL' => 'http://esotalk.org',
     'license' => 'GPLv2'
-);
+];
 
 
 /**
@@ -46,7 +46,7 @@ class ETPlugin_Debug extends ETPlugin
      * An array of queries that have been executed.
      * @var array
      */
-    private $queries = array();
+    private $queries = [];
 
 
     /**
@@ -114,7 +114,7 @@ class ETPlugin_Debug extends ETPlugin
         $method .= $item['function'] . '()';
 
         // Store the query in our queries array.
-        $this->queries[] = array($result->queryString, round(microtime(true) - $this->queryStartTime, 4), $method);
+        $this->queries[] = [$result->queryString, round(microtime(true) - $this->queryStartTime, 4), $method];
     }
 
 
@@ -148,7 +148,7 @@ class ETPlugin_Debug extends ETPlugin
             $geshi->set_header_type(GESHI_HEADER_PRE);
             echo '<div><strong>' . $query[2] . "</strong> <span class='queryTime subText" . ($query[1] > 0.5 ? ' warning' : '') . "'>" . $query[1] . 's</span>' . $geshi->parse_code() . '</div>';
         }
-        $this->queries = array();
+        $this->queries = [];
 
         // Output POST + GET + FILES information.
         echo "</div>

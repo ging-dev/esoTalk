@@ -43,9 +43,9 @@ class ETUpgradeController extends ETController
             ET::upgradeModel()->upgrade(C('esoTalk.version'));
 
             // Update the version and serial in the config file.
-            ET::writeConfig(array(
+            ET::writeConfig([
             'esoTalk.version' => ESOTALK_VERSION
-        ));
+        ]);
 
             // Show a success message and redirect.
             $this->message(T('message.upgradeSuccessful'), 'success');

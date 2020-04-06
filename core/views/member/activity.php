@@ -31,7 +31,7 @@ $thisPostTime = relativeTime($item['time'], false); ?>
 if (!isset($activity[$k - 1]['time']) or relativeTime($activity[$k - 1]['time'], false, true) != $thisPostTime): ?>
 <div class='timeMarker'><?php echo $thisPostTime; ?></div>
 <?php endif; ?>
-<?php $this->renderView('member/activityItem', array('activity' => $item) + $data); ?>
+<?php $this->renderView('member/activityItem', ['activity' => $item] + $data); ?>
 </li>
 
 <?php endforeach; ?>

@@ -13,7 +13,7 @@ class FeedController extends Controller
 {
 
 // Feed data variables, outputted in the view.
-    public $items = array();
+    public $items = [];
     public $pubDate = '';
     public $title = '';
     public $description = '';
@@ -78,12 +78,12 @@ class FeedController extends Controller
             // Fetch the 20 most recent posts in the conversation.
             $result = $this->esoTalk->db->query('SELECT postId, name, content, time FROM ' . config('esoTalk.database.prefix') . 'posts INNER JOIN ' . config('esoTalk.database.prefix') . "members USING (memberId) WHERE conversationId={$conversation['id']} AND deleteMember IS NULL ORDER BY time DESC LIMIT 20");
             while (list($id, $member, $content, $time) = $this->esoTalk->db->fetchRow($result)) {
-                $this->items[] = array(
+                $this->items[] = [
                     'title' => $member,
                     'description' => sanitize($this->format($content)),
                     'link' => $config['baseURL'] . makeLink('post', $id),
                     'date' => date('D, d M Y H:i:s O', $time)
-                );
+                ];
             }
 
             break;
@@ -95,12 +95,12 @@ class FeedController extends Controller
             // that aren't private!
             $result = $this->esoTalk->db->query('SELECT p.postId, c.title, m.name, p.content, p.time FROM ' . config('esoTalk.database.prefix') . 'posts p LEFT JOIN ' . config('esoTalk.database.prefix') . 'conversations c USING (conversationId) INNER JOIN ' . config('esoTalk.database.prefix') . 'members m ON (m.memberId=p.memberId) WHERE c.private=0 AND c.posts>0 AND p.deleteMember IS NULL ORDER BY p.time DESC LIMIT 20');
             while (list($postId, $title, $member, $content, $time) = $this->esoTalk->db->fetchRow($result)) {
-                $this->items[] = array(
+                $this->items[] = [
                     'title' => "$member - $title",
                     'description' => sanitize($this->format($content)),
                     'link' => $config['baseURL'] . makeLink('post', $postId),
                     'date' => date('D, d M Y H:i:s O', $time)
-                );
+                ];
             }
 
             // Set the title, link, description, etc.
@@ -115,7 +115,7 @@ class FeedController extends Controller
     {
         global $config, $language;
 
-        $this->fireEvent('formatPost', array(&$post));
+        $this->fireEvent('formatPost', [&$post]);
 
         // Replace empty post links with "go to this post" links.
         $post = preg_replace("`(<a href='" . str_replace('?', "\?", makeLink('post', "(\d+)")) . "'[^>]*>)<\/a>`", "$1{$language['go to this post']}</a>", $post);

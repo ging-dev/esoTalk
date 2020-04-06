@@ -66,7 +66,7 @@ function errorHandler($code, $message, $file, $line)
     ET::fatalError(new ErrorException($message, $code, 1, $file, $line));
 }
 set_error_handler('errorHandler', E_USER_ERROR);
-set_exception_handler(array('ET', 'fatalError'));
+set_exception_handler(['ET', 'fatalError']);
 
 // Determine the relative path to this forum. For example, if the forum is at http://forum.com/test/forum/,
 // the web path should be /test/forum.
@@ -223,7 +223,7 @@ ET::$session = ETFactory::make('session');
 foreach (ET::$plugins as $k => $v) {
     if (C("$k.version") != ET::$pluginInfo[$k]['version']) {
         if ($v->setup(C("$k.version"))) {
-            ET::writeConfig(array("$k.version" => ET::$pluginInfo[$k]['version']));
+            ET::writeConfig(["$k.version" => ET::$pluginInfo[$k]['version']]);
         }
     }
 }

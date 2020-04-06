@@ -35,7 +35,7 @@ $form = $data['form'];
 </div>
 
 <div class='buttons'>
-<?php echo $form->button('submit', T('Change Password'), array('class' => 'big')); ?>
+<?php echo $form->button('submit', T('Change Password'), ['class' => 'big']); ?>
 </div>
 
 <?php echo $form->close(); ?>

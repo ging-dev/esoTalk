@@ -32,7 +32,7 @@ $form = $data['form'];
 </div>
 
 <div class='section editing allowedList action'>
-<?php $this->renderView('conversation/membersAllowedList', $data + array('editable' => true)); ?>
+<?php $this->renderView('conversation/membersAllowedList', $data + ['editable' => true]); ?>
 </div>
 
 </div>

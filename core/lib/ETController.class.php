@@ -30,7 +30,7 @@ class ETController extends ETPluggable
      * should be used as the primary transport of data between a controller and a view.
      * @var array
      */
-    public $data = array();
+    public $data = [];
 
 
     /**
@@ -44,28 +44,28 @@ class ETController extends ETPluggable
      * An array of JavaScript files to be included in the head of the page.
      * @var array
      */
-    private $jsFiles = array('global' => array(), 'local' => array(), 'remote' => array());
+    private $jsFiles = ['global' => [], 'local' => [], 'remote' => []];
 
 
     /**
      * An array of CSS files to be included in the head of the page.
      * @var array
      */
-    private $cssFiles = array('global' => array(), 'local' => array(), 'remote' => array());
+    private $cssFiles = ['global' => [], 'local' => [], 'remote' => []];
 
 
     /**
      * An array of language definition codes to make accessible to JavaScript.
      * @var array
      */
-    private $jsLanguage = array();
+    private $jsLanguage = [];
 
 
     /**
      * An array of data to make accessible to JavaScript.
      * @var array
      */
-    private $jsData = array();
+    private $jsData = [];
 
 
     /**
@@ -79,14 +79,14 @@ class ETController extends ETPluggable
      * An array of ETMenu objects for common menus (such as "user", "main", and "meta".)
      * @var array
      */
-    public $menus = array();
+    public $menus = [];
 
 
     /**
      * An array of data to output in a JSON response.
      * @var array
      */
-    public $json = array();
+    public $json = [];
 
 
     /**
@@ -136,7 +136,7 @@ class ETController extends ETPluggable
      * An array of messages to show on the page.
      * @var string
      */
-    private $messages = array();
+    private $messages = [];
 
 
     /**
@@ -168,7 +168,7 @@ class ETController extends ETPluggable
     public function dispatch($method, $arguments)
     {
         // Create an array of arguments where the first item is $this.
-        $eventArguments = array_merge(array(&$this), $arguments);
+        $eventArguments = array_merge([&$this], $arguments);
         $eventName = $this->className . '_' . $method;
 
         // Trigger a "before" event for this method.
@@ -179,7 +179,7 @@ class ETController extends ETPluggable
         foreach (ET::$plugins as $plugin) {
             $actionName = 'action_' . $eventName;
             if (method_exists($plugin, $actionName)) {
-                call_user_func_array(array($plugin, $actionName), $eventArguments);
+                call_user_func_array([$plugin, $actionName], $eventArguments);
                 $called = true;
                 break;
             }
@@ -187,7 +187,7 @@ class ETController extends ETPluggable
 
         // If one wasn't found, call the method on $this.
         if (!$called) {
-            call_user_func_array(array($this, 'action_' . $method), $arguments);
+            call_user_func_array([$this, 'action_' . $method], $arguments);
         }
 
         // Trigger an "after" event for this method.
@@ -211,7 +211,7 @@ class ETController extends ETPluggable
     public function message($message, $options = '')
     {
         if (!is_array($options)) {
-            $options = array('className' => $options);
+            $options = ['className' => $options];
         }
         $options['message'] = $message;
         if (!empty($options['id'])) {
@@ -235,7 +235,7 @@ class ETController extends ETPluggable
     public function messages($messages, $options = '')
     {
         if (!is_array($options)) {
-            $options = array('className' => $options);
+            $options = ['className' => $options];
         }
         foreach ($messages as $id => $message) {
             $options['id'] = !is_numeric($id) ? $id : null;
@@ -263,16 +263,16 @@ class ETController extends ETPluggable
                 continue;
             }
 
-            $avatar = avatar(array(
+            $avatar = avatar([
             'memberId' => $notification['fromMemberId'],
             'avatarFormat' => $notification['avatarFormat'],
             'email' => $notification['email']
-        ), 'thumb');
+        ], 'thumb');
             $this->message("<a href='" . $notification['link'] . "' class='messageLink'><span class='action'>" . $avatar . $notification['body'] . '</span></a>', 'popup notificationMessage autoDismiss hasSprite');
         }
 
         // Update the user's "notificationCheckTime" preference so these notifications won't be shown again.
-        ET::$session->setPreferences(array('notificationCheckTime' => time()));
+        ET::$session->setPreferences(['notificationCheckTime' => time()]);
     }
 
 
@@ -470,7 +470,7 @@ class ETController extends ETPluggable
         else {
 
         // Make a new data array for the master view.
-            $data = array();
+            $data = [];
 
             // For any master views but the JSON and ATOM ones, give the view some data that will be useful in
             // rendering a HTML page.
@@ -488,7 +488,7 @@ class ETController extends ETPluggable
 
                 // Add the <head> contents and the page title.
                 $data['head'] = $this->head();
-                $titleParts = array();
+                $titleParts = [];
                 if ($this->title) {
                     $titleParts[] = $this->title;
                 }
@@ -571,7 +571,7 @@ class ETController extends ETPluggable
             $controller = ETFactory::make('userController');
             $controller->init();
             $controller->loginMessage = $message;
-            $controller->dispatch('login', array());
+            $controller->dispatch('login', []);
         }
 
         // If they are logged in, however, we'll just show a page not found message.
@@ -631,7 +631,7 @@ class ETController extends ETPluggable
      * @param array $data An array of data to pass to the view.
      * @return string The output of the view.
      */
-    public function getViewContents($view, $data = array())
+    public function getViewContents($view, $data = [])
     {
         ob_start();
         $this->renderView($view, $data);
@@ -647,13 +647,13 @@ class ETController extends ETPluggable
      * @param array $data An array of data to pass to the view.
      * @return void
      */
-    public function renderView($view, $data = array())
+    public function renderView($view, $data = [])
     {
         ob_start();
         include $this->getViewPath($view);
         $content = ob_get_clean();
 
-        $this->trigger('renderView', array($view, &$content, $data));
+        $this->trigger('renderView', [$view, &$content, $data]);
 
         echo $content;
     }
@@ -798,7 +798,7 @@ class ETController extends ETPluggable
     protected function aggregateFiles($files, $type)
     {
         // Construct an array of filenames, and get the maximum last modifiction time of all the files.
-        $filenames = array();
+        $filenames = [];
         $lastModTime = 0;
         foreach ($files as $filename) {
             $filenames[] = str_replace('.', '', pathinfo($filename, PATHINFO_FILENAME));
@@ -825,7 +825,7 @@ class ETController extends ETPluggable
             file_force_contents($file, $type == 'css' ? minifyCSS($contents) : minifyJS($contents));
         }
 
-        return array($file);
+        return [$file];
     }
 
 
@@ -875,13 +875,13 @@ class ETController extends ETPluggable
         }
 
         // Output all necessary config variables and language definitions, as well as other variables.
-        $esoTalkJS = array(
+        $esoTalkJS = [
         'webPath' => ET::$webPath . ((C('esoTalk.urls.friendly') and !C('esoTalk.urls.rewrite')) ? '/index.php' : ''),
         'userId' => ET::$session->user ? (int)ET::$session->userId : false,
         'token' => ET::$session->token,
         'debug' => C('esoTalk.debug'),
         'language' => $this->jsLanguage
-    ) + (array)$this->jsData;
+    ] + (array)$this->jsData;
         $head .= '<script>var ET=' . json_encode($esoTalkJS) . "</script>\n";
 
         // Add remote JavaScript.
@@ -917,7 +917,7 @@ class ETController extends ETPluggable
         // Finally, append the custom HTML string constructed via $this->addToHead().
         $head .= $this->head;
 
-        $this->trigger('head', array(&$head));
+        $this->trigger('head', [&$head]);
 
         return $head;
     }

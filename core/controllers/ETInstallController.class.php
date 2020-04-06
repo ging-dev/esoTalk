@@ -151,7 +151,7 @@ class ETInstallController extends ETController
             if (!$form->errorCount() and $values['tablePrefix'] != @$values['confirmTablePrefix']) {
 
             // Get a list of all existing tables.
-                $theirTables = array();
+                $theirTables = [];
                 $result = ET::SQL('SHOW TABLES');
                 while ($table = $result->result()) {
                     $theirTables[] = $table;
@@ -197,7 +197,7 @@ class ETInstallController extends ETController
         }
 
         // Prepare the $config variable with the installation settings.
-        $config = array(
+        $config = [
         'esoTalk.installed' => true,
         'esoTalk.version' => ESOTALK_VERSION,
         'esoTalk.database.host' => $info['mysqlHost'],
@@ -208,10 +208,10 @@ class ETInstallController extends ETController
         'esoTalk.forumTitle' => $info['forumTitle'],
         'esoTalk.baseURL' => $info['baseURL'],
         'esoTalk.emailFrom' => "do_not_reply@{$_SERVER['HTTP_HOST']}",
-        'esoTalk.cookie.name' => preg_replace(array("/\s+/", "/[^\w]/"), array('_', ''), $info['forumTitle']),
+        'esoTalk.cookie.name' => preg_replace(["/\s+/", "/[^\w]/"], ['_', ''], $info['forumTitle']),
         'esoTalk.urls.friendly' => !empty($info['friendlyURLs']),
         'esoTalk.urls.rewrite' => !empty($info['friendlyURLs']) and function_exists('apache_get_modules') and in_array('mod_rewrite', apache_get_modules())
-    );
+    ];
 
         // Merge these new config settings into our current conifg variable.
         ET::$config = array_merge(ET::$config, $config);
@@ -289,7 +289,7 @@ Disallow: /conversation/start/');
      */
     protected function warningChecks()
     {
-        $errors = array();
+        $errors = [];
 
         // We don't like register_globals!
         if (ini_get('register_globals')) {
@@ -317,7 +317,7 @@ Disallow: /conversation/start/');
      */
     protected function fatalChecks()
     {
-        $errors = array();
+        $errors = [];
 
         // Make sure the installer is not locked.
         if (C('esoTalk.installed')) {
@@ -335,8 +335,8 @@ Disallow: /conversation/start/');
         }
 
         // Check file permissions.
-        $fileErrors = array();
-        $filesToCheck = array('', 'uploads', 'uploads/avatars', 'addons/plugins', 'addons/skins', 'addons/languages', 'config', 'cache');
+        $fileErrors = [];
+        $filesToCheck = ['', 'uploads', 'uploads/avatars', 'addons/plugins', 'addons/skins', 'addons/languages', 'config', 'cache'];
         sort($filesToCheck);
 
         // Go through each file (directory)...

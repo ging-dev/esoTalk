@@ -176,7 +176,7 @@ class geshi
      * The data for the language used
      * @var array
      */
-    public $language_data = array();
+    public $language_data = [];
 
     /**
      * The path to the language files
@@ -195,12 +195,12 @@ class geshi
      * Possible error messages
      * @var array
      */
-    public $error_messages = array(
+    public $error_messages = [
         GESHI_ERROR_NO_SUCH_LANG => 'GeSHi could not find the language {LANGUAGE} (using path {PATH})',
         GESHI_ERROR_FILE_NOT_READABLE => 'The file specified for load_from_file was not readable',
         GESHI_ERROR_INVALID_HEADER_TYPE => 'The header type specified is invalid',
         GESHI_ERROR_INVALID_LINE_NUMBER_TYPE => 'The line number type specified is invalid'
-    );
+    ];
 
     /**
      * Whether highlighting is strict or not
@@ -230,10 +230,10 @@ class geshi
      * Array of permissions for which lexics should be highlighted
      * @var array
      */
-    public $lexic_permissions = array(
-        'KEYWORDS' =>    array(),
-        'COMMENTS' =>    array('MULTI' => true),
-        'REGEXPS' =>     array(),
+    public $lexic_permissions = [
+        'KEYWORDS' =>    [],
+        'COMMENTS' =>    ['MULTI' => true],
+        'REGEXPS' =>     [],
         'ESCAPE_CHAR' => true,
         'BRACKETS' =>    true,
         'SYMBOLS' =>     true,
@@ -241,7 +241,7 @@ class geshi
         'NUMBERS' =>     true,
         'METHODS' =>     true,
         'SCRIPT' =>      true
-    );
+    ];
 
     /**
      * The time it took to parse the code
@@ -284,7 +284,7 @@ class geshi
      * The styles for hyperlinks in the code
      * @var array
      */
-    public $link_styles = array();
+    public $link_styles = [];
 
     /**
      * Whether important blocks should be recognised or not
@@ -313,7 +313,7 @@ class geshi
      * Lines that should be highlighted extra
      * @var array
      */
-    public $highlight_extra_lines = array();
+    public $highlight_extra_lines = [];
 
     /**
      * Styles of extra-highlighted lines
@@ -448,10 +448,10 @@ class geshi
     {
         if ($this->error) {
             $msg = $this->error_messages[$this->error];
-            $debug_tpl_vars = array(
+            $debug_tpl_vars = [
                 '{LANGUAGE}' => $this->language,
                 '{PATH}' => $this->language_path
-            );
+            ];
             foreach ($debug_tpl_vars as $tpl => $var) {
                 $msg = str_replace($tpl, $var, $msg);
             }
@@ -484,7 +484,7 @@ class geshi
     public function set_source($source)
     {
         $this->source = $source;
-        $this->highlight_extra_lines = array();
+        $this->highlight_extra_lines = [];
     }
 
     /**
@@ -1118,47 +1118,47 @@ class geshi
      *       a extension->lang lookup?)
      * @todo static?
      */
-    public function get_language_name_from_extension($extension, $lookup = array())
+    public function get_language_name_from_extension($extension, $lookup = [])
     {
         if (!$lookup) {
-            $lookup = array(
-                'actionscript' => array('as'),
-                'ada' => array('a', 'ada', 'adb', 'ads'),
-                'apache' => array('conf'),
-                'asm' => array('ash', 'asm'),
-                'asp' => array('asp'),
-                'bash' => array('sh'),
-                'c' => array('c', 'h'),
-                'c_mac' => array('c', 'h'),
-                'caddcl' => array(),
-                'cadlisp' => array(),
-                'cdfg' => array('cdfg'),
-                'cpp' => array('cpp', 'h', 'hpp'),
-                'csharp' => array(),
-                'css' => array('css'),
-                'delphi' => array('dpk', 'dpr'),
-                'html4strict' => array('html', 'htm'),
-                'java' => array('java'),
-                'javascript' => array('js'),
-                'lisp' => array('lisp'),
-                'lua' => array('lua'),
-                'mpasm' => array(),
-                'nsis' => array(),
-                'objc' => array(),
-                'oobas' => array(),
-                'oracle8' => array(),
-                'pascal' => array('pas'),
-                'perl' => array('pl', 'pm'),
-                'php' => array('php', 'php5', 'phtml', 'phps'),
-                'python' => array('py'),
-                'qbasic' => array('bi'),
-                'sas' => array('sas'),
-                'smarty' => array(),
-                'vb' => array('bas'),
-                'vbnet' => array(),
-                'visualfoxpro' => array(),
-                'xml' => array('xml')
-            );
+            $lookup = [
+                'actionscript' => ['as'],
+                'ada' => ['a', 'ada', 'adb', 'ads'],
+                'apache' => ['conf'],
+                'asm' => ['ash', 'asm'],
+                'asp' => ['asp'],
+                'bash' => ['sh'],
+                'c' => ['c', 'h'],
+                'c_mac' => ['c', 'h'],
+                'caddcl' => [],
+                'cadlisp' => [],
+                'cdfg' => ['cdfg'],
+                'cpp' => ['cpp', 'h', 'hpp'],
+                'csharp' => [],
+                'css' => ['css'],
+                'delphi' => ['dpk', 'dpr'],
+                'html4strict' => ['html', 'htm'],
+                'java' => ['java'],
+                'javascript' => ['js'],
+                'lisp' => ['lisp'],
+                'lua' => ['lua'],
+                'mpasm' => [],
+                'nsis' => [],
+                'objc' => [],
+                'oobas' => [],
+                'oracle8' => [],
+                'pascal' => ['pas'],
+                'perl' => ['pl', 'pm'],
+                'php' => ['php', 'php5', 'phtml', 'phps'],
+                'python' => ['py'],
+                'qbasic' => ['bi'],
+                'sas' => ['sas'],
+                'smarty' => [],
+                'vb' => ['bas'],
+                'vbnet' => [],
+                'visualfoxpro' => [],
+                'xml' => ['xml']
+            ];
         }
 
         foreach ($lookup as $lang => $extensions) {
@@ -1186,7 +1186,7 @@ class geshi
      * @todo Complete rethink of this and above method
      * @since 1.0.5
      */
-    public function load_from_file($file_name, $lookup = array())
+    public function load_from_file($file_name, $lookup = [])
     {
         if (is_readable($file_name)) {
             $this->set_source(implode('', file($file_name)));
@@ -1218,7 +1218,7 @@ class geshi
     public function remove_keyword($key, $word)
     {
         $this->language_data['KEYWORDS'][$key] =
-            array_diff($this->language_data['KEYWORDS'][$key], array($word));
+            array_diff($this->language_data['KEYWORDS'][$key], [$word]);
     }
 
     /**
@@ -1230,7 +1230,7 @@ class geshi
      * @param array  The words to use for the keyword group
      * @since 1.0.0
      */
-    public function add_keyword_group($key, $styles, $case_sensitive = true, $words = array())
+    public function add_keyword_group($key, $styles, $case_sensitive = true, $words = [])
     {
         $words = (array) $words;
         $this->language_data['KEYWORDS'][$key] = $words;
@@ -1526,7 +1526,7 @@ class geshi
         if ($this->strict_mode) {
             // Break the source into bits. Each bit will be a portion of the code
             // within script delimiters - for example, HTML between < and >
-            $parts = array(0 => array(0 => ''));
+            $parts = [0 => [0 => '']];
             $k = 0;
             for ($i = 0; $i < $length; $i++) {
                 $char = substr($code, $i, 1);
@@ -1575,12 +1575,12 @@ class geshi
         } else {
             // Not strict mode - simply dump the source into
             // the array at index 1 (the first highlightable block)
-            $parts = array(
-                1 => array(
+            $parts = [
+                1 => [
                     0 => '',
                     1 => $code
-                )
-            );
+                ]
+            ];
         }
 
         // Now we go through each part. We know that even-indexed parts are
@@ -1972,7 +1972,7 @@ class geshi
                         //  2 => '&nbsp; ',
                         //  3 => '&nbsp; &nbsp;' etc etc
                         // to use instead of building a string every time
-                        $strs = array(0 => '&nbsp;', 1 => ' ');
+                        $strs = [0 => '&nbsp;', 1 => ' '];
                         for ($k = 0; $k < ($tab_width - (($i - $pos) % $tab_width)); $k++) {
                             $str .= $strs[$k % 2];
                         }
@@ -2069,8 +2069,8 @@ class geshi
 
                     return '<|UR1|"' .
                         str_replace(
-                            array('{FNAME}', '.'),
-                            array(GeSHi::hsc($word), '<DOT>'),
+                            ['{FNAME}', '.'],
+                            [GeSHi::hsc($word), '<DOT>'],
                             $this->language_data['URLS'][$group]
                         ) . '">';
                 }
@@ -2219,25 +2219,25 @@ class geshi
         // be highlighting regardless
         //
         if ($this->lexic_permissions['BRACKETS']) {
-            $code_entities_match = array('[', ']', '(', ')', '{', '}');
+            $code_entities_match = ['[', ']', '(', ')', '{', '}'];
             if (!$this->use_classes) {
-                $code_entities_replace = array(
+                $code_entities_replace = [
                     '<| style="' . $this->language_data['STYLES']['BRACKETS'][0] . '">&#91;|>',
                     '<| style="' . $this->language_data['STYLES']['BRACKETS'][0] . '">&#93;|>',
                     '<| style="' . $this->language_data['STYLES']['BRACKETS'][0] . '">&#40;|>',
                     '<| style="' . $this->language_data['STYLES']['BRACKETS'][0] . '">&#41;|>',
                     '<| style="' . $this->language_data['STYLES']['BRACKETS'][0] . '">&#123;|>',
                     '<| style="' . $this->language_data['STYLES']['BRACKETS'][0] . '">&#125;|>',
-                );
+                ];
             } else {
-                $code_entities_replace = array(
+                $code_entities_replace = [
                     '<| class="br0">&#91;|>',
                     '<| class="br0">&#93;|>',
                     '<| class="br0">&#40;|>',
                     '<| class="br0">&#41;|>',
                     '<| class="br0">&#123;|>',
                     '<| class="br0">&#125;|>',
-                );
+                ];
             }
             $stuff_to_parse = str_replace($code_entities_match, $code_entities_replace, $stuff_to_parse);
         }
@@ -2320,7 +2320,7 @@ class geshi
     public function load_language($file_name)
     {
         $this->enable_highlighting();
-        $language_data = array();
+        $language_data = [];
         require $file_name;
         // Perhaps some checking might be added here later to check that
         // $language data is a valid thing but maybe not
@@ -2389,7 +2389,7 @@ class geshi
             // Set vars to defaults for following loop
             $parsed_code = '';
             $i = 0;
-            $attrs = array();
+            $attrs = [];
 
             // Foreach line...
             foreach ($code as $line) {
@@ -2450,7 +2450,7 @@ class geshi
                 }
                 $attr_string = substr($attr_string, 0, -1);
                 $parsed_code .= "<li$attr_string>$start$line$end</li>$ls";
-                $attrs = array();
+                $attrs = [];
             }
         } else {
             // No line numbers, but still need to handle highlighting lines extra.
@@ -2625,7 +2625,7 @@ class geshi
      */
     public function replace_keywords($instr)
     {
-        $keywords = $replacements = array();
+        $keywords = $replacements = [];
 
         $keywords[] = '<TIME>';
         $keywords[] = '{TIME}';
@@ -2722,12 +2722,12 @@ class geshi
     public function hsc($string, $quote_style=ENT_COMPAT)
     {
         // init
-        $aTransSpecchar = array(
+        $aTransSpecchar = [
             '&' => '&amp;',
             '"' => '&quot;',
             '<' => '&lt;',
             '>' => '&gt;'
-            );                      // ENT_COMPAT set
+            ];                      // ENT_COMPAT set
 
         if (ENT_NOQUOTES == $quote_style) {       // don't convert double quotes
             unset($aTransSpecchar['"']);

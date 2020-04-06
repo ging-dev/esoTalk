@@ -15,7 +15,7 @@ if (!defined('IN_ESOTALK')) {
 <div id='adminUpdateNotification' class='area help'>
 
 <?php
-$info = C('esoTalk.admin.lastUpdateCheckInfo', array('version' => ESOTALK_VERSION));
+$info = C('esoTalk.admin.lastUpdateCheckInfo', ['version' => ESOTALK_VERSION]);
 if (version_compare($info['version'], ESOTALK_VERSION, '>')): ?>
 <h3><?php printf(T('message.esoTalkUpdateAvailable'), $info['version']); ?></h3>
 <p><?php echo T('message.esoTalkUpdateAvailableHelp'); ?></p>

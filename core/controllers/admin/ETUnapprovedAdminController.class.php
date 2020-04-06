@@ -54,7 +54,7 @@ class ETUnapprovedAdminController extends ETAdminController
             return;
         }
 
-        ET::memberModel()->updateById($memberId, array('confirmed' => true));
+        ET::memberModel()->updateById($memberId, ['confirmed' => true]);
 
         sendEmail(
             $member['email'],
@@ -103,7 +103,7 @@ class ETUnapprovedAdminController extends ETAdminController
             return;
         }
 
-        ET::memberModel()->delete(array('confirmed' => 0));
+        ET::memberModel()->delete(['confirmed' => 0]);
 
         $this->message(T('message.changesSaved'), 'success autoDismiss');
         $this->redirect(URL('admin/unapproved'));

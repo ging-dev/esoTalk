@@ -27,7 +27,7 @@ class ETMemberController extends ETController
  */
     public function renderProfile($view = '')
     {
-        if (!in_array($this->responseType, array(RESPONSE_TYPE_VIEW, RESPONSE_TYPE_AJAX))) {
+        if (!in_array($this->responseType, [RESPONSE_TYPE_VIEW, RESPONSE_TYPE_AJAX])) {
             $this->data('view', $view);
             parent::render('member/profile');
         } else {
@@ -177,7 +177,7 @@ class ETMemberController extends ETController
             $actions->add('privateStart', "<a href='" . URL('conversation/start/' . urlencode($member['username']) . '?token=' . ET::$session->token) . "'>" . sprintf(T('Start a private conversation with %s'), $member['username']) . '</a>');
         }
 
-        $this->trigger('initProfile', array(&$member, $panes, $controls, $actions));
+        $this->trigger('initProfile', [&$member, $panes, $controls, $actions]);
 
         // Pass along these menus to the view.
         $this->data('member', $member);
@@ -314,9 +314,9 @@ class ETMemberController extends ETController
         $form->action = URL('member/permissions/' . $member['memberId']);
 
         // Get a list of all possible account types, groups, and permission types.
-        $accounts = array(ACCOUNT_ADMINISTRATOR, ACCOUNT_MEMBER);
+        $accounts = [ACCOUNT_ADMINISTRATOR, ACCOUNT_MEMBER];
         $groups = ET::groupModel()->getAll();
-        $permissions = array('view' => T('View'), 'reply' => T('Reply'), 'start' => T('Start'), 'moderate' => T('Moderate'));
+        $permissions = ['view' => T('View'), 'reply' => T('Reply'), 'start' => T('Start'), 'moderate' => T('Moderate')];
 
         // Set the value of the account field in the form to the member's current account.
         $form->setValue('account', $member['account']);
@@ -335,7 +335,7 @@ class ETMemberController extends ETController
         $channels = ET::channelModel()->getAll();
 
         // Create a list of "extra" permissions (eg. being able to access the admin CP, or suspend members.)
-        $extraPermissions = array();
+        $extraPermissions = [];
         if ($currentAccount == ACCOUNT_ADMINISTRATOR) {
             $extraPermissions[] = T('Access the administrator control panel.');
         }
@@ -420,7 +420,7 @@ class ETMemberController extends ETController
         @unlink(PATH_UPLOADS . '/avatars/' . $member['memberId'] . '.' . $member['avatarFormat']);
 
         // Clear the member's avatar format field.
-        ET::memberModel()->updateById($member['memberId'], array('avatarFormat' => null));
+        ET::memberModel()->updateById($member['memberId'], ['avatarFormat' => null]);
 
         $url = R('return', memberURL($member['memberId'], $member['username']));
         $this->redirect(URL($url));
@@ -507,7 +507,7 @@ class ETMemberController extends ETController
 
         // Update the username.
             $model = ET::memberModel();
-            $model->updateById($member['memberId'], array('username' => $form->getValue('username')));
+            $model->updateById($member['memberId'], ['username' => $form->getValue('username')]);
 
             // Check for errors - if there are none, show a message and redirect.
             if ($model->errorCount()) {

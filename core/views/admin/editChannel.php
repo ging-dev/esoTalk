@@ -35,7 +35,7 @@ $form = $data['form'];
 
 <li>
 <label><?php echo T('Channel slug'); ?></label>
-<?php echo $form->input('slug', 'text', array('id' => 'channelSlug')); ?>
+<?php echo $form->input('slug', 'text', ['id' => 'channelSlug']); ?>
 </li>
 
 <li class='sep'></li>
@@ -69,14 +69,14 @@ $form = $data['form'];
 <tr id='permissions-guests'>
 <th><?php echo groupName('guest', true); ?></th>
 <?php foreach ($data['permissions'] as $k => $v): ?>
-<td><?php if ($k == 'view'): echo $form->checkbox('permissions[' . GROUP_ID_GUEST . "][$k]", array('class' => "permission-$k")); endif; ?></td>
+<td><?php if ($k == 'view'): echo $form->checkbox('permissions[' . GROUP_ID_GUEST . "][$k]", ['class' => "permission-$k"]); endif; ?></td>
 <?php endforeach; ?>
 </tr>
 
 <tr id='permissions-members'>
 <th><?php echo groupName('member', true); ?></th>
 <?php foreach ($data['permissions'] as $k => $v): ?>
-<td><?php if ($k != 'moderate'): echo $form->checkbox('permissions[' . GROUP_ID_MEMBER . "][$k]", array('class' => "permission-$k")); endif; ?></td>
+<td><?php if ($k != 'moderate'): echo $form->checkbox('permissions[' . GROUP_ID_MEMBER . "][$k]", ['class' => "permission-$k"]); endif; ?></td>
 <?php endforeach; ?>
 </tr>
 
@@ -84,7 +84,7 @@ $form = $data['form'];
 <tr class='group'>
 <th><?php echo groupName($group['name'], true); ?></th>
 <?php foreach ($data['permissions'] as $k => $v): ?>
-<td><?php echo $form->checkbox("permissions[$id][$k]", array('class' => "permission-$k")); ?></td>
+<td><?php echo $form->checkbox("permissions[$id][$k]", ['class' => "permission-$k"]); ?></td>
 <?php endforeach; ?>
 </tr>
 <?php endforeach; ?>
@@ -100,7 +100,7 @@ $form = $data['form'];
 </table>
 
 <div class='subText' id='permissions-copy'><?php echo T('Copy permissions from'); ?> <?php
-$copyOptions = array('' => '');
+$copyOptions = ['' => ''];
 foreach ($data['channels'] as $id => $channel) {
     $copyOptions[$id] = str_repeat('&nbsp;', $channel['depth'] * 5) . $channel['title'];
 }

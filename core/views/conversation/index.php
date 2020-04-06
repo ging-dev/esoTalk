@@ -20,7 +20,7 @@ $conversation = $data['conversation'];
 function makeURL($startFrom = 0, $searchString = '')
 {
     global $conversation;
-    $urlParts = array(conversationURL($conversation['conversationId'], $conversation['title']));
+    $urlParts = [conversationURL($conversation['conversationId'], $conversation['title'])];
 
     if ($startFrom > 0 or $startFrom[0] == 'p' or $startFrom == 'last' or $startFrom == 'unread' or $searchString) {
         $urlParts[] = $startFrom;
@@ -33,7 +33,7 @@ function makeURL($startFrom = 0, $searchString = '')
 }
 
 // Work out what general class names to apply to the conversation wrapper.
-$classes = array('channel-' . $conversation['channelId']);
+$classes = ['channel-' . $conversation['channelId']];
 if ($conversation['starred']) {
     $classes[] = 'starred';
 }
@@ -46,7 +46,7 @@ if ($conversation['startMemberId'] == ET::$session->userId) {
 <div class='scrubberColumn'>
 <div class='scrubberContent'>
 
-<?php $this->trigger('renderControlsBefore', array($data)); ?>
+<?php $this->trigger('renderControlsBefore', [$data]); ?>
 
 <?php
 // Search within conversation form?>
@@ -69,7 +69,7 @@ echo starButton($conversation['conversationId'], $conversation['starred']) . "\n
 <a href='#reply' class='button big' id='jumpToReply'><i class='icon-plus'></i> <?php echo T('Post a Reply'); ?></a>
 <?php endif; ?>
 
-<?php $this->trigger('renderScrubberBefore', array($data)); ?>
+<?php $this->trigger('renderScrubberBefore', [$data]); ?>
 
 <?php if (!$data['searchString']): ?>
 <!-- Timeline scrubber -->
@@ -102,7 +102,7 @@ if ($data['startFrom'] > 0 or !empty($data['year'])) {
 
 // Construct an array of YYYY => array(MM, MM, ...) elements for each month from the conversation's start
 // right time through to its end time.
-$scrubber = array();
+$scrubber = [];
 $y = $oldestYear;
 $m = $oldestMonth;
 while ($y < $latestYear or $m <= $latestMonth) {
@@ -115,7 +115,7 @@ while ($y < $latestYear or $m <= $latestMonth) {
 }
 
 // Take out the last 5 months of today's year. We will display them as their own scrubber items.
-$recentMonths = array();
+$recentMonths = [];
 if (!empty($scrubber[$currentYear])) {
     $recentMonths = array_splice($scrubber[$currentYear], -5);
     if (!count($scrubber[$currentYear])) {
@@ -175,11 +175,11 @@ endif;
 <?php
 
 // Channel
-$this->renderView('conversation/channelPath', array('conversation' => $conversation));
+$this->renderView('conversation/channelPath', ['conversation' => $conversation]);
 
 // Labels?>
 <span class='labels'>
-<?php $this->renderView('conversation/labels', array('labels' => $conversation['labels'])); ?>
+<?php $this->renderView('conversation/labels', ['labels' => $conversation['labels']]); ?>
 </span>
 
 </div>
@@ -240,15 +240,15 @@ if (!$conversation['canReply']) {
 
     // If the user simply isn't logged in, show a reply box placeholder saying that they need to log in or sign up.
     if (!ET::$session->user) {
-        $post = array(
+        $post = [
             'id' => 'reply',
             'class' => 'logInToReply',
             'title' => '',
             'body' => sprintf(T('message.logInToReply'), URL('user/login?return=' . urlencode($this->selfURL)), URL('user/join?return=' . urlencode($this->selfURL))),
             'avatar' => avatar()
-        );
+        ];
 
-        $this->renderView('conversation/post', array('post' => $post));
+        $this->renderView('conversation/post', ['post' => $post]);
     }
 
     // If the user is suspended, show an informational message.
@@ -264,11 +264,11 @@ if (!$conversation['canReply']) {
 
 // If we can reply, show the reply box.
 else {
-    $this->renderView('conversation/reply', array(
+    $this->renderView('conversation/reply', [
         'form' => $data['replyForm'],
         'conversation' => $conversation,
         'controls' => $data['replyControls']
-    ));
+    ]);
 }
 ?>
 

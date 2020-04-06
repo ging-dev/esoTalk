@@ -59,7 +59,7 @@ foreach ($form->getFieldsInSection($k) as $field): ?>
 <div class='buttons'>
 <small><?php printf(T("Don't have an account? <a href='%s' class='link-join'>Sign up!</a>"), URL('user/join')); ?></small>
 <?php
-echo $form->button('login', T('Log In'), array('class' => 'big submit'));
+echo $form->button('login', T('Log In'), ['class' => 'big submit']);
 echo $form->cancelButton();
 ?>
 </div>

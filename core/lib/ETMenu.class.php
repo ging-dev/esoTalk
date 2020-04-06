@@ -20,14 +20,14 @@ class ETMenu
  * A list of menu items.
  * @var array
  */
-    public $items = array();
+    public $items = [];
 
 
     /**
      * A list of menu item keys to highlight.
      * @var array
      */
-    public $highlight = array();
+    public $highlight = [];
 
 
     /**

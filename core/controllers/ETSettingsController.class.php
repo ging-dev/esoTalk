@@ -43,7 +43,7 @@ class ETSettingsController extends ETController
      */
     public function renderProfile($view = '')
     {
-        if (!in_array($this->responseType, array(RESPONSE_TYPE_VIEW, RESPONSE_TYPE_AJAX))) {
+        if (!in_array($this->responseType, [RESPONSE_TYPE_VIEW, RESPONSE_TYPE_AJAX])) {
             $this->data('view', $view);
             parent::render('member/profile');
         } else {
@@ -91,7 +91,7 @@ class ETSettingsController extends ETController
         // Add a link to go back to the user's member profile.
         $actions->add('viewProfile', "<a href='" . URL('member/me') . "'><i class='icon-eye-open'></i> " . T('View your profile') . '</a>');
 
-        $this->trigger('initProfile', array($panes, $controls, $actions));
+        $this->trigger('initProfile', [$panes, $controls, $actions]);
 
         // Pass along these menus to the view.
         $this->data('member', $member);
@@ -118,51 +118,51 @@ class ETSettingsController extends ETController
 
         // Add the avatar section and field to the form.
         $form->addSection('avatar', T('Avatar'));
-        $form->addField('avatar', 'avatar', array($this, 'fieldAvatar'), array($this, 'saveAvatar'));
+        $form->addField('avatar', 'avatar', [$this, 'fieldAvatar'], [$this, 'saveAvatar']);
 
         // If there's more than 1 language installed, add the language section and field to the form.
         if (count(ET::getLanguages()) > 1) {
             $form->addSection('language', T('Forum language'));
 
             $form->setValue('language', ET::$session->preference('language', C('esoTalk.language')));
-            $form->addField('language', 'language', array($this, 'fieldLanguage'), array($this, 'saveLanguage'));
+            $form->addField('language', 'language', [$this, 'fieldLanguage'], [$this, 'saveLanguage']);
         }
 
         $form->addSection('notifications', T('Notifications'));
 
         // Add the "email me when I'm added to a private conversation" field.
         $form->setValue('privateAdd', ET::$session->preference('email.privateAdd'));
-        $form->addField('notifications', 'privateAdd', array($this, 'fieldEmailPrivateAdd'), array($this, 'saveEmailPreference'));
+        $form->addField('notifications', 'privateAdd', [$this, 'fieldEmailPrivateAdd'], [$this, 'saveEmailPreference']);
 
         // Add the "email me when someone replies to a conversation I have starred" field.
         $form->setValue('post', ET::$session->preference('email.post'));
-        $form->addField('notifications', 'post', array($this, 'fieldEmailReplyToStarred'), array($this, 'saveEmailPreference'));
+        $form->addField('notifications', 'post', [$this, 'fieldEmailReplyToStarred'], [$this, 'saveEmailPreference']);
 
         // Add the "email me when mentions me in a post" field.
         $form->setValue('mention', ET::$session->preference('email.mention'));
-        $form->addField('notifications', 'mention', array($this, 'fieldEmailMention'), array($this, 'saveEmailPreference'));
+        $form->addField('notifications', 'mention', [$this, 'fieldEmailMention'], [$this, 'saveEmailPreference']);
 
         // Add the "automatically star conversations I reply to" field.
         $form->setValue('starOnReply', ET::$session->preference('starOnReply'));
-        $form->addField('notifications', 'starOnReply', array($this, 'fieldStarOnReply'), array($this, 'saveBoolPreference'));
+        $form->addField('notifications', 'starOnReply', [$this, 'fieldStarOnReply'], [$this, 'saveBoolPreference']);
 
         // Add the "automatically star private conversations that I'm added to" field.
         $form->setValue('starPrivate', ET::$session->preference('starPrivate'));
-        $form->addField('notifications', 'starPrivate', array($this, 'fieldStarPrivate'), array($this, 'saveBoolPreference'));
+        $form->addField('notifications', 'starPrivate', [$this, 'fieldStarPrivate'], [$this, 'saveBoolPreference']);
 
         $form->addSection('privacy', T('Privacy'));
 
         // Add the "Don't allow other users to see when I am online" field.
         $form->setValue('hideOnline', ET::$session->preference('hideOnline'));
-        $form->addField('privacy', 'hideOnline', array($this, 'fieldHideOnline'), array($this, 'saveBoolPreference'));
+        $form->addField('privacy', 'hideOnline', [$this, 'fieldHideOnline'], [$this, 'saveBoolPreference']);
 
-        $this->trigger('initGeneral', array($form));
+        $this->trigger('initGeneral', [$form]);
 
         // If the save button was clicked...
         if ($form->validPostBack('save')) {
 
         // Create an array of preferences to write to the database and run the form field callbacks on it.
-            $preferences = array();
+            $preferences = [];
             $form->runFieldCallbacks($preferences);
 
             // If no errors occurred, we can write the preferences to the database.
@@ -181,7 +181,7 @@ class ETSettingsController extends ETController
 
         // Delete the avatar file and set the member's avatarFormat to null.
             @unlink(PATH_UPLOADS . '/avatars/' . $member['memberId'] . '.' . $member['avatarFormat']);
-            ET::memberModel()->updateById($member['memberId'], array('avatarFormat' => null));
+            ET::memberModel()->updateById($member['memberId'], ['avatarFormat' => null]);
 
             $this->message(T('message.changesSaved'), 'success autoDismiss');
             $this->redirect(URL('settings/general'));
@@ -217,7 +217,7 @@ class ETSettingsController extends ETController
      */
     public function fieldLanguage($form)
     {
-        $options = array();
+        $options = [];
         foreach (ET::getLanguages() as $language) {
             $options[$language] = ET::$languageInfo[$language]['name'];
         }
@@ -387,7 +387,7 @@ class ETSettingsController extends ETController
             $avatar = $uploader->saveAsImage($file, PATH_UPLOADS . '/avatars/' . ET::$session->userId, C('esoTalk.avatars.width'), C('esoTalk.avatars.height'), 'crop');
 
             // Update the member's avatarFormat field to the avatar file's extension.
-            ET::memberModel()->updateById(ET::$session->userId, array('avatarFormat' => pathinfo($avatar, PATHINFO_EXTENSION)));
+            ET::memberModel()->updateById(ET::$session->userId, ['avatarFormat' => pathinfo($avatar, PATHINFO_EXTENSION)]);
         } catch (Exception $e) {
 
         // If something went wrong up there, add the error message to the form.
@@ -451,7 +451,7 @@ class ETSettingsController extends ETController
 
         // If the form was submitted...
         if ($form->validPostBack('save')) {
-            $update = array();
+            $update = [];
 
             // Are we setting a new password?
             if ($password = $form->getValue('password')) {

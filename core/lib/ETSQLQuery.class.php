@@ -34,28 +34,28 @@ class ETSQLQuery
      * An array of expressions to SELECT.
      * @var array
      */
-    public $select = array();
+    public $select = [];
 
 
     /**
      * An array of tables to select FROM, including JOIN clauses, or to INSERT into, UPDATE, or DELETE from.
      * @var array
      */
-    public $tables = array();
+    public $tables = [];
 
 
     /**
      * An array of WHERE conditions.
      * @var array
      */
-    public $where = array();
+    public $where = [];
 
 
     /**
      * An array of GROUP BY expressions.
      * @var array
      */
-    public $groupBy = array();
+    public $groupBy = [];
 
 
     /**
@@ -76,14 +76,14 @@ class ETSQLQuery
      * An array of ORDER BY expressions.
      * @var array
      */
-    public $orderBy = array();
+    public $orderBy = [];
 
 
     /**
      * An array of HAVING expressions.
      * @var array
      */
-    public $having = array();
+    public $having = [];
 
 
     /**
@@ -97,35 +97,35 @@ class ETSQLQuery
      * An array of fields to set in an INSERT query.
      * @var array
      */
-    public $insertFields = array();
+    public $insertFields = [];
 
 
     /**
      * An array of fields => values to set for an UPDATE query, or an array of arrays of values to INSERT.
      * @var array
      */
-    public $set = array();
+    public $set = [];
 
 
     /**
      * An array of fields => values to set ON DUPLICATE KEY.
      * @var array
      */
-    public $setDuplicateKey = array();
+    public $setDuplicateKey = [];
 
 
     /**
      * An array of SQL queries to UNION.
      * @var array
      */
-    public $union = array();
+    public $union = [];
 
 
     /**
      * An array of bound parameters to replace when the query is constructed.
      * @var array
      */
-    public $parameters = array();
+    public $parameters = [];
 
 
     /**
@@ -139,7 +139,7 @@ class ETSQLQuery
      */
     public function bind($parameter, $value, $dataType = null)
     {
-        $this->parameters[$parameter] = array($value, $dataType);
+        $this->parameters[$parameter] = [$value, $dataType];
         return $this;
     }
 
@@ -226,7 +226,7 @@ class ETSQLQuery
 
         // If a value was specified, use the predicate as the field name.
         if ($value !== false) {
-            $predicate = array($predicate => $value);
+            $predicate = [$predicate => $value];
         }
 
         // Go through the predicates and add them to the query one by one.
@@ -369,7 +369,7 @@ class ETSQLQuery
     public function set($field, $value = false, $sanitize = true)
     {
         if (!is_array($field)) {
-            $field = array($field => $value);
+            $field = [$field => $value];
         }
         foreach ($field as $field => $value) {
             $value = $sanitize ? ET::$database->escapeValue($value) : $value;
@@ -435,7 +435,7 @@ class ETSQLQuery
     public function setOnDuplicateKey($field, $value = false, $sanitize = true)
     {
         if (!is_array($field)) {
-            $field = array($field => $value);
+            $field = [$field => $value];
         }
         foreach ($field as $field => $value) {
             $this->setDuplicateKey[$field] = $sanitize ? ET::$database->escapeValue($value) : $value;
@@ -498,7 +498,7 @@ class ETSQLQuery
     protected function indent($value)
     {
         if (is_array($value)) {
-            return array_map(array($this, 'indent'), $value);
+            return array_map([$this, 'indent'], $value);
         } else {
             return str_replace("\n", "\n\t\t", $value);
         }
@@ -535,7 +535,7 @@ class ETSQLQuery
     protected function getSelect()
     {
         // Construct the SELECT clause.
-        $select = array();
+        $select = [];
         foreach ($this->select as $k => $v) {
             if (!is_numeric($k)) {
                 $select[] = "$v AS $k";
@@ -569,7 +569,7 @@ class ETSQLQuery
         $tables = implode(', ', $this->tables);
 
         // Construct the SET clause.
-        $set = array();
+        $set = [];
         foreach ($this->set as $k => $v) {
             $set[] = "$k=$v";
         }
@@ -593,14 +593,14 @@ class ETSQLQuery
         $fields = implode(', ', $this->insertFields);
 
         // Make a list of rows and their values to insert.
-        $rows = array();
+        $rows = [];
         foreach ($this->set as $row) {
             $rows[] = '(' . implode(', ', $row) . ')';
         }
         $values = implode(', ', $rows);
 
         // Construct the ON DUPLICATE KEY UPDATE clause.
-        $onDuplicateKey = array();
+        $onDuplicateKey = [];
         foreach ($this->setDuplicateKey as $k => $v) {
             $onDuplicateKey[] = "$k=$v";
         }

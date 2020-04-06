@@ -34,8 +34,8 @@ class ETConversationsController extends ETController
         // Now we need to construct some arrays to determine which channel "tabs" to show in the view.
         // $channels is a list of channels with the same parent as the current selected channel(s).
         // $path is a breadcrumb trail to the depth of the currently selected channel(s).
-        $channels = array();
-        $path = array();
+        $channels = [];
+        $path = [];
 
         // Work out what channel we will use as the "parent" channel. This will be the last item in $path,
         // and its children will be in $channels.
@@ -54,7 +54,7 @@ class ETConversationsController extends ETController
 
         // If no channel is selected, make a faux parent channel.
         if (!$curChannel) {
-            $curChannel = array('lft' => 0, 'rgt' => PHP_INT_MAX, 'depth' => -1);
+            $curChannel = ['lft' => 0, 'rgt' => PHP_INT_MAX, 'depth' => -1];
         }
 
         // Now, finally, go through all the channels and add ancestors of the "parent" channel to the $path,
@@ -112,7 +112,7 @@ class ETConversationsController extends ETController
         $this->data('fulltextString', implode(' ', $search->fulltext));
 
         // Construct a canonical URL and add to the breadcrumb stack.
-        $slugs = array();
+        $slugs = [];
         foreach ($currentChannels as $channel) {
             $slugs[] = $channelInfo[$channel]['slug'];
         }
@@ -138,48 +138,48 @@ class ETConversationsController extends ETController
             }
 
             // Add the default gambits to the gambit cloud: gambit text => css class to apply.
-            $gambits = array(
-            'main' => array(
-                T('gambit.sticky') => array('gambit-sticky', 'icon-pushpin'),
-            ),
-            'time' => array(
-                T('gambit.order by newest') => array('gambit-orderByNewest', 'icon-list-ol'),
-                T('gambit.active last ? hours') => array('gambit-activeLastHours', 'icon-time'),
-                T('gambit.active last ? days') => array('gambit-activeLastDays', 'icon-calendar'),
-                T('gambit.active today') => array('gambit-activeToday', 'icon-asterisk'),
-                T('gambit.dead') => array('gambit-dead', 'icon-remove'),
-                T('gambit.locked') => array('gambit-locked', 'icon-lock'),
-            ),
-            'member' => array(
-                T('gambit.author:') . T('gambit.member') => array('gambit-author', 'icon-user'),
-                T('gambit.contributor:') . T('gambit.member') => array('gambit-contributor', 'icon-user'),
-            ),
-            'replies' => array(
-                T('gambit.has replies') => array('gambit-hasReplies', 'icon-comment'),
-                T('gambit.has >10 replies') => array('gambit-replies', 'icon-comments'),
-                T('gambit.order by replies') => array('gambit-orderByReplies', 'icon-list-ol'),
-            ),
-            'text' => array(
-                T('gambit.title:') . ' ?' => array('gambit-title', 'icon-font')
-            ),
-            'misc' => array(
-                T('gambit.random') => array('gambit-random', 'icon-random'),
-                T('gambit.reverse') => array('gambit-reverse', 'icon-exchange'),
-            )
-        );
+            $gambits = [
+            'main' => [
+                T('gambit.sticky') => ['gambit-sticky', 'icon-pushpin'],
+            ],
+            'time' => [
+                T('gambit.order by newest') => ['gambit-orderByNewest', 'icon-list-ol'],
+                T('gambit.active last ? hours') => ['gambit-activeLastHours', 'icon-time'],
+                T('gambit.active last ? days') => ['gambit-activeLastDays', 'icon-calendar'],
+                T('gambit.active today') => ['gambit-activeToday', 'icon-asterisk'],
+                T('gambit.dead') => ['gambit-dead', 'icon-remove'],
+                T('gambit.locked') => ['gambit-locked', 'icon-lock'],
+            ],
+            'member' => [
+                T('gambit.author:') . T('gambit.member') => ['gambit-author', 'icon-user'],
+                T('gambit.contributor:') . T('gambit.member') => ['gambit-contributor', 'icon-user'],
+            ],
+            'replies' => [
+                T('gambit.has replies') => ['gambit-hasReplies', 'icon-comment'],
+                T('gambit.has >10 replies') => ['gambit-replies', 'icon-comments'],
+                T('gambit.order by replies') => ['gambit-orderByReplies', 'icon-list-ol'],
+            ],
+            'text' => [
+                T('gambit.title:') . ' ?' => ['gambit-title', 'icon-font']
+            ],
+            'misc' => [
+                T('gambit.random') => ['gambit-random', 'icon-random'],
+                T('gambit.reverse') => ['gambit-reverse', 'icon-exchange'],
+            ]
+        ];
 
             // Add some more personal gambits if there is a user logged in.
             if (ET::$session->user) {
-                addToArrayString($gambits['main'], T('gambit.private'), array('gambit-private', 'icon-envelope-alt'), 1);
-                addToArrayString($gambits['main'], T('gambit.starred'), array('gambit-starred', 'icon-star'), 2);
-                addToArrayString($gambits['main'], T('gambit.draft'), array('gambit-draft', 'icon-pencil'), 3);
-                addToArrayString($gambits['main'], T('gambit.ignored'), array('gambit-ignored', 'icon-eye-close'), 4);
-                addToArrayString($gambits['time'], T('gambit.unread'), array('gambit-unread', 'icon-inbox'), 0);
-                addToArrayString($gambits['member'], T('gambit.author:') . T('gambit.myself'), array('gambit-authorMyself', 'icon-smile'), 0);
-                addToArrayString($gambits['member'], T('gambit.contributor:') . T('gambit.myself'), array('gambit-contributorMyself', 'icon-smile'), 2);
+                addToArrayString($gambits['main'], T('gambit.private'), ['gambit-private', 'icon-envelope-alt'], 1);
+                addToArrayString($gambits['main'], T('gambit.starred'), ['gambit-starred', 'icon-star'], 2);
+                addToArrayString($gambits['main'], T('gambit.draft'), ['gambit-draft', 'icon-pencil'], 3);
+                addToArrayString($gambits['main'], T('gambit.ignored'), ['gambit-ignored', 'icon-eye-close'], 4);
+                addToArrayString($gambits['time'], T('gambit.unread'), ['gambit-unread', 'icon-inbox'], 0);
+                addToArrayString($gambits['member'], T('gambit.author:') . T('gambit.myself'), ['gambit-authorMyself', 'icon-smile'], 0);
+                addToArrayString($gambits['member'], T('gambit.contributor:') . T('gambit.myself'), ['gambit-contributorMyself', 'icon-smile'], 2);
             }
 
-            $this->trigger('constructGambitsMenu', array(&$gambits));
+            $this->trigger('constructGambitsMenu', [&$gambits]);
 
             // Construct the gambits menu based on the above arrays.
             $gambitsMenu = ETFactory::make('menu');
@@ -199,7 +199,7 @@ class ETConversationsController extends ETController
             $this->data('gambitsMenu', $gambitsMenu);
 
             // Construct a list of keywords to use in the meta tags.
-            $keywords = array();
+            $keywords = [];
             foreach ($channelInfo as $c) {
                 if ($c['depth'] == 0) {
                     $keywords[] = strtolower($c['title']);
@@ -227,18 +227,18 @@ class ETConversationsController extends ETController
             $this->addJSFile('core/js/search.js');
 
             // Add an array of channels in the form slug => id for the JavaScript to use.
-            $channels = array();
+            $channels = [];
             foreach ($channelInfo as $id => $c) {
                 $channels[$id] = $c['slug'];
             }
             $this->addJSVar('channels', $channels);
 
             // Get a bunch of statistics...
-            $queries = array(
+            $queries = [
             'post' => ET::SQL()->select('COUNT(*)')->from('post')->get(),
             'conversation' => ET::SQL()->select('COUNT(*)')->from('conversation')->get(),
             'member' => ET::SQL()->select('COUNT(*)')->from('member')->get()
-        );
+        ];
             $sql = ET::SQL();
             foreach ($queries as $k => $query) {
                 $sql->select("($query) AS $k");
@@ -251,7 +251,7 @@ class ETConversationsController extends ETController
                 if ($k == 'member' and (C('esoTalk.members.visibleToGuests') or ET::$session->user)) {
                     $stat = "<a href='" . URL('members') . "'>$stat</a>";
                 }
-                $this->addToMenu('statistics', "statistic-$k", $stat, array('before' => 'statistic-online'));
+                $this->addToMenu('statistics', "statistic-$k", $stat, ['before' => 'statistic-online']);
             }
 
             $this->render('conversations/index');
@@ -294,7 +294,7 @@ class ETConversationsController extends ETController
         $channelInfo = ET::channelModel()->get();
 
         // Get a list of the currently selected channels.
-        $currentChannels = array();
+        $currentChannels = [];
         $includeDescendants = true;
 
         if (!empty($channelSlug)) {
@@ -327,7 +327,7 @@ class ETConversationsController extends ETController
         // Otherwise, loop through all the channels and add IDs of descendants. Make sure we don't include
         // any channels which the user has unsubscribed to.
         else {
-            $channelIds = array();
+            $channelIds = [];
             foreach ($currentChannels as $id) {
                 $channelIds[] = $id;
                 $rootUnsubscribed = !empty($channelInfo[$id]['unsubscribed']);
@@ -349,7 +349,7 @@ class ETConversationsController extends ETController
             }
         }
 
-        return array($channelInfo, $currentChannels, $channelIds, $includeDescendants);
+        return [$channelInfo, $currentChannels, $channelIds, $includeDescendants];
     }
 
 
@@ -361,7 +361,7 @@ class ETConversationsController extends ETController
     public function action_markAllAsRead()
     {
         // Update the user's preferences.
-        ET::$session->setPreferences(array('markedAllConversationsAsRead' => time()));
+        ET::$session->setPreferences(['markedAllConversationsAsRead' => time()]);
 
         // For a normal response, redirect to the conversations page.
         if ($this->responseType === RESPONSE_TYPE_DEFAULT) {
@@ -424,7 +424,7 @@ class ETConversationsController extends ETController
         // If the "random" gambit is in the search string, then don't go any further (because the results will
         // obviously differ!)
         $random = false;
-        $terms = $query ? explode('+', strtolower(str_replace('-', '+!', trim($query, ' +-')))) : array();
+        $terms = $query ? explode('+', strtolower(str_replace('-', '+!', trim($query, ' +-')))) : [];
         foreach ($terms as $v) {
             if (trim($v) == T('gambit.random')) {
                 $random = true;
@@ -442,7 +442,7 @@ class ETConversationsController extends ETController
             // Get the difference of the two sets of conversationId's.
             $diff = array_diff((array)$newConversationIds, (array)$conversationIds);
             if (count($diff)) {
-                $this->message(sprintf(T('message.newSearchResults'), 'javascript:ETSearch.showNewActivity();void(0)'), array('id' => 'newSearchResults'));
+                $this->message(sprintf(T('message.newSearchResults'), 'javascript:ETSearch.showNewActivity();void(0)'), ['id' => 'newSearchResults']);
             }
         }
 
@@ -452,13 +452,13 @@ class ETConversationsController extends ETController
 
         // Get the full result data for these conversations, and construct an array of rendered conversation rows.
         $results = $search->getResults($conversationIds, true);
-        $rows = array();
+        $rows = [];
         foreach ($results as $conversation) {
-            $rows[$conversation['conversationId']] = $this->getViewContents('conversations/conversation', array(
+            $rows[$conversation['conversationId']] = $this->getViewContents('conversations/conversation', [
             'conversation' => $conversation,
             'channelInfo' => $channelInfo,
             'fulltextString' => $fulltextString
-        ));
+        ]);
         }
 
         // Add that to the response.
@@ -476,7 +476,7 @@ class ETConversationsController extends ETController
      */
     protected function highlight($terms)
     {
-        $words = array();
+        $words = [];
         foreach ($terms as $term) {
             if (preg_match_all('/"(.+?)"/', $term, $matches)) {
                 $words[] = $matches[1];

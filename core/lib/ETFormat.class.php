@@ -41,7 +41,7 @@ class ETFormat extends ETPluggable
     public function init($content, $sanitize = true)
     {
         // Clean up newline characters - make sure the only ones we are using are \n!
-        $content = strtr($content, array("\r\n" => "\n", "\r" => "\n")) . "\n";
+        $content = strtr($content, ["\r\n" => "\n", "\r" => "\n"]) . "\n";
 
         // Set the content, and sanitize if necessary.
         $this->content = $sanitize ? sanitizeHTML($content) : $content;
@@ -196,10 +196,10 @@ class ETFormat extends ETPluggable
         $this->content = trim($this->content);
 
         // Add paragraphs and breakspaces.
-        $this->content = '<p>' . str_replace(array("\n\n", "\n"), array('</p><p>', '<br/>'), $this->content) . '</p>';
+        $this->content = '<p>' . str_replace(["\n\n", "\n"], ['</p><p>', '<br/>'], $this->content) . '</p>';
 
         // Strip empty paragraphs.
-        $this->content = preg_replace(array("/<p>\s*<\/p>/i", "/(?<=<p>)\s*(?:<br\/>)*/i", "/\s*(?:<br\/>)*\s*(?=<\/p>)/i"), '', $this->content);
+        $this->content = preg_replace(["/<p>\s*<\/p>/i", "/(?<=<p>)\s*(?:<br\/>)*/i", "/\s*(?:<br\/>)*\s*(?=<\/p>)/i"], '', $this->content);
         $this->content = str_replace('<p></p>', '', $this->content);
 
         return $this;
@@ -216,7 +216,7 @@ class ETFormat extends ETPluggable
         // Convert normal links - http://www.example.com, www.example.com - using a callback function.
         $this->content = preg_replace_callback(
             "/(?<=\s|^|>|\()(\w+:\/\/)?((?:\w[\w\-]*\w\.)+(?:[a-z][a-z]+)(?:[\/#][^\s<]*?)?)(?=\)\s|[\s\.,?!>\)]*(?:\s|>|$))/i",
-            array($this, 'linksCallback'),
+            [$this, 'linksCallback'],
             $this->content
         );
 
@@ -396,7 +396,7 @@ class ETFormat extends ETPluggable
     public function getMentions($content)
     {
         preg_match_all('/(^|[\s,\.:\]])@([^\s[\]]{2,20})\b/iu', $content, $matches, PREG_SET_ORDER);
-        $names = array();
+        $names = [];
         foreach ($matches as $k => $v) {
             $names[] = str_replace('&nbsp;', ' ', $v[2]);
         }
